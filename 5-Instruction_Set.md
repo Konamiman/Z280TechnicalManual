@@ -532,10 +532,10 @@ or
 ADDW src
 ```
 
-Assignment of a value is indicated by the symbol "<—". For example,
+Assignment of a value is indicated by the symbol "←". For example,
 
 ```
-dst <— dst + src
+dst ← dst + src
 ```
 
 indicates that the source data is added to the destination data and the result is stored in the destination location.
@@ -558,3 +558,3126 @@ _Table 5-12. Encoding of 8-Bit Registers in Instruction Opcodes_
 
 
 The remainder of this chapter consists of the individual descriptions of each Z280 MPU instruction.
+
+
+## ADC - Add with Carry (Byte)
+
+**ADC** [A,]src
+
+ src = R, RX, IM, IR, DA, X, SX, RA, SR, BX
+
+### Operation
+
+A ← A + src + C
+
+The source operand together with the Carry flag is added to the accumulator and the sum is stored in the accumulator. The contents of the source are unaffected. Twos- complement addition is performed.
+
+### Flags
+
+**S:** Set if the result is negative; cleared otherwise
+
+**Z:** Set if the result is zero; cleared otherwise
+
+**H:** Set if there is a carry from bit 3 of the result; cleared otherwise
+
+**V:** Set if arithmetic overflow occurs, that is, if both operands are of the same sign and the result is of the opposite sign; cleared otherwise
+
+**N:** Cleared
+
+**C:** Set if there is a carry from the most significant bit of the result; cleared otherwise
+
+### Exceptions
+
+None
+
+### Instruction Formats
+
+| Addressing<br/>Mode | Syntax | Instruction Format
+|-|-|-|
+R | ADC A,R | `10 001  r `
+RX | ADC A,RX | `11 *11 101` `10 001 rx `
+IM | ADC A,n  | `11 001 110` `     n      `
+IR | ADC A,(HL) | `10 001 110`
+DA | ADC A,(addr)   | `11 011 101` `10 001 111` ` addr(low)  ` ` addr(high) `
+X | ADC A,(XX + dd) | `11 111 101` `10 001 xx ` `   d(low)   ` `  d(high)   `
+SX | ADC A,(XY + d) | `11 *11 101` `10 001 110` `     d      `
+RA | ADC A,<addr> | `11 111 101` `10 001 000` ` disp(low)  ` ` disp(high) `
+SR | ADC A,(SP + dd) | `11 011 101` `10 001 000` `   d(low)   ` `  d(high)   `
+BX | ADC A,(XXA + XXB) | `11 011 101` `10 001 bx `
+
+#### Field Encodings
+
+**\*:** 0 for IX, 1 for IY<br/>
+**rx:** 100 for high byte, 101 for low byte<br/>
+**xx:** 001 for (IX + dd), 010 for (IY + dd), 011 for (HL + dd)<br/>
+**bx:** 001 for (HL + IX), 010 for (HL + IY), 011 for (IX + IY)
+
+### Example
+
+ADC A,(HL)
+
+_Before instruction execution:_
+
+| Register | Value |
+|-|-|
+AF | 48 szxhxvn1
+HL | 2454
+
+| Memory<br/>Address |Value |
+|-|-|
+2454 | 18
+
+_After instruction execution:_
+
+| Register | Value |
+|-|-|
+AF | 61 00x1x000
+HL | 2454
+
+| Memory<br/>Address |Value |
+|-|-|
+2454 | 18
+
+
+## ADC - Add With Carry (Word)
+
+**ADC** dst,src
+
+dst = HL<br/>
+src = BC, DE, HL, SP
+
+or
+
+dst = IX<br/>
+src = BC, DE, IX, SP
+
+or
+
+dst = IY<br/>
+src = BC, DE, IY, SP
+
+### Operation
+
+dst ← dst + src + C
+
+The source operand together with the Carry flag is added to the destination and the sum is stored in the destination. The contents of the source are unaffected. Twos-complement addition is performed.
+
+### Flags
+
+**S:** Set if the result is negative; cleared otherwise
+
+**Z:** Set if the result is zero; cleared otherwise
+
+**H:** Set if there is a carry from bit 11 of the result; cleared otherwise
+
+**V:** Set if arithmetic overflow occurs, that is, if the operands are of the same sign and the result is of the opposite sign; cleared otherwise
+
+**N:** Cleared
+
+**C** Set if there is a carry from the most significant bit of the result; cleared otherwise.
+
+### Exceptions
+
+None
+
+### Instruction Formats
+
+Syntax | Instruction Format
+|-|-|
+ADC HL,RR | `11 101 101` `01 rr  010`
+ADC XY,RR | `11 *11 101` `11 101 101` `01 rr  010`
+
+#### Field Encodings
+
+**\*:** 0 for IX, 1 for IY<br/>
+**rr:** 001 for BC, 011 for DE, 101 for add register to itself, 111 for SP
+
+### Example
+
+ADC HL,BC
+
+_Before instruction execution:_
+
+| Register | Value |
+|-|-|
+ F | szxhxvn1
+BC | 2308
+HL | F038
+
+_After instruction execution:_
+
+| Register | Value |
+|-|-|
+ F | 00x0x001
+BC | 2308
+HL | 1341
+
+
+## ADD - Add Accumulator to Addressing Register
+
+**ADD** dst,A
+
+dst = HL, IX, IY
+
+### Operation
+
+dst ← dst + A
+
+The contents of the accumulator are added to the contents of the destination and the result is stored in the destination. The contents of the accumulator are unaffected. The contents of the accumulator are treated as a signed binary integer and are sign- extended to 16 bits; twos-complement addition is performed.
+
+### Flags
+
+**S:** Set if the result is negative; cleared otherwise
+
+**Z:** Set if the result is zero; cleared otherwise
+
+**H:** Set if there is a carry from bit 11 of the result; cleared otherwise
+
+**V:** Set if arithmetic overflow occurs, that is, if the operands are of the same sign and the result is of the opposite sign from the operands; cleared otherwise
+
+**N:** Cleared
+
+**C:** Set if there is a carry from the most significant bit of the result; cleared otherwise
+
+### Exceptions
+
+None
+
+### Instruction Formats
+
+Syntax | Instruction Format
+|-|-|
+ADD HL,A | `11 101 101` `01 101 101`
+ADC XY,A | `11 *11 101` `11 101 101` `01 101 101`
+
+#### Field Encodings
+
+**\*:** 0 for IX, 1 for IY
+
+### Example
+
+ADD HL,a
+
+_Before instruction execution:_
+
+| Register | Value |
+|-|-|
+AF | E2 szxhxvnc
+HL | 2384
+
+_After instruction execution:_
+
+| Register | Value |
+|-|-|
+AF | E2 00x1x001
+HL | 2366
+
+Computation: accumulator is sign-extended
+
+```
+ FFE2
++2384
+ ----
+ 2366 
+```
+
+
+## ADD - Add (Byte)
+
+**ADD** [A],src
+
+src = R, RX, IM, IR, DA, X, SX, RA, SR, BX
+
+### Operation
+
+A ← A + src
+
+The source operand is added to the accumulator and the sum is stored in the accumulator. The contents of the source are unaffected. Twos-complement addition is performed.
+
+### Flags
+
+**S:** Set if the result is negative; cleared otherwise
+
+**Z:** Set if the result is zero; cleared otherwise 
+
+**H:** Set if there is a carry from bit 3 of the result; cleared otherwise 
+
+**V:** Set if arithmetic overflow occurs, that is, if both operands are of the same sign and the result is of the opposite sign; cleared otherwise 
+
+**N:** Cleared
+
+**C:** Set if there is a carry from the most significant bit of the result; cleared otherwise
+
+### Exceptions
+
+None
+
+### Instruction Formats
+
+| Addressing<br/>Mode | Syntax | Instruction Format
+|-|-|-|
+R | ADD A,R | `10 000  r `
+RX | ADD A,RX | `11 *11 101` `10 000 rx `
+IM | ADD A,n | `11 000 110`  `     n      `
+IR | ADD A,(HL) | `10 000 110`
+DA | ADD A,(addr) | `11 011 101` `10 000 111` ` addr(low)  ` ` addr(high) `
+X | ADD A,(XX + dd) | `11 111 101` `10 000 xx ` `   d(low)   ` `  d(high)   `
+SX | ADD A,(XY + d) | `11 *11 101` `10 000 110` `     d      `
+RA | ADD A,<addr> | `11 111 101` `10 000 000` ` disp(low)  ` ` disp(high) `
+SR | ADD A,(SP + dd) | `11 011 101` `10 000 000` `   d(low)   ` `  d(high)   `
+BX | ADD A,(XXA + XXB) | `11 011 101` `10 000 bx `
+
+#### Field Encodings
+
+**\*:** 0 for IX, 1 for IY<br/>
+**rx:** 100 for high byte, 101 for low byte<br/>
+**xx:** 001 for (IX + dd), 010 for (IY + dd), 011 for (HL + dd)<br/>
+**bx:** 001 for (HL + IX), 010 for (HL + IY), 011 for (IX + IY)
+
+### Example
+
+ADD A,(HL)
+
+_Before instruction execution:_
+
+| Register | Value |
+|-|-|
+AF | 48 szxhxvnc
+HL | 2454
+
+| Memory<br/>Address |Value |
+|-|-|
+2454 | 18
+
+_After instruction execution:_
+
+| Register | Value |
+|-|-|
+AF | 60 00x1x000
+HL | 2454
+
+| Memory<br/>Address |Value |
+|-|-|
+2454 | 18
+
+
+## ADD - Add (Word)
+
+**ADD** dst,src
+
+dst = HL<br/>
+src = BC, DE, HL, SP
+
+or
+
+dst = IX<br/>
+src = BC, DE, IX, SP
+
+or
+
+dst = IY<br/>
+src = BC, DE, IY, SP
+
+### Operation
+
+dst ← dst + src
+
+The source operand is added to the destination and the sum is stored in the destination. The contents of the source are unaffected. Twos-complement addition is performed.
+
+### Flags
+
+**S:** Unaffected
+
+**Z:** Unaffected
+
+**H:** Set if there is a carry from bit 11 of the result; cleared otherwise
+
+**V:** Unaffected
+
+**N:** Cleared
+
+**C** Set if there is a carry from the most significant bit of the result; cleared otherwise.
+
+### Exceptions
+
+None
+
+### Instruction Formats
+
+Syntax | Instruction Format
+|-|-|
+ADD HL,RR | `00 rr  001`
+ADD XY,RR | `11 *11 101` `00 rr  001`
+
+#### Field Encodings
+
+**\*:** 0 for IX, 1 for IY<br/>
+**rr:** 001 for BC, 011 for DE, 101 for add register to itself, 111 for SP
+
+### Example
+
+ADD HL,BC
+
+_Before instruction execution:_
+
+| Register | Value |
+|-|-|
+ F | szxhxvnc
+BC | 2308
+HL | F038
+
+_After instruction execution:_
+
+| Register | Value |
+|-|-|
+ F | szx0xv01
+BC | 2308
+HL | 1340
+
+
+## ADDW - Add Word
+
+**ADDW** [HL],src
+
+src = R, IM, DA, X, RA
+
+### Operation
+
+HL ← HL + src
+
+The source operand is added to the HL register and the sum is stored in the HL register. The contents of the source are unaffected. Twos-complement addition is performed.
+
+### Flags
+
+**S:** Set if the result is negative; cleared otherwise
+
+**Z:** Set if the result is zero; cleared otherwise 
+
+**H:** Set if there is a carry from bit 11 of the result; cleared otherwise 
+
+**V:** Set if arithmetic overflow occurs, that is, if both operands are of the same sign and the result is of the opposite sign; cleared otherwise 
+
+**N:** Cleared
+
+**C:** Set if there is a carry from the most significant bit of the result; cleared otherwise
+
+### Exceptions
+
+None
+
+### Instruction Formats
+
+| Addressing<br/>Mode | Syntax | Instruction Format
+|-|-|-|
+R | ADDW HL,RR | `11 101 101` `11 rr  110`
+|  | ADDW HL,XY | `11 *01 101` `11 101 101` `11 100 110`
+IM | ADDW HL,nn | `11 111 101` `11 101 101` `11 110 110` `   n(low)   ` `   n(high)  `
+DA | ADDW HL,(addr) | `11 011 101` `11 101 101` `11 010 110` ` addr(low)  ` ` addr(high) `
+X | ADDW HL,(XX + dd) | `11 111 101` `11 101 101`  `11 xy  110` `   d(low)   ` `  d(high)   `
+RA | ADDW HL,&lt;addr&gt; | `11 011 101` `11 101 101` `11 110 110` ` disp(low)  ` ` disp(high) `
+IR | ADDW HL,(HL) | `11 011 101` `11 101 101` `11 000 110`
+
+#### Field Encodings
+
+**\*:** 0 for IX, 1 for IY<br/>
+**rr:** 000 for BC, 010 for DE, 100 for HL, 110 for SP<br/>
+**xy:** 000 for (IX + dd), 010 for (IY + dd)
+
+### Example
+
+ADDW HL,DE
+
+_Before instruction execution:_
+
+| Register | Value |
+|-|-|
+F | szxhxvnc
+DE | 0010
+HL | A123
+
+_After instruction execution:_
+
+| Register | Value |
+|-|-|
+F | 10x0x000
+DE | 0010
+HL | A133
+
+
+## AND - And
+
+**AND** [A],src
+
+src = R, RX, IM, IR, DA, X, SX, RA, SR, BX
+
+### Operation
+
+A ← A AND src
+
+A logical AND operation is performed between the corresponding bits of the source operand and the accumulator and the result is stored in the accumulator. A 1 bit is storede wherever the corresponding bits in the two operands are both 1s; otherwise a 0 bit is stored. The contents of the source are unaffected.
+
+### Flags
+
+**S:** Set if the most significant bit of the result is set; cleared otherwise
+
+**Z:** Set if all bits of the result are zero; cleared otherwise 
+
+**H:** Set
+
+**P:** Set if parity is even; cleared otherwise 
+
+**N:** Cleared
+
+**C:** Cleared
+
+### Exceptions
+
+None
+
+### Instruction Formats
+
+| Addressing<br/>Mode | Syntax | Instruction Format
+|-|-|-|
+R | AND A,R | `10 100  r `
+RX | AND A,RX | `11 *11 101` `10 100 rx `
+IM | AND A,n  | `11 100 110` `     n      `
+IR | AND A,(HL) | `10 100 110`
+DA | AND A,(addr) | `11 011 101` `10 100 111` ` addr(low)  ` ` addr(high) `
+X | AND A,(XX + dd) | `11 111 101` `10 100 xx ` `   d(low)   ` `  d(high)   `
+SX | AND A,(XY + d) | `11 *11 101` `10 100 110` `     d      `
+RA | AND A,&lt;addr&gt;| `11 111 101` `11 100 000` ` disp(low)  ` ` disp(high) `
+SR | AND A,(SP + dd) | `11 011 101` `10 100 000` `   d(low)   ` `  d(high)   `
+BX | AND A,(XXA + XXB) | `11 011 101` `10 100 bx `
+
+#### Field Encodings
+
+**\*:** 0 for IX, 1 for IY<br/>
+**rx:** 100 for hight byte, 101 for low byte<br/>
+**xx:** 011 for (IX + dd), 010 for (IY + dd), 011 for (HL + dd)<br/>
+**bx:** 001 for (HL + IX), 010 for (HL + IY), 011 for (IX + IY)
+
+### Example
+
+AND A,(HL)
+
+_Before instruction execution:_
+
+| Register | Value |
+|-|-|
+AF | 48 szxhxvnc
+HL | 2454
+
+| Memory<br/>Address |Value |
+|-|-|
+2454 | 18
+
+_After instruction execution:_
+
+| Register | Value |
+|-|-|
+AF | 08 00x1x000
+HL | 2454
+
+| Memory<br/>Address |Value |
+|-|-|
+2454 | 18
+
+
+## BIT - Bit Test
+
+**BIT** b,dst
+
+dst = R, IR, SX
+
+### Operation
+
+Z ← NOT dst(b)
+
+The specified bit b within the destination operand is tested, and the Zero flag is set to 1 if the specified bit is zero, otherwise the Zero flag is cleared to 0. The contents of the destination are unaffected. The bit to be tested is specified by a 3-bit field in the instruction; this field contains the binary encoding for the bit number to be tested. The bit number must be between 0 and 7.
+
+### Flags
+
+**S:** Unaffected
+
+**Z:** Set if the specified bit is zero; cleared otherwise
+
+**H:** Set
+
+**P:** Unaffected
+
+**N:** Cleared
+
+**C:** Unaffected
+
+### Exceptions
+
+None
+
+### Instruction Formats
+
+| Addressing<br/>Mode | Syntax | Instruction Format
+|-|-|-|
+R | BIT b,R | `11 001 011` `01  b   r `
+IR | BIT b,(HL) | `11 001 011` `01  b  110`
+SX | BIT b,(XY + d) | `11 *11 101` `11 001 011` `     d      ` `01  b  110`
+
+#### Field Encodings
+
+**\*:** 0 for IX, 1 for IY<br/>
+
+### Example
+
+BIT 1,A
+
+_Before instruction execution:_
+
+| Register | Value |
+|-|-|
+AF | 00010110 szxhxvnc
+
+_After instruction execution:_
+
+| Register | Value |
+|-|-|
+AF | 00010110 s0x1xp0c
+
+
+## CALL - Call
+
+**CALL** [cc,]dst
+
+dst = IR, DA, RA
+
+### Operation
+
+If the cc is satisfied then:<br/>
+SP ← SP - 2<br/>
+(SP) ← PC<br/>
+PC ← dst
+
+A conditional call transfers program control to the destination address if the setting of a selected flag satisfies the condition code "cc" specified in the instruction; an unconditional call always transfers control to the destination address. The current contents of the Program Counter (PC) are pushed onto the top of the stack; the PC value used is the address of the first instruction byte following the Call instruction. The destination address is then loaded into the PC and points to the first instruction of the called procedure. At the end of a procedure a return instruction (RET) can be used to return to the original program.
+
+Each of the Zero, Carry, Sign, and Overflow flags can be individually tested and a call performed conditionally on the setting of the flag.
+
+When using DA mode with the CALL instruction, the operand is not enclosed in parentheses.
+
+### Flags
+No flags affected
+
+### Exceptions
+
+System Stack Overflow Warning
+
+### Instruction Formats
+
+| Addressing<br/>Mode | Syntax | Instruction Format
+|-|-|-|
+IR | CALL cc,(HL) | `11 011 101` `11 cc  100` 
+|  | CALL (HL)    | `11 011 101` `11 011 101` `"unconditional call"`
+DA | CALL cc,addr | `11 cc  100` ` addr(low)  ` ` addr(high) `
+|  | CALL addr    | `11 001 101` ` addr(low)  ` ` addr(high) ` `"unconditional call"`
+RA | CALL cc,&lt;addr&gt; | `11 111 101` `11 cc  100`  ` disp(low)  ` ` disp(high) `
+|  | CALL &lt;addr&gt;    | `11 111 101` `11 001 101` ` disp(low)  ` ` disp(high) ` `"unconditional call"`
+
+### Field Encodings
+
+**cc:** 000 for NZ, 001 for Z, 010 for NC, 011 for C, 100 for PO or NV, 101 for PE or V, 110 for P or NS, 111 for M or S
+
+### Example
+
+CALL 2520H
+
+_Before instruction execution:_
+
+| Register | Value |
+|-|-|
+PC | 1630
+SP | FF26
+
+| Memory<br/>Address |Value |
+|-|-|
+FF24 | 00
+FF25 | 00
+
+_After instruction execution:_
+
+| Register | Value |
+|-|-|
+PC | 2520
+SP | FF24
+
+| Memory<br/>Address |Value |
+|-|-|
+FF24 | 33
+FF25 | 16
+
+
+## CCF - Complement Carry Flag
+
+*CCF*
+
+### Operation
+
+C ← NOT C
+
+The Carry flag is inverted.
+
+### Flags
+
+**S:** Unaffected
+
+**Z:** Unaffected
+
+**H:** The previous state of the Carry flag
+
+**P:** Unaffected
+
+**N:** Cleared
+
+**C:** Set if the Carry flag was clear before the operation; cleared otherwise
+
+### Exceptions
+
+None
+
+### Instruction Formats
+
+| Syntax | Instruction Format
+|-|-|
+CCF | `00 111 111`
+
+### Example
+
+CCF
+
+_Before instruction execution:_
+
+| Register | Value |
+|-|-|
+F | szxhxvn0
+
+_After instruction execution:_
+
+| Register | Value |
+|-|-|
+F | szx0xv01
+
+
+## CP - Compare (Byte)
+
+**CP** [A,]src
+
+src = R, RX, IM, IR, DA, X, SX, RA, SR, BX
+
+### Operation
+
+A - src
+
+The source operand is compared with the accumulator and the flags are set accordingly. The contents of the accumulator and the source are unaffected. Twos-complement subtraction is performed.
+
+### Flags
+
+**S:** Set if the result is negative; cleared otherwise
+
+**Z:** Set if the result is zero; cleared otherwise
+
+**H:** Set if there is a borrow from bit 4 of the result; cleared otherwise
+
+**V:** Set if arithmetic overflow occurs, that is, if the operands are of different signs and the result is the same sign as the source; cleared otherwise 
+
+**N:** Set
+
+**C:** Set if there is a borrow from the most significant bit of the result; cleared otherwise
+
+### Exceptions
+
+None
+
+### Instruction Formats
+
+| Addressing<br/>Mode | Syntax | Instruction Format
+|-|-|-|
+R  | CP A,R    | `10 111  r `
+RX | CP A,RX   | `11 *11 101` `10 111 rx `
+IM | CP A,n    | `11 111 110` `     n      `
+IR | CP A,(HL) | `10 111 110`
+DA | CP A,(addr)    | `11 011 101` `10 111 111` ` addr(low)  ` ` addr(high) `
+X  | CP A,(XX + dd) | `11 111 101` `10 111 xx ` ` addr(low)  ` ` addr(high) ` 
+SX | CP A,(XY + d)  | `11 *11 101` `10 111 110` `     d      `
+RA | CP A,&lt;addr&gt; | `11 111 101` `10 111 000` ` disp(low)  ` ` disp(high) `
+SR | CP A,(SP + dd) | `11 011 101` `10 111 000` `   d(low)   ` `  d(high)   `
+BX | CP A,(XXA + XXB) | `11 011 101` `10 111 bx `
+
+#### Field Encodings
+
+**\*:** 0 for IX, 1 for IY<br/>
+**rx:** 100 for high byte, 101 for low byte<br/>
+**xx:** 001 for (IX + dd), 010 for (IY + dd), 011 for (HL + dd)<br/>
+**bx:** 001 for (HL + IX), 010 for (HL + IY), 011 for (IX + IY)
+
+### Example
+
+CP A,(HL)
+
+_Before instruction execution:_
+
+| Register | Value |
+|-|-|
+AF | 48 szxhxvnc
+HL | 2454
+
+| Memory<br/>Address |Value |
+|-|-|
+2454 | 18
+
+_After instruction execution:_
+
+| Register | Value |
+|-|-|
+AF | 48 00x0x010
+HL | 2454
+
+| Memory<br/>Address |Value |
+|-|-|
+2454 | 18
+
+
+## CPD - Compare and Decrement
+
+**CPD**
+
+### Operation
+
+A - (HL)<br/>
+HL ← HL - 1<br/>
+BC ← BC - 1
+
+This instruction is used for searching strings of byte data. The byte of data at the location addressed by the HL register is compared with the contents of the accumulator and the Sign and Zero flags are set to reflect the result of the comparison. The contents of the accumulator and the memory bytes are unaffected. Twos-complement subtraction is performed. Next the HL register is decremented by one, thus moving the pointer to the previous element in the string. The BC register, used as a counter, is then decremented by one.
+
+### Flags
+
+**S:** Set if the result is negative; cleared otherwise
+
+**Z:** Set if the result is zero, indicating that the contents of the accumulator and the memory byte are equal; cleared otherwise
+
+**H:** Set if there is a borrow from bit 4 of the result; cleared otherwise
+
+**V:** Set if the result of decrementing BC is not equal to zero; cleared otherwise
+
+**N:** Set
+
+**C:** Unaffected
+
+### Exceptions
+
+None
+
+### Instruction Formats
+
+| Syntax | Instruction Format
+|-|-|
+CPD |`11 101 101` `10 101 001`
+
+### Example
+
+CPD
+
+_Before instruction execution:_
+
+| Register | Value |
+|-|-|
+AF | 3B szxhxvnc
+HL | 1215
+BC | 0001
+
+| Memory<br/>Address |Value |
+|-|-|
+1215 | 3B
+
+_After instruction execution:_
+
+| Register | Value |
+|-|-|
+AF | 3B 01x0x01c
+HL | 1214
+BC | 0000
+
+| Memory<br/>Address |Value |
+|-|-|
+1215 | 3B
+
+
+## CPDR - Compare, Decrement and Repeat
+
+**CPDR**
+
+### Operation
+
+Repeat until BC = 0 or match:<br/>
+A - (HL)<br/>
+HL ← HL - 1<br/>
+BC ← BC - 1
+
+This instruction is used for searching strings of byte data. The bytes of data starting at the location addressed by the HL register are compared with the contents of the accumulator until either an exact match is found or the string length is exhausted. The Sign and Zero flags are set to reflect the result of the last comparison. The contents of the accumulator and the memory bytes are unaffected. Twos-complement subtraction is performed.
+
+After each comparison, the HL register is decremented by one, thus moving the pointer to the previous element in the string. The BC register, used as a counter, is then decremented by one. If the result of decrementing the BC register is not zero and no match has been found, the process is repeated. If the contents of the BC register are zero at the start of this instruction, a string length of 65,536 bytes is indicated.
+
+This instruction can be interrupted after each execution of the basic operation. The Program Counter value of the start of this instruction is saved before the interrupt request is accepted, so that the instruction can be properly resumed.
+
+### Flags
+
+**S:** Set if the last result is negative; cleared otherwise
+
+**Z:** Set if the last result is zero, indicating that the contents of the accumulator and the memory byte are equal; cleared otherwise
+
+**H:** Set if there is a borrow from bit 4 of the last result; cleared otherwise
+
+**V:** Set if the result of decrementing BC is not equal to zero; cleared otherwise
+
+**N:** Set
+
+**C:** Unaffected
+
+### Exceptions
+
+None
+
+### Instruction Formats
+
+| Syntax | Instruction Format
+|-|-|
+CPDR | `11 101 101` `10 111 001`
+
+### Example
+
+CPDR
+
+_Before instruction execution:_
+
+| Register | Value |
+|-|-|
+AF | F3 szxhxvnc
+HL | 1118
+BC | 0007
+
+| Memory<br/>Address |Value |
+|-|-|
+1116 | F3
+1117 | 00
+1118 | 52
+
+_After instruction execution:_
+
+| Register | Value |
+|-|-|
+AF | F3 01x0x11c
+HL | 1115
+BC | 0004
+
+| Memory<br/>Address |Value |
+|-|-|
+1116 | F3
+1117 | 00
+1118 | 52
+
+
+## CPI - Compare and Increment
+
+**CPI**
+
+### Operation
+
+A - (HL)<br/>
+HL ← HL + 1<br/>
+BC ← BC - 1
+
+This instruction is used for searching strings of byte data. The byte of data at the location addressed by the HL register is compared with the contents of the accumulator and the Sign and Zero flags are set to reflect the result of the comparison. The contents of the accumulator and the memory bytes are unaffected. Twos-complement subtraction is performed.
+
+Next the HL register is incremented by one, thus moving the pointer to the next element in the string. The BC register, used as a counter, is then decremented by one.
+
+### Flags
+
+**S:** Set if the result is negative; cleared otherwise
+
+**Z:** Set if the result is zero, indicating that the contents of the accumulator and the memory byte are equal; cleared otherwise
+
+**H:** Set if there is a borrow from bit 4 of the result; cleared otherwise
+
+**V:** Set if the result of decrementing BC is not equal to zero; cleared otherwise
+
+**N:** Set
+
+**C:** Unaffected
+
+### Exceptions
+
+None
+
+### Instruction Formats
+
+| Syntax | Instruction Format
+|-|-|
+CPI | `11 101 101` `10 100 001`
+
+### Example
+
+CPI
+
+_Before instruction execution:_
+
+| Register | Value |
+|-|-|
+AF | 3B szxhxvnc
+HL | 1215
+BC | 0001
+
+| Memory<br/>Address |Value |
+|-|-|
+1215 | 3B
+
+_After instruction execution:_
+
+| Register | Value |
+|-|-|
+AF | 3B 01x0x01c
+HL | 1216
+BC | 0000
+
+| Memory<br/>Address |Value |
+|-|-|
+1215 | 3B
+
+
+## CPIR - Compare, Increment and Repeat
+
+**CPIR**
+
+### Operation
+
+Repeat until BC = 0 or match:<br/>
+A - (HL)<br/>
+HL ← HL + 1<br/>
+BC ← BC - 1
+
+This instruction is used for searching strings of byte data. The bytes of data starting at the location addressed by the HL register are compared with the contents of the accumulator until either an exact match is found or the string length is exhausted. The Sign and Zero flags are set to reflect the result of the comparison. The last contents of the accumulator and the memory bytes are unaffected. Twos-complement subtraction is performed.
+
+After each comparison, the HL register is incremented by one, thus moving the pointer to the next element in the string. The BC register, used as a counter, is then decremented by one. If the result of decrementing the BC register is not zero and no match has been found, the process is repeated. If the contents of the BC register are zero at the start of this instruction, a string length of 65,536 bytes is indicated.
+
+This instruction can be interrupted after each execution of the basic operation. The Program Counter value of the start of this instruction is saved before the interrupt request is accepted, so that the instruction can be properly resumed.
+
+### Flags
+
+**S:** Set if the last result is negative; cleared otherwise
+
+**Z:** Set if the last result is zero, indicating that the contents of the accumulator and the memory byte are equal; cleared otherwise
+
+**H:** Set if there is a borrow from bit 4 of the last result; cleared otherwise
+
+**V:** Set if the result of decrementing BC is not equal to zero; cleared otherwise
+
+**N:** Set
+
+**C:** Unaffected
+
+### Exceptions
+
+None
+
+### Instruction Formats
+
+| Syntax | Instruction Format
+|-|-|
+CPIR | `11 101 101` `10 110 001`
+
+### Example
+
+CPIR
+
+_Before instruction execution:_
+
+| Register | Value |
+|-|-|
+AF | F3 szxhxvnc
+HL | 1118
+BC | 0007
+
+| Memory<br/>Address |Value |
+|-|-|
+1118 | 25
+1119 | 00
+111A | F3
+
+_After instruction execution:_
+
+| Register | Value |
+|-|-|
+AF | F3 01x0x11c
+HL | 111B
+BC | 0004
+
+| Memory<br/>Address |Value |
+|-|-|
+1118 | 25
+1119 | 00
+111A | F3
+
+
+## CPL - Complement Accumulator
+
+**CPL** [A]
+
+### Operation
+
+A ← NOT A
+
+The contents of the accumulator are complemented (ones complement): all 1 bits are changed to 0 and vice-versa.
+
+### Flags
+
+**S:** Unaffected
+
+**Z:** Unaffected
+
+**H:** Set
+
+**V:** Unaffected
+
+**N:** Set
+
+**C:** Unaffected
+
+### Exceptions
+
+None
+
+### Instruction Formats
+
+| Syntax | Instruction Format
+|-|-|
+CPL A | `00 101 111`
+
+### Example
+
+CPL A
+
+_Before instruction execution:_
+
+| Register | Value |
+|-|-|
+AF | 28 szxhxvnc
+
+_After instruction execution:_
+
+| Register | Value |
+|-|-|
+AF | D7 szx1xv1c
+
+
+## CPW - Compare (Word)
+
+**CPW** [HL,]src
+
+src = R, IM, DA, X, RA
+
+### Operation
+
+HL - src
+
+The source operand is compared with the HL register and the flags are set accordingly. The contents of the source and HL are unaffected. Twos-complement subtraction is performed.
+
+### Flags
+
+**S:** Set if the result is negative; cleared otherwise
+
+**Z:** Set if the result is zero; cleared otherwise
+
+**H:** Set if there is a borrow from bit 12 of the result; cleared otherwise
+
+**V:** Set if arithmetic overflow occurs, that is, if the operands are of different signs and the result is the same sign as the source; cleared otherwise
+
+**N: Set**
+
+**C:** Set if there is a borrow from the most significant bit of the result; cleared otherwise
+
+### Exceptions
+
+None
+
+### Instruction Formats
+
+| Addressing<br/>Mode | Syntax | Instruction Format
+|-|-|-|
+R  | CPW HL,RR   | `11 101 101` `11 rr  111`
+|  | CPW HL,XY   | `11 *11 101` `11 101 101` `11 100 111`
+IM | CPW HL,nn   | `11 111 101` `11 101 101` `11 110 111` `   n(low)   ` `  n(high)   `
+DA | CPW HL,(addr)    | `11 011 101` `11 101 101` `11 010 111` ` addr(low)  ` ` addr(high) `
+X  | CPW HL,(XY + dd) | `11 111 101` `11 101 101` `10 0*0 111` `   d(low)   ` `  d(high)   ` 
+RA | CPW HL,&lt;addr&gt; | `11 011 101` `10 101 101` `11 110 111` ` disp(low)  ` ` disp(high) `
+IR | CPW HL,(HL) | `11 011 101` `11 101 101` `11 000 111`
+
+#### Field Encodings
+
+**\*:** 0 for IX, 1 for IY<br/>
+**rr:** 000 for BC, 010 for DE, 100 for HL, 110 for SP
+
+### Example
+
+CPW HL,DE
+
+_Before instruction execution:_
+
+| Register | Value |
+|-|-|
+F  | szxhxvnc
+DE | 0010
+HL | A123
+
+_After instruction execution:_
+
+| Register | Value |
+|-|-|
+F  | 10x0x010
+DE | 0010
+HL | A123
+
+
+## DAA - Decimal Adjust Accumulator
+
+**DAA**
+
+### Operation
+
+A ← Decimal Adjust A
+
+The accumulator is adjusted to form two 4-bit BCD digits following a binary, twos-complement addition or subtraction on two BCD-encoded bytes. The table below indicates the operation performed for addition (ADD, ADC, INC) or subtraction (SUB, SBC, DEC, NEG).
+
+#### Operation of DAA Instruction
+
+_For ADD, ADC, INC (N=0):_
+
+C Before<br/>DAA | Hex Value in<br/>Upper Digit<br/>(Bits 7-4) | H Before<br/>DAA | Hex Value in<br/>Lower Digit<br/>(Bits 3-0) | C After<br/>DAA | H After<br/>DAA | 
+|-|-|-|-|-|-|
+0 | 0-9 | 0 | 0-9 | 00 | 0 | 0
+0 | 0-8 | 0 | A-F | 06 | 0 | 1
+0 | 0-9 | 1 | 0-3 | 06 | 0 | 0
+0 | A-F | 0 | 0-9 | 60 | 1 | 0
+0 | 9-F | 0 | A-F | 66 | 1 | 1
+0 | A-F | 1 | 0-3 | 66 | 1 | 0
+1 | 0-2 | 0 | 0-9 | 60 | 1 | 0
+1 | 0-2 | 0 | A-F | 66 | 1 | 1
+1 | 0-3 | 1 | 0-3 | 66 | 1 | 0
+
+_For SUB, SBC, DEC, NEG (N=1):_
+
+C Before<br/>DAA | Hex Value in<br/>Upper Digit<br/>(Bits 7-4) | H Before<br/>DAA | Hex Value in<br/>Lower Digit<br/>(Bits 3-0) | C After<br/>DAA | H After<br/>DAA | 
+|-|-|-|-|-|-|
+0 | 0-9 | 0 | 0-9 | 00 | 0 | 0
+0 | 0-8 | 1 | 6-F | FA | 0 | 1
+1 | 7-F | 0 | 0-9 | A0 | 1 | 0
+1 | 6-F | 1 | 6-F | 9A | 1 | 1
+
+The operation is undefined if the accumulator was not the result of a binary addition or subtraction of BCD digits.
+
+### Flags
+
+**S:** Set if the most significant bit of the result is set; cleared otherwise
+
+**Z:** Set if the result is zero; cleared otherwise
+
+**H:** See table above
+
+**P:** Set if the parity of the result is even; cleared otherwise
+
+**N:** Not affected
+
+**C:** See table above
+
+### Exceptions
+
+None
+
+### Instruction Formats
+
+| Syntax | Instruction Format
+|-|-|
+DAA | `00 100 111`
+
+### Example
+
+DAA
+
+_Before instruction execution:_
+
+| Register | Value |
+|-|-|
+AF | 28 szx0xp01
+
+_After instruction execution:_
+
+| Register | Value |
+|-|-|
+AF | 88 00x0x001
+
+
+## DEC - Decrement (Byte)
+
+**DEC** dst
+
+dst = R, RX, IR, DA, X, SX, RA, SR, BX
+
+### Operation
+
+dst ← dst - 1
+
+The destination operand is decremented by one and the result is stored in the destination. Twos-complement subtraction is performed.
+
+### Flags
+
+**S:** Set if the result is negative; cleared otherwise
+
+**Z:** Set if the result is zero; cleared otherwise
+
+**H:** Set if there is a borrow from bit 4 of the result; cleared otherwise
+
+**V:** Set if arithmetic overflow occurs, that is, if the destination was 80h; cleared otherwise
+
+**N:** Set
+
+**C:** Unaffected
+
+### Exceptions
+
+None
+
+### Instruction Formats
+
+| Addressing<br/>Mode | Syntax | Instruction Format
+|-|-|-|
+R  | DEC R | `00  r  101`
+RX | DEC RX | `11 *11 101` `00 rx  101`
+IR | DEC (HL) | `00 110 101`
+DA | DEC (addr) | `11 011 101` `00 111 101` ` addr(low)  ` ` addr(high) `
+X  | DEC (XX + dd) | `11 111 101` `00 xx  101` `   d(low)   ` `  d(high)   `
+SX | DEC (XY + d)  | `11 *11 101` `00 110 101` `     d      `
+RA | DEC &lt;addr&gt; | `11 111 101` `00 000 101` ` disp(low)  ` ` disp(high) `
+SR | DEC (SP + dd) | `11 011 101` `00 000 101` `   d(low)   ` `  d(high)   `
+BX | DEC (XXA + XXB) | `11 011 101` `00 bx  101`
+
+#### Field Encodings
+
+**\*:** 0 for IX, 1 for IY<br/>
+**rx:** 100 for high byte, 101 for low byte<br/>
+**xx:** 001 for (IX + dd), 010 for (IY + dd), 011 for(HL + dd)<br/>
+**bx:** 001 for (HL + IX), 010 for (HL + IY), 011 for (IX + IY)
+
+
+### Example
+
+DEC (HL)
+
+_Before instruction execution:_
+
+| Register | Value |
+|-|-|
+F | szxhxvnc
+HL | 2454
+
+| Memory<br/>Address |Value |
+|-|-|
+2454 | 88
+
+_After instruction execution:_
+
+| Register | Value |
+|-|-|
+F | 10x0x01c
+HL | 2454
+
+| Memory<br/>Address |Value |
+|-|-|
+2454 | 87
+
+
+## DEC[W] - Decrement (Word)
+
+**DEC[W]** dst
+
+dst = R
+
+or
+
+**DECW** dst
+
+dst = IR, DA, X, RA
+
+### Operation
+
+dst ← dst - 1
+The destination operand is decremented by one. Twos-complement subtraction is performed.
+
+### Flags
+
+No flags affected
+
+### Exceptions
+
+None
+
+### Instruction Formats
+
+| Addressing<br/>Mode | Syntax | Instruction Format
+|-|-|-|
+R  | DECW RR | `00 rr  011`
+|  | DECW XY | `11 *11 101` `00 101 011`
+IR | DECW (HL) | `11 011 101` `00 001 011`
+DA | DECW (addr) | `11 011 101` `00 011 011` ` addr(low)  ` ` addr(high) `
+X  | DECW (XY + dd) | `11 111 101` `00 xy  011` `   d(low)   ` `  d(high)   `
+RA | DECW &lt;addr&gt; | `11 011 101` `00 111 011` ` disp(low)  ` ` disp(high) `
+
+#### Field Encodings
+
+**\*:** 0 for IX, 1 for IY<br/>
+**rr:** 001 for BC, 011 for DE, 101 for HL, 111 for SP<br/>
+**xy:** 001 for (IX + dd), 011 for (IY + dd)
+
+### Example
+
+DECW HL
+
+_Before instruction execution:_
+
+| Register | Value |
+|-|-|
+HL | 2308
+
+_After instruction execution:_
+
+| Register | Value |
+|-|-|
+HL | 2307
+
+
+## DI - Disable Interrupt
+
+**DI** mask
+
+Mask = Hex value between 0 and 7F<sub>H</sub>
+
+### Operation
+
+If mask(i) = 1 then MSR(i) ← 0
+
+The designated interrupt control bits in the Master Status register (MSR) are cleared to 0, thus disabling all interrupts on these inputs; all other interrupt enables in the MSR are unaffected. If no mask is present then all interrupts are disabled.
+
+Any combination of interrupt enables in the MSR can be specified. The seven bits in the mask field in the instruction correspond to the seven interrupt enable bits in the MSR, mask bit i corresponding to MSR bit i.
+
+### Flags
+
+No flags affected
+
+### Exceptions
+
+Privileged Instruction
+
+### Instruction Formats
+
+| Syntax | Instruction Format
+|-|-|
+DI | `11 110 011`
+DI mask | `11 101 101` `01 110 111` `    mask    `
+
+Mask = byte specifying which interrupts to disable: mask(i) corresponds to interrupt source i; mask(7) must be zero.
+
+### Eample
+
+DI 23H
+
+_Before instruction execution:_
+
+| Register | Value |
+|-|-|
+MSR | 007F
+
+_After instruction execution:_
+
+| Register | Value |
+|-|-|
+MSR | 005C
+
+
+## DIV - Divide (Byte)
+
+**DIV** [HL,]src
+
+src = R, RX, IM, DA, X, SX, RA, SR, BX
+
+### Operation
+
+A ← HL / src<br/>
+L ← remainder
+
+The contents of the HL register (dividend) are divided by the source operand (divisor) and the quotient is stored in the accumulator; the remainder is stored in the L register. The contents of the source and the H registef are unaffected. Both operands are treated as signed, twos-complement integers and division is performed so that the remainder is of the same sign as the dividend.
+
+There are three possible outcomes of the DIV instruction, depending on the division and the resulting quotient:
+
+CASE 1: If the quotient is within the range -2<sup>7</sup> to 2<sup>7</sup>-1 inclusive, then the quotient is left in the accumulator, the Overflow flag is cleared to 0, and the Sign and Zero flags are set according to the value of the quotient.
+
+CASE 2: If the divisor is zero, the accumulator remains unchanged, the Zero and Overflow flags are set to 1, and the Sign flag is cleared to 0. Then the Division Exception trap is taken.
+
+CASE 3: If the quotient is outside the range -2<sup>7</sup> to 2<sup>7</sup>-1, the accumulator remains unchanged, the Overflow flag is set to 1, and the Sign and Zero flags are cleared to 0. Then the Division Exception trap is taken.
+
+### Flags
+
+**S:** Cleared if V flag is set; else set if the quotient is negative, cleared otherwise
+
+**Z:** Set if the quotient or divisor is zero; cleared otherwise
+
+**H:** Unaffected
+
+**V:** Set if the divisor is zero or if the computed quptient lies outside the range from -2<sup>7</sup> to 2<sup>7</sup>-1; cleared otherwise
+
+**N:** Unaffected
+
+**C:** Unaffected
+
+### Exceptions
+
+Division Exception
+
+### Instruction Formats
+
+| Addressing<br/>Mode | Syntax | Instruction Format
+|-|-|-|
+R  | DIV HL,R  | `11 101 101` `11  r  100`
+RX | DIV HL,RX | `11 *11 101` `11 101 101` `11 rx  100`
+IM | DIV HL,n  | `11 111 101` `11 101 101` `11 111 100` `     n      `
+DA | DIV HL,(addr) | `11 011 101` `11 101 101` `11 111 100` ` addr(low)  ` ` addr(high) `
+X  | DIV HL,(XX + dd) | `11 111 101` `11 101 101` `11 xx  100` `   d(low)   ` `  d(high)   `
+SX | DIV HL,(XY + d)  | `11 *11 101` `11 101 101` `11 110 100` `     d      `
+RA | DIV HL,&lt;addr&gt; | `11 111 101` `11 101 101` `11 000 100` `disp(lop)` ` disp(high) `
+SR | DIV HL,(SP + dd)    | `11 011 101` `11 101 101` `11 000 100` `   d(low)   ` `  d(high)   `
+BX | DIV HL,(XXA + XXB)  | `11 011 101` `11 101 101` `11 bx  100`
+IR | DIV HL,(HL) | `11 101 101` `11 100 100`
+
+#### Field Encodings
+
+**\*:** 0 for IX, 1 for IY<br/>
+**rx:** 100 for high byte, 101 for low byte<br/>
+**xx:** 001 for (IX + dd), 010 for (IY + dd), 011 for (HL + dd)<br/>
+**bx:** 001 for (HL + IX), 010 for (HL + IY), 011 for (IX + IY)
+
+### Eample
+
+DIV HL,C
+
+_Before instruction execution:_
+
+| Register | Value |
+|-|-|
+AF | 55 szxhxvnc
+C  | FE
+HL | FFFD
+
+_After instruction execution:_
+
+| Register | Value |
+|-|-|
+AF | 01 00xhx0nc
+C  | FE
+HL | FFFF
+
+
+## DIVU - Divide Unsigned (Byte)
+
+**DIVU** [HL,]src
+
+src = R, RX, IM, DA, X, SX, RA, SR, BX
+
+### Operation
+
+A ← HL / src<br/>
+L ← remainder
+
+The contents of the HL register (dividend) are divided by the source operand (divisor) and the quotient is stored in the accumulator; the remainder is stored in the L register. The contents of the source and the H register are not affected. Both operands are treated as unsigned, binary integers.
+
+There are three possible outcomes of the DIVU instruction, depending on the division and the resulting quotient:
+
+CASE 1: If the quotient is less than 2<sup>8</sup>, then the quotient is left in the accumulator, the Overflow and Sign flagw are cleared to 0 and the Zero flag is set according to the value of the quotient.
+
+CASE 2: If the divisor is zero, the accumulator remains unchanged, the Zero and Overflow flags are set to 1 and the Sign flag is cleared to 0. Then the Division Exception trap is taken.
+
+CASE 3: If the quotient is greater than or equal to 2<sup>8</sup>, the accumulator remains unchanged, the Overflow flag is set to 1, and the Sign and Zero flags are cleared to 0. Then the Division Exception trap is taken.
+
+### Flags
+
+**S:** Cleared
+
+**Z:** Set if the quotient or divisor is zero; cleared otherwise
+
+**H:** Unaffected
+
+**V:** Set if the divisor is zero or if the computed quotient is greater than or equal to 2<sup>8</sup>; cleared otherwise
+
+**N:** Unaffected
+
+**C:** Unaffected
+
+### Exceptions
+
+Division Exception
+
+### Instruction Formats
+
+| Addressing<br/>Mode | Syntax | Instruction Format
+|-|-|-|
+R  | DIVU HL,R  | `11 101 101` `11  r  101`
+RX | DIVU HL,RX | `11 *11 101` `11 101 101` `11 rx  101`
+IM | DIVU HL,n  | `11 111 101` `11 101 101` `11 111 101` `     n      `
+DA | DIVU HL,(addr) | `11 011 101` `11 101 101` `11 111 101` ` addr(low)  ` ` addr(high) `
+X  | DIVU HL,(XX + dd) | `11 111 101` `11 101 101` `11 xx  101` `   d(low)   ` `  d(high)   `
+SX | DIVU HL,(XY + d)  | `11 *11 101` `11 101 101` `11 110 101` `     d      `
+RA | DIVU HL,&lt;addr&gt; | `11 111 101` `11 101 101` `11 000 101` `disp(lop)` ` disp(high) `
+SR | DIVU HL,(SP + dd)    | `11 011 101` `11 101 101` `11 000 101` `   d(low)   ` `  d(high)   `
+BX | DIVU HL,(XXA + XXB)  | `11 011 101` `11 101 101` `11 bx  101`
+IR | DIVU HL,(HL) | `11 101 101` `11 110 101`
+
+#### Field Encodings
+
+**\*:** 0 for IX, 1 for IY<br/>
+**rx:** 100 for high byte, 101 for low byte<br/>
+**xx:** 001 for (IX + dd), 010 for (IY + dd), 011 for (HL + dd)<br/>
+**bx:** 001 for (HL + IX), 010 for (HL + IY), 011 for (IX + IY)
+
+### Eample
+
+DIVU HL,C
+
+_Before instruction execution:_
+
+| Register | Value |
+|-|-|
+AF | 55 szxhxvnc
+C  | 02
+HL | 0101
+
+_After instruction execution:_
+
+| Register | Value |
+|-|-|
+AF | 80 00xhx0nc
+C  | 02
+HL | 0101
+
+
+## DIVUW - Divide Unsigned (Word)
+
+**DIVUW** [DEHL],src
+
+src = R, IM, DA, X, RA
+
+### Operation
+
+HL ← DEHL / src<br/>
+DE ← remainder
+
+The contents of the DE and HL registers (with the most significant bits of the dividend in the DE register) are divided by the source operand (divisor) and the quotient is stored in the HL register and the remainder in the DE register. The contents of the source are unaffected. Both operands are treated as unsigned, binary integers.
+
+There are three possible outcomes of the DIVUW instruction, depending on the division and the resulting quotient:
+
+CASE 1: If the quotient is less than 2<sup>16</sup>, then the quotient is left in the HL register and the remainder is left in the DE register, the Overflow and Sign flags are cleared to 0, and the Zero flag is set according to the value of the quotient.
+
+CASE 2: If the divisor is zero, the DE and HL registers remain unchanged, the Zero and Overflow flags are set to 1, and the Sign flag is cleared to 0. Then the Division Exception trap is taken.
+
+CASE 3: If the quotient is greater than 2<sup>16</sup> -1, then the DE and HL registers remain unchanged, the Overflow flag is set to 1, and the Zero and Sign flags are cleared to 0. Then the Division Exception trap is taken.
+
+### Flags
+
+**S:** Cleared
+
+**Z:** Set if the quotient or divisor is zero; cleared otherwise
+
+**H:** Unaffected
+
+**V:** Set if the divisor is zero or if the computed quotient is greater than or equal to cleared otherwise
+
+**N:** Unaffected
+
+**C:** Unaffected
+
+### Exceptions
+
+Division Exception
+
+### Instruction Formats
+
+| Addressing<br/>Mode | Syntax | Instruction Format
+|-|-|-|
+R |  DIVUW DEHL,RR | `11 101 101` `11 rr  011`
+| |  DIVUW DEHL,XY | `11 *11 101` `11 101 101` `11 101 011`
+IM | DIVUW DEHL,nn | `11 111 101` `11 101 101` `11 111 011` `   n(low)   ` `  n(high)   `
+DA | DIVUW DEHL,(addr) | `11 011 101` `11 101 101` `11 011 011` ` addr(low)  ` ` addr(high) `
+X  | DIVUW DEHL,(XY + dd) | `11 111 101` `11 101 101` `11 xy  011` ` disp(low)  ` ` disp(high) `
+RA | DIVUW DEHL,&lt;addr&gt; | `11 011 101` `11 101 101` `11 111 011` ` disp(low)  ` ` disp(high) `
+IR | DIVUW DEHL,(HL) | `11 011 101` `11 101 101` `11 001 011`
+
+#### Field Encodings
+
+**\*:** 0 for IX, 1 for IY<br/>
+**rr:** 001 for BC, 011 for DE, 101 for HL, 111 for SP<br/>
+**xy:** 001 for (IX + dd), 011 for (IY + dd)
+
+### Eample
+
+DIVUW DEHL,6
+
+_Before instruction execution:_
+
+| Register | Value |
+|-|-|
+F  | szxhxvnc
+DE | 0000
+HL | 0022
+
+_After instruction execution:_
+
+| Register | Value |
+|-|-|
+F  | 00xhx0nc
+DE | 0004
+HL | 0005
+
+
+## DIVW - Divide (Word)
+
+**DIVW** [DEHL],src
+
+src = R, IM, DA, X, RA
+
+### Operation
+
+HL ← DEHL / src<br/>
+DE ← remainder
+
+The contents of the DE and HL registers (with the DE register containing the most significant bits of the dividend) are divided by the source operand (divisor) and the quotient is stored in the HL register. The contents of the source are unaffected. Both operands are treated as signed, twos-complement integers and division is performed so that the remainder is of the same sign as the dividend.
+
+There are three possible outcomes of the DIVW instruction, depending on the division and the resulting quotient:
+
+CASE 1: If the quotient is within the range -2<sup>15</sup> to 2<sup>15</sup>-1 inclusive, then the quotient is left in the HL register and the remainder is left in the DE register, the Overflow flag is cleared to 0, and the Sign and Zero flags are set according to the value of the quotient.
+
+CASE 2: If the divisor is zero, the DE and HL registers remain unchanged, the Zero and Overflow flags are set to 1, and the Sign flag is cleared to 0. Then the Division Exception trap is taken.
+
+CASE 3: If the quotient is outside the range -2<sup>15</sup> to 2<sup>15</sup>-1, the DE and HL registers remain unchanged, the Overflow flag is set to 1, and the Sign and Zero flags are cleared to 0. Then the Division Exception trap is taken.
+
+### Flags
+
+**S:** Cleared if V flag is set; else set if the quotient is negative, cleared otherwise
+
+**Z:** Set if the quotient or divisor is zero; cleared otherwise
+
+**H:** Unaffected
+
+**V:** Set if the divisor is zero or if the computed quotient lies outside the range from -2<sup>15</sup> to 2<sup>15</sup>-1; cleared otherwise
+
+**N:** Unaffected
+
+**C:** Unaffected
+
+### Exceptions
+
+Division Exception
+
+### Instruction Formats
+
+| Addressing<br/>Mode | Syntax | Instruction Format
+|-|-|-|
+R |  DIVW DEHL,RR | `11 101 101` `11 rr  010`
+| |  DIVW DEHL,XY | `11 *11 101` `11 101 101` `11 101 010`
+IM | DIVW DEHL,nn | `11 111 101` `11 101 101` `11 111 010` `   n(low)   ` `   n(high)  `
+DA | DIVW DEHL,(addr) | `11 011 101` `11 101 101` `11 011 010` ` addr(low)  ` ` addr(high) `
+X  | DIVW DEHL,(XY + dd) | `11 111 101` `11 101 101` `11 xy  010` ` disp(low)  ` ` disp(high) `
+RA | DIVW DEHL,&lt;addr&gt; | `11 011 101` `11 101 101` `11 111 010` ` disp(low)  ` ` disp(high) `
+IR | DIVW DEHL,(HL) | `11 011 101` `11 101 101` `11 001 010`
+
+#### Field Encodings
+
+**\*:** 0 for IX, 1 for IY<br/>
+**rr:** 001 for BC, 011 for DE, 101 for HL, 111 for SP<br/>
+**xy:** 001 for (IX + dd), 011 for (IY + dd)
+
+### Eample
+
+DIUW DEHL,6
+
+_Before instruction execution:_
+
+| Register | Value |
+|-|-|
+F  | szxhxvnc
+DE | 0000
+HL | 0022
+
+_After instruction execution:_
+
+| Register | Value |
+|-|-|
+F  | 00xhx0nc
+DE | 0004
+HL | 0005
+
+
+## DJNZ - Decrement and Jump if Non-Zero
+
+**DJNZ** dst
+
+dst = RA
+
+### Operation
+
+B ← B - 1<br/>
+if B != 0 then PC ← dst
+
+The B register is decremenjted by one. If the result is non-zero, then the destination address is calculated and theh loaded into the Program Counter (PC). Control then passes to the instruction whose address is pointed to by the PC. When the B register reaches zero, control falls through to the instruction following DJNZ. This instruction provides a simple method of loop control.
+
+The destination address is calculated using Relative addressing. The displacement in the instruction is added to the PC; the PC value used is the address of the instruction following the DJNZ instruction. The 8-bit displacement is treated as a signed, twos-complement integer. Thus the branching range from the location of this instruction is -126 to +129 bytes.
+
+### Flags
+
+No flags affected
+
+### Exceptions
+
+None
+
+### Instruction Formats
+
+| Syntax | Instruction Format
+|-|-|
+DJNZ addr | `00 010 000` `    disp    `
+
+### Eample
+
+DJNZ 1050H
+
+_Before instruction execution:_
+
+| Register | Value |
+|-|-|
+B  | 12
+PC | 1076
+
+_After instruction execution:_
+
+| Register | Value |
+|-|-|
+B  | 11
+PC | 1050
+
+
+## EI - Enable Interrupt
+
+**EI** mask
+
+Mask = Hex value between 0 and 7F<sub>H</sub>
+
+### Operation
+
+If mask(i) = 1 then MSR(i) ← 1
+
+The designated control bits in the Master Status register (MSR) are set to 1, thus enabling interrupts on these inputs; all other interrupt enables in the MSR are unaffected. Note that during the execution of this instruction and the following instruction, all maskable interrupts (whether previously enabled or not) are automatically disabled for the duration of these two instructions.
+
+Any combination of interrupt enables in the MSR can be specified. The seven bits in the mask field in the instruction correspond to the seven interrupt enable bits in the MSR, mask bit i corresponding to MSR bit i. If no mask is present, all interrupts are enabled.
+
+### Flags
+
+No flags affected
+
+### Exceptions
+
+Privileged Instruction
+
+### Instruction Formats
+
+Syntax | Instruction Format
+|-|-|
+EI | `11 111 011`
+EI mask | `11 101 101` `01 111 111` `    mask    `
+
+Mask = byte specifying which interrupts to disable: mask(i) corresponds to interrupt source i; mask(7) must be zero.
+
+### Example
+
+EI 49H
+
+_Before instruction execution:_
+
+| Register | Value |
+|-|-|
+MSR | 0000
+
+_After instruction execution:_
+
+| Register | Value |
+|-|-|
+MSR | 0049
+
+
+## EX - Exchange Accumulator/Flag with Alternate Bank
+
+**EX** AF,AF'
+
+### Operation
+
+AF ↔ AF'
+
+The control bit mapping the accumulator and flag registers into the primary bank or the auxiliary bank is complemented, thus effectively exchanging the accumulator and flag registers between the two banks.
+
+### Flags
+
+Loaded from F'
+
+### Exceptions
+
+None
+
+### Instruction Formats
+
+Syntax | Instruction Format
+|-|-|
+EX AF,AF' | `00 001 000`
+
+### Example
+
+EX AF,AF'
+
+_Before instruction execution:_
+
+| Register | Value |
+|-|-|
+AF  | 23F3
+AF' | 10B0
+
+_After instruction execution:_
+
+| Register | Value |
+|-|-|
+AF  | 10B0
+AF' | 23F3
+
+
+## EX - Exchange Addressing Register with Top of Stack
+
+**EX** (SP),dst
+
+dst = HL, IX, IY
+
+### Operation
+
+(SP) ↔ dst
+
+The contents of the destination register are exchanged with the contents of the top of stack. That is, the low-order byte contained in the register is exchanged with the contents of the memory address specified by the Stack Pointer (SP), and the high-order byte of the register is exchanged with the contents of the next highest memory address (SP + 1).
+
+### Flags
+
+No flags affected
+
+### Exceptions
+
+None
+
+### Instruction Formats
+
+Syntax | Instruction Format
+|-|-|
+EX (SP),HL | `11 100 011`
+EX (SP),XY | `11 *11 101` `11 100 011`
+
+#### Field Encoding
+
+**\*:** 0 for IX, 1 for IY
+
+### Example
+
+EX (SP),HL
+
+_Before instruction execution:_
+
+| Register | Value |
+|-|-|
+HL | 2193
+SP | 8200
+
+| Memory<br/>Address |Value |
+|-|-|
+8200 | 2A
+8201 | B3
+
+_After instruction execution:_
+
+| Register | Value |
+|-|-|
+HL | B32A
+SP | 8200
+
+| Memory<br/>Address |Value |
+|-|-|
+8200 | 93
+8201 | 21
+
+
+## EX - Exchange H and L
+
+**EX** H,L
+
+### Operation
+
+H ↔ L
+
+The contents of the H and L registers are exchanged.
+
+### Flags
+
+No flags affected
+
+### Exceptions
+
+None
+
+### Instruction Formats
+
+Syntax | Instruction Format
+|-|-|
+EX H,L | `11 101 101` `11 101 111`
+
+### Example
+
+EX H,L
+
+_Before instruction execution:_
+
+| Register | Value |
+|-|-|
+HL  | 1234
+
+_After instruction execution:_
+
+| Register | Value |
+|-|-|
+HL  | 3421
+
+
+## EX - Exchange HL with Addressing Register
+
+**EX** src,HL
+
+src = DE, IX, IY
+
+### Operation
+
+src ↔ HL
+
+The contents of the HL register are exchanged with the contents of the source.
+
+### Flags
+
+No flags affected
+
+### Exceptions
+
+None
+
+### Instruction Formats
+
+Syntax | Instruction Format
+|-|-|
+EX DE,HL | `11 101 011`
+EX XY,HL | `11 *11 101` `11 101 011`
+
+#### Field Encoding
+
+**\*:** 0 for IX, 1 for IY
+
+### Example
+
+EX HL,DE
+
+_Before instruction execution:_
+
+| Register | Value |
+|-|-|
+DE  | 82E0
+HL  | 38FF
+
+_After instruction execution:_
+
+| Register | Value |
+|-|-|
+DE  | 38FF
+HL  | 82E0
+
+
+## EX - Exchange with Accumulator
+
+**EX** A,src
+
+src = R, RX, IR, DA, X, SX, RA, SR, BX
+
+### Operation
+
+src ↔ A
+
+The contents of the accumulator are exchanged with the contents of the source.
+
+### Flags
+
+No flags affected
+
+### Exceptions
+
+None
+
+### Instruction Formats
+
+| Addressing<br/>Mode | Syntax | Instruction Format
+|-|-|-|
+R  | EX A,R  | `11 101 101` `00  r  111`
+RX | EX A,RX | `11 *11 101` `11 101 101` `00 rx  111`
+IR | EX A,(HL) | `11 101 101` `00 110 111`
+DA | EX A,(addr) | `11 011 101` `11 101 101` `00 111 111` ` addr(low)  ` ` addr(high) `
+X  | EX A,(XX + dd) | `11 111 101` `11 101 101` `00 xx  111` `   d(low)   ` `  d(high)   `
+SX | EX A,(XY + d)  | `11 *11 101` `11 101 101` `00 110 111` `     d      `
+RA | EX A,&lt;addr&gt; | `11 111 101` `11 101 101` `00 000 111` ` disp(low)  ` ` disp(high) `
+SR | EX A,(SP + dd)    | `11 011 101` `11 101 101` `00 000 111` `   d(low)   ` `  d(high)   `
+BX | EX A,(XXA + XXB) | `11 011 101` `11 101 101` `00 bx  111`
+
+#### Field Encodings
+
+**\*:** 0 for IX, 1 for IY<br/>
+**rx:** 100 for high byte, 101 for low byte<br/>
+**xx:** 001 for (IX + dd), 010 for (IY + dd), 011 for (HL + dd)<br/>
+**bx:** 001 for (HL + IX), 010 for (HL + IY), 011 for (IX + IY)
+
+### Example
+
+EX A,B
+
+_Before instruction execution:_
+
+| Register | Value |
+|-|-|
+A | 03
+B | 82
+
+_After instruction execution:_
+
+| Register | Value |
+|-|-|
+A | 82
+B | 03
+
+
+## EXTS - Extend Sign (Byte)
+
+**EXTS** [A]
+
+### Operation
+
+L ← A<br/>
+If A(7) = 0, then H ← 00 else H ← FF
+
+The contents of the accumulator, considered as a signed, twos-complement integer, are sign-extended to 16 bits and the result is stored in the HL register. The contents of the accumulator are unaffected. This instruction is useful for conversion of short signed operands to longer signed operands.
+
+### Flags
+
+No flags affected
+
+### Exceptions
+
+None
+
+### Instruction Formats
+
+| Syntax | Instruction Format
+|-|-|
+EXTS A | `11 101 101` `01 100 100`
+
+### Example
+
+EXTS A
+
+_Before instruction execution:_
+
+| Register | Value |
+|-|-|
+A | 82
+HL | 5555
+
+_After instruction execution:_
+
+| Register | Value |
+|-|-|
+A | 82
+HL | FF82
+
+
+## EXTS - Extend Sign (Word)
+
+**EXTS** HL 
+
+### Operation
+
+If H(7) = 0, then DE ← 0000 else DE ← FFFF
+
+The contents of the HL register, considered as a signed, twos-complement integer, are sign-extended to 32 bits and the result is stored in the DE and HL registers, with the DE register containing the most significant bits. This instruction is useful for conversion of signed operands to larger signed operands.
+
+### Flags
+
+No flags affected
+
+### Exceptions
+
+None
+
+### Instruction Formats
+
+| Syntax | Instruction Format
+|-|-|
+EXTS HL | `11 101 101` `01 101 100`
+
+### Example
+
+EXTS HL
+
+_Before instruction execution:_
+
+| Register | Value |
+|-|-|
+DE | 032F
+HL | EF30
+
+_After instruction execution:_
+
+| Register | Value |
+|-|-|
+DE | FFFF
+HL | EF30
+
+
+## EXX - Exchange Byte/Word Registers with Alternate Bank
+
+**EXX**
+
+### Operation
+
+BC ↔ BC'<br/>
+DE ↔ DE'<br/>
+HL ↔ HL'
+
+The control bit mapping the byte/word registers into the primary or auxiliary bank of the CPU registers is complemented, thus effectively exchanging the B, C, D, E, H, and L registers between the two banks.
+
+### Flags
+
+No flags affected
+
+### Exceptions
+
+None
+
+### Instruction Formats
+
+| Syntax | Instruction Format
+|-|-|
+EXX | `11 011 001`
+
+### Example
+
+EXX
+
+_Before instruction execution:_
+
+| Register | Value |
+|-|-|
+BC | 23A0
+DE | 1653
+HL | 24FF
+BC' | 380F
+DE' | E200
+HL' | 1FA3
+
+
+_After instruction execution:_
+
+| Register | Value |
+|-|-|
+BC | 380F
+DE | E200
+HL | 1FA3
+BC' | 23A0
+DE' | 1653
+HL' | 24FF
+
+
+## HALT - Halt
+
+**HALT**
+
+### Operation
+
+CPU Halts
+
+The CPU operation is suspended until an interrupt or reset request is received. This instruction is used to synchronize the Z280 MPU with external events, preserving its state until an interrupt or reset request is accepted. After an interrupt is serviced, the instruction following HALT is executed. While halted, memory refresh cycles still occur, and bus requests are honored.
+
+For the Z80 Bus configuration of the Z280 MPU, the <u>HALT</u> signal is asserted when the Halt instruction is executed and remains asserted until an interrupt or reset request is accepted. For the Z-BUS configurations of the Z280 MPU, a special Halt bus transaction is performed when the halt instruction is executed.
+
+If the Breakpoint-on-Halt control bit in the Master Status register is set to 1, the Halt instruction is not executed, and Breakpoint-on-Halt trap is taken instead.
+
+### Flags
+
+No flags affected
+
+### Exceptions
+
+Breakpoint, Privileged Instruction
+
+### Instruction Formats
+
+| Syntax | Instruction Format
+|-|-|
+HALT | `01 110 110`
+
+
+## IM - Interrupt Mode Select
+
+**IM** p
+
+p = 0, 1,2, 3
+
+### Operation
+
+Interrupt Mode ← p
+
+The interrupt mode of operation is set to one of four modes (see Chapter 6 for a description of the various modes for responding to interrupts). The current interrupt mode can be read from the Interrupt Status register.
+
+### Flags
+
+No flags affected
+
+### Exceptions
+
+Privileged Instruction
+
+### Instruction Formats
+
+| Syntax | Instruction Format
+|-|-|
+IM p | `11 101 101` `01  t  110`
+
+p<br/>mode | t<br/>encoding
+|-|-|
+0 | 000
+1 | 010
+2 | 011
+3 | 001
+
+### Example
+
+IM 3
+
+_Before instruction execution:_
+
+| Register | Value |
+|-|-|
+Interrupt status register | F000
+
+_After instruction execution:_
+
+| Register | Value |
+|-|-|
+Interrupt status register | F300
+
+
+## IN - Input
+
+**IN** dst,(C)
+
+dst = R, RX, DA, X, RA, SR, BX
+
+### Operation
+
+dst ← (C)
+
+The byte of data from the selected peripheral is loaded into the destination. During the I/O transaction, the peripheral address from the C register is placed on the low byte of the address bus, the contents of the B register are placed on address lines A<sub>8</sub>-A<sub>15</sub> and the contents of the I/O Page register are placed on address lines A<sub>16</sub>-A<sub>23</sub>. The byte of data from the peripheral is then loaded ihto the destination.
+
+### Flags
+
+**S:** Set if the input data is negative; cleared otherwise
+
+**Z:** Set if the input data is zero; cleared otherwise
+
+**H:** Cleared
+
+**V:** Set if the input data has even parity; cleared otherwise
+
+**N:** Cleared
+
+**C:** Unaffected
+
+### Exceptions
+
+Privileged Instruction (if the Inhibit User I/O bit in the Trap Control register is set to 1)
+
+### Instruction Formats
+
+| Addressing<br/>Mode | Syntax | Instruction Format
+|-|-|-|
+R  | IN R,(C)  | `11 101 101` `01  r  000`
+RX | IN RX,(C) | `11 *11 101` `11 101 101` `01 rx  000`
+DA | IN (addr),(C)       | `11 011 101` `11 101 101` `01 111 000` ` addr(low)  ` ` addr(high) `
+X  | IN (XX + dd),(C)    | `11 111 101` `11 101 101` `01 xx  000` `   d(low)   ` `  d(high)   `
+RA | IN &lt;addr&gt;,(C) | `11 111 101` `11 101 101` `01 000 000` ` disp(low)  ` ` disp(high) `
+SR | IN (SP + dd),(C)    | `11 011 101` `11 101 101` `01 000 000` `   d(low)   ` `  d(high)   `
+BX | IN (XXA + XXB),(C)  | `11 011 101` `11 101 101` `01 bx  000`
+
+#### Field Encodings
+
+**\*:** 0 for IX, 1 for IY<br/>
+**rx:** 100 for high byte, 101 for low byte<br/>
+**xx:** 001 for (IX + dd), 010 for (IY + dd), 011 for (HL + dd)<br/>
+**bx:** 001 for (HL + IX), 010 for (HL + IY), 011 for (IX + IY)
+
+### Example
+
+IN L,(C)
+
+_Before instruction execution:_
+
+| Register | Value |
+|-|-|
+F | szxhxvnc
+BC | 1650
+HL | 0023
+I/O page<br/>register | 11
+
+Byte 76<sub>H</sub> available at I/O port 111650<sub>H</sub>
+
+_After instruction execution:_
+
+| Register | Value |
+|-|-|
+F | 00x0x00c
+BC | 1650
+HL | 0076
+
+
+## IN - Input Accumulator
+
+**IN** A,(n)
+
+### Operation
+
+A ← (n)
+
+The byte of data from the selected peripheral is loaded into the accumulator. During the I/O transaction, the 8-bit peripheral address from the instruction is placed on the low byte of the address bus, the contents of the accumulator are placed on address lines A<sub>8</sub>-A<sub>15</sub> and the contents of the I/O Page register are placed on address lines A<sub>16</sub>-A<sub>23</sub>. The byte of data from the selected port is written into the accumulator.
+
+### Flags
+
+No flags affected
+
+### Exceptions
+
+Privileged Instruction (if the Inhibit User I/O bit in the Trap Control register is set to 1)
+
+### Instruction Formats
+
+| Syntax | Instruction Format
+|-|-|
+IN A,(n) | `11 011 011` `     n      `
+
+### Example
+
+IN A,(66H)
+
+_Before instruction execution:_
+
+| Register | Value |
+|-|-|
+A | 42
+I/O page<br/>register | 11
+
+Byte FD<sub>H</sub> available at I/O port 114266<sub>H</sub>
+
+_After instruction execution:_
+
+| Register | Value |
+|-|-|
+A | FD
+
+
+## INC - Increment (Byte)
+
+**INC** dst
+
+dst = R, RX, IR, DA, X, SX, RA, SR, BX
+
+### Operation
+
+dst ← dst +1
+
+The destination operand is incremented by one and the sum is stored in the destination. Twos-complement addition is performed.
+
+### Flags
+
+**S:** Set if the result is negative; cleared otherwise
+
+**Z:** Set if the result is zero; cleared otherwise
+
+**H:** Set if there is a carry from bit 3 of the result; cleared otherwise
+
+**V:** Set if arithmetic overflow occurs, that is, if the destination was 7F<sub>H</sub>; cleared otherwise
+
+**N:** Cleared
+
+**C:** Unaffected
+
+### Exceptions
+
+None
+
+### Instruction Formats
+
+| Addressing<br/>Mode | Syntax | Instruction Format
+|-|-|-|
+R  | INC R    | `00  r  100`
+RX | INC RX   | `11 *11 101` `00 rx  100`
+IR | INC (HL) | `00 110 100`
+DA | INC (addr) | `11 011 101` `00 111 100` ` addr(low)  ` ` addr(high) `
+X  | INC (XX + dd) | `11 111 101` `00 xx  100` `   d(low)   ` `  d(high)   `
+SX | INC (XY + d) | `11 *11 101` `00 110 100` `     d      `
+RA | INC &lt;addr&gt; | `11 111 101` `00 000 100` ` disp(low)  ` ` disp(high) `
+SR | INC (SP + dd) | `11 011 101` `00 000 100` `   d(low)   ` `  d(high)   `
+BX | INC (XXA + XXB) | `11 011 101` `00 bx  100`
+
+#### Field Encodings
+
+**\*:** 0 for IX, 1 for IY<br/>
+**rx:** 100 for high byte, 101 for low byte<br/>
+**xx:** 001 for (IX + dd), 010 for (IY + dd), 011 for (HL + dd)<br/>
+**bx:** 001 for (HL + IX), 010 for (HL + IY), 011 for (IX + IY)
+
+### Example
+
+INC (HL)
+
+_Before instruction execution:_
+
+| Register | Value |
+|-|-|
+F  | szxhxvnc
+HL | 2454
+
+| Memory<br/>Address |Value |
+|-|-|
+2454 | 88
+
+_After instruction execution:_
+
+| Register | Value |
+|-|-|
+F | 100x0x00c
+HL | 2454
+
+| Memory<br/>Address |Value |
+|-|-|
+2454 | 89
+
+
+## INC[W] - Increment (Word)
+
+**INC[W]** dst<br/>
+dst = R
+
+or
+
+**INCW** dst<br/>
+dst = IR, DA, X, RA
+
+### Operation
+
+dst ← dst + 1
+
+The destination operand is incremented by one. Twos-complement addition is performed.
+
+### Flags
+
+No flags affected
+
+### Exceptions
+
+None
+
+### Instruction Formats
+
+| Addressing<br/>Mode | Syntax | Instruction Format
+|-|-|-|
+R  | INCW R  | `00 rr  011`
+|  | INCW XY | `11 *11 101` `00 100 011`
+IR | INCW (HL) | `11 011 101` `00 000 011`
+DA | INCW (addr) | `11 011 101` `00 010 011` ` addr(low)  ` ` addr(high) `
+X  | INCW (XY + dd) | `11 111 101` `00 xy  011` `   d(low)   ` `  d(high)   `
+RA | INCW &lt;addr&gt; | `11 011 101` `00 110 011` ` disp(low)  ` ` disp(high) `
+
+#### Field Encodings
+
+**\*:** 0 for IX, 1 for IY<br/>
+**rr:** 000 for BC, 010 for DE, 100 for HL, 110 for SP<br/>
+**xy:** 000 for (IX + dd), 010 for (IY + dd)
+
+### Example
+
+INCW BC
+
+_Before instruction execution:_
+
+| Register | Value |
+|-|-|
+BC | 3F12
+
+_After instruction execution:_
+
+| Register | Value |
+|-|-|
+BC | 3F13
+
+
+## IND - Input and Decrement (Byte, Word)
+
+**IND**<br/>
+**INDW**
+
+### Operation
+
+(HL) ← (C)<br/>
+B ← B - 1<br/>
+HL ← AUTODECREMENT HL (by one if byte, by two if word)
+
+This instruction is used for block input of strings of data. During the I/O transaction, the peripheral address from the C register is placed on the low byte of the address bus, the contents of the B register are placed on address lines A<sub>8</sub>-A<sub>15</sub>, and the contents of the I/O Page register are placed on address lines A<sub>16</sub>-A<sub>23</sub>. The byte or word of data from the selected peripheral is then loaded into the memory location addressed by the HL register. The HL register is then decremented by one for byte transfers or by two for word transfers, thus moving the memory pointer to the next destination for the input. The B register, used as a counter, is then decremented by one.
+
+### Flags
+
+**S:** Unaffected
+
+**Z:** Set if the result of decrementing B is zero; cleared otherwise
+
+**H:** Unaffected
+
+**V:** Unaffected
+
+**N:** Set
+
+**C:** Unaffected
+
+### Exceptions
+
+Privileged Instruction (if the Inhibit User I/O bit in the Trap Control register is set to 1)
+
+### Instruction Formats
+
+| Syntax | Instruction Format
+|-|-|
+IND  | `11 101 101` `10 101 010`
+INDW | `11 101 101` `10 001 010`
+
+### Example
+
+INDW
+
+_Before instruction execution:_
+
+| Register | Value |
+|-|-|
+F  | szxhxvnc
+BC | 1564
+HL | 5002
+I/O page<br/>register | 33
+
+Word 8D07<sub>H</sub> available at I/O port 331564<sub>H</sub>
+
+_After instruction execution:_
+
+| Register | Value |
+|-|-|
+F  | s0xhxv1c
+BC | 1464
+HL | 5000
+
+| Memory<br/>Address |Value |
+|-|-|
+5002 | 07
+5003 | 8D
+
+
+## INDR - Input, Decrement and Repeat (Byte, Word)
+
+**INDR**<br/>
+**INDRW**
+
+### Operation
+
+Repeat until B = 0:<br/>
+(HL) ← (C)<br/>
+B ← B - 1<br>
+HL ← AUTODECREMENT HL (by one if byte, by two if word)
+
+This instruction is used for block input of strings of data. The string of data from the selected peripheral is loaded into memory at consecutive addresses, starting with the location addressed by the HL register and decreasing. During the I/O transactions, the peripheral address from the C register is placed on the low byte of the address bus, the contents of the B register are placed on address lines A<sub>8</sub>-A<sub>15</sub>, and the contents of the I/O Page register are placed on address lines A<sub>18</sub>-A<sub>23</sub>. The byte or word of data from the selected peripheral is loaded into the memory location addressed by the HL register. The HL register is then decremented by one for byte transfers or by two for word transfers, thus moving the memory pointer to the next destination for the input. The B register, used as a counter, is then decremented by one. If the result of decrementing the B register is zero, the instruction is terminated, otherwise the input sequence is repeated. Note that if the B register contains 0 at the start of the execution of this instruction, 256 bytes are input.
+
+This instruction can be interrupted after each execution of the basic operation. The Program Counter value of the start of this instruction is saved before the interrupt request is accepted, so that the instruction can be properly resumed.
+
+### Flags
+
+**S:** Unaffected
+
+**Z:** Set
+
+**H:** Unaffected
+
+**V:** Unaffected
+
+**N:** Set
+
+**C:** Unaffected
+
+### Exceptions
+
+Privileged Instruction (if the Inhibit User I/O bit in the Trap Control register is set to 1)
+
+### Instruction Formats
+
+| Syntax | Instruction Format
+|-|-|
+INDR  | `11 101 101` `10 111 010`
+INDRW | `11 101 101` `10 011 010`
+
+### Example
+
+INDR
+
+_Before instruction execution:_
+
+| Register | Value |
+|-|-|
+F  | szxhxvnc
+BC | 0346
+HL | 5218
+I/O page<br/>register | 17
+
+Byte 9A<sub>H</sub> available at I/O port 170346<sub>H</sub>,<br/>
+then byte 3B<sub>H</sub> available at I/O port 170246<sub>H</sub>,<br/>
+then byte FF<sub>H</sub> available at I/O port 170146<sub>H.
+
+_After instruction execution:_
+
+| Register | Value |
+|-|-|
+F  | s1xhxv1c
+BC | 0046
+HL | 5215
+
+| Memory<br/>Address |Value |
+|-|-|
+5216 | FF
+5217 | 3B
+5218 | 9A
+
+
+## INI - Input and Increment (Byte, Word)
+
+**INI**<br/>
+**INIW**
+
+### Operation
+
+(HL) ← (C)<br/>
+B ← B - 1<br/>
+HL ← AUTOINCREMENT HL (by one if byte, by two if word)
+
+This instruction is used for block input of strings of data. During the I/O transaction, the peripheral address from the C register is placed on the low byte of the address bus, the contents of the B register are placed on address lines A<sub>8</sub>-A<sub>15</sub>, and the contents of the I/O Page register are placed on address lines A<sub>16</sub>-A<sub>23</sub>. The byte or word of data from the selected peripheral is then loaded into the memory location addressed by the HL register. The HL register is then incremented by one for byte transfers or by two for word transfers, thus moving the memory pointer to the next destination for the input. The B register, used as a counter, is then decremented by one.
+
+### Flags
+
+**S:** Unaffected
+
+**Z:** Set if the result of decrementing B is zero; cleared otherwise
+
+**H:** Unaffected
+
+**V:** Unaffected
+
+**N:** Set
+
+**C:** Unaffected
+
+### Exceptions
+
+Privileged Instruction (if the Inhibit User I/O bit in the Trap Control register is set to 1)
+
+### Instruction Formats
+
+| Syntax | Instruction Format
+|-|-|
+INI  | `11 101 101` `10 100 010`
+INIW | `11 101 101` `10 000 010`
+
+### Example
+
+INI
+
+_Before instruction execution:_
+
+| Register | Value |
+|-|-|
+F  | szxhxvnc
+BC | 1564
+HL | 5002
+I/O page<br/>register | 33
+
+Byte 7A<sub>H</sub> available at I/O port 331564<sub>H</sub>
+
+_After instruction execution:_
+
+| Register | Value |
+|-|-|
+F  | s0xhxv1c
+BC | 1464
+HL | 5003
+
+| Memory<br/>Address |Value |
+|-|-|
+5002 | 7A
+
+
+## INIR - Input, Increment and Repeat
+
+**INIR**<br/>
+**INIRW**
+
+### Operation
+
+Repeat until B = 0:<br/>
+(HL) ← (C)<br/>
+B ← B - 1<br>
+HL ← AUTOINCREMENT HL (by one if byte, by two if word)
+
+This instruction is used for block input of strings of data. The string of data from the selected peripheral is loaded into memory at consecutive addresses, starting with the location addressed by the HL register and increasing. During the I/O transactions, the peripheral address from the C register is placed on the low byte of the address bus, the contents of the B register are placed on address lines A<sub>8</sub>-A<sub>15</sub>, and the contents of the I/O Page register are placed on address lines A<sub>18</sub>-A<sub>23</sub>. The byte or word of data from the selected peripheral is loaded into the memory location addressed by the HL register. The HL register is then incremented by one for byte transfers or by two for word transfers, thus moving the memory pointer to the next destination for the input. The B register, used as a counter, is then decremented by one. If the result of decrementing the B register is zero, the instruction is terminated, otherwise the input sequence is repeated. Note that if the B register contains 0 at the start of the execution of this instruction, 256 bytes are input.
+
+This instruction can be interrupted after each execution of the basic operation. The Program Counter value of the start of this instruction is saved before the interrupt request is accepted, so that the instruction can be properly resumed.
+
+### Flags
+
+**S:** Unaffected
+
+**Z:** Set
+
+**H:** Unaffected
+
+**V:** Unaffected
+
+**N:** Set
+
+**C:** Unaffected
+
+### Exceptions
+
+Privileged Instruction (if the Inhibit User I/O bit in the Trap Control register is set to 1)
+
+### Instruction Formats
+
+| Syntax | Instruction Format
+|-|-|
+INIR  | `11 101 101` `10 110 010`
+INIRW | `11 101 101` `10 010 010`
+
+### Example
+
+INIRW
+
+_Before instruction execution:_
+
+| Register | Value |
+|-|-|
+F  | szxhxvnc
+BC | 0255
+HL | 4002
+I/O page<br/>register | 31
+
+Word 66D7<sub>H</sub> available at I/O port 310255<sub>H</sub>,<br/>
+then word A8FF<sub>H</sub> available at I/O port 310155<sub>H</sub>.
+
+_After instruction execution:_
+
+| Register | Value |
+|-|-|
+F  | s1xhxv1c
+BC | 0055
+HL | 4006
+
+| Memory<br/>Address |Value |
+|-|-|
+4002 | D7
+4003 | 66
+4004 | FF
+4005 | A8
+
+**Note:** Example assumes that a 16-bit data bus configuration of the Z280 MPU is used.
+
+
+## IN[W] - Input HL
+
+**IN[W]** HL,(C)
+
+### Operation
+
+HL ← (C)
+
+The word of data from the selected peripheral is loaded into the HL register. During the I/O transaction, the 8-bit peripheral address from the C register is placed on the low byte of the address bus, the contents of the B register are placed on address lines A<sub>8</sub>-A<sub>15</sub> and the contents of the I/O Page register are placed on address lines A<sub>16</sub>-A<sub>23</sub>. Then one word of data from the selected port is written into the HL register. For 8-bit data buses, the contents of L are undefined for external peripherals.
+
+### Flags
+
+No flags affected
+
+### Exceptions
+
+Privileged Instruction (if the Inhibit User I/O bit in the Trap Control register is set to 1)
+
+### Instruction Formats
+
+| Addressing<br/>Mode | Syntax | Instruction Format
+|-|-|-|
+IN HL,(C) | `11 101 101` `10 110 111`
+
+### Example
+
+INW HL,(C)
+
+_Before instruction execution:_
+
+| Register | Value |
+|-|-|
+BC | 2650
+HL | 3333
+I/O page<br/>register | 10
+
+Word 4D87<sub>H</sub> available at I/O port 102650<sub>H</sub>
+
+_After instruction execution:_
+
+| Register | Value |
+|-|-|
+BC | 2650
+HL | 874D
+
+**Note:** Example assumes that a 16-bit data bus configuration of the Z280 MPU is used.
+
+
+## JAF - Jump On Auxiliary Accumulator/Flag
+
+**JAF** dst
+
+dst = RA
+
+### Operation
+
+If auxiliary AF then PC ← dst
+
+A conditional jump is performed if the auxiliary Accumulator/Flag registers are in use. If the jump is taken, the Program Counter is loaded with the destination address; otherwise the instruction following the JAF instruction is executed. This instruction employs an 8-bit signed, twos-complement displacement from the Program Counter to permit jumps within the range -125 to +130 bytes from the location of this instruction.
+
+### Flags
+
+No flags affected
+
+### Exceptions
+
+None
+
+### Instruction Formats
+
+| Addressing<br/>Mode | Syntax | Instruction Format
+|-|-|-|
+RA | JAF addr | `11 011 101` `00 101 000` `    disp    `
+
+### Example
+
+JAF 5000H
+
+_Before instruction execution:_
+
+| Register | Value |
+|-|-|
+PC | 4FE6
+
+Auxiliary Accumulator/Flag in use
+
+_After instruction execution:_
+
+| Register | Value |
+|-|-|
+PC | 5000
+
+
+## JAR - Jump On Auxiliary Register File In Use
+
+**JAR** dst
+
+dst = RA
+
+### Operation
+
+If auxiliary file then PC ← dst
+
+A conditional jump is performed if the auxiliary register file is in use. If the jump is taken, the Program Counter is loaded with the destination address; otherwise the instruction following the JAR instruction is executed. This instruction employs an 8-bit signed, twos- complement displacement from the Program Counter to permit jumps within the range
+-125 to +130 bytes from the location of this instruction.
+
+### Flags
+
+No flags affected
+
+### Exceptions
+
+None
+
+### Instruction Formats
+
+| Addressing<br/>Mode | Syntax | Instruction Format
+|-|-|-|
+RA | JAR addr | `11 011 101` `00 100 000` `    disp    `
+
+### Example
+
+JAR 42D0H
+
+_Before instruction execution:_
+
+| Register | Value |
+|-|-|
+PC | 42F6
+
+Auxiliary file in use
+
+_After instruction execution:_
+
+| Register | Value |
+|-|-|
+PC | 42D0
+
+
+## JP - Jump
+
+**JP** [cc,]dst
+
+dst = IR, DA, RA
+
+### Operation
+
+If cc is satisfied then PC ← dst
+
+A conditional jump transfers program control to the destination address if the setting of a selected flag satisfies the condition code "cc" specified in the instruction; an unconditional jump always transfers control to the destination address. If the jump is taken, the Program Counter (PC) is loaded with the destination address; otherwise the instruction following the Jump instruction is executed. For the Relative Address mode, the PC value used to calculate the destination address is the address of the next instruction following the Jump instruction; a 16-bit signed twos-complement displacement from the PC permits jumps within the range -32764 to +32771 bytes from the location of this instruction.
+
+Each of the Zero, Carry, Sign, and Overflow flags can be individually tested and a jump performed conditionally on the setting of the flag.
+
+When using DA mode with the JP instruction, the operand is not enclosed in parentheses.
+
+### Flags
+
+No flags affected
+
+### Exceptions
+
+None
+
+### Instruction Formats
+
+| Addressing<br/>Mode | Syntax | Instruction Format
+|-|-|-|
+IR | JP CC,(HL) | `11 011 101` `11 cc  010`
+|  | JP (HL)    | `11 101 001` `"unconditional jump"`
+|  | JP (XY)    | `11 *11 101` `11 101 001` `"unconditional jump"`
+DA | JP CC,addr | `11 cc  010` ` addr(low)  ` ` addr(high) `
+|  | JP addr    | `11 000 011` ` addr(low)  ` ` addr(high) ` `"unconditional jump"`
+RA | JP CC,&lt;addr&gt; | `11 111 101` `11 cc  010` ` disp(low)  ` ` disp(high) `
+|  | JP &lt;addr&gt;    | `11 111 101` `11 000 011` ` disp(low)  ` ` disp(high) ` `"unconditional jump"`
+
+#### Field Encodings
+
+**\*:** 0 for IX, 1 for IY<br/>
+**cc:** 000 for NZ, 001 for Z, 010 for NC, 011 for C, 100 for PO or NV, 101 for PE or V, 110 for P or NS, 111 for M or S
+
+### Example
+
+JP C,5000H
+
+_Before instruction execution:_
+
+| Register | Value |
+|-|-|
+F  | szxhxvn1
+PC | 2684
+
+_After instruction execution:_
+
+| Register | Value |
+|-|-|
+F  | szxhxvn1
+PC | 5000
+
+
+## JR - Jump Relative
+
+**JR** [cc,]dst
+
+dst = RA
+
+### Operation
+
+If the cc is satisfied then PC ← dst
+
+A conditional jump transfers program control to the destination address if the setting of a selected flag satisfies the condition code "cc" specified in the instruction; an unconditional jump always transfers control to the destination address. If the jump is taken, the Program Counter (PC) is loaded with the destination address; otherwise the instruction following the Jump Relative instruction is executed. These instructions employ an 8-bit signed, twos-complement displacement from the PC to permit jumps within the range -126 to +129 bytes from the location of this instruction.
+
+Either the Zero or Carry flag can be tested and a jump performed conditionally on the setting of the flag.
+
+### Flags
+
+No flags affected
+
+### Exceptions
+
+None
+
+### Instruction Formats
+
+| Addressing<br/>Mode | Syntax | Instruction Format
+|-|-|-|
+RA | JR CC,addr | `00 cc  000` `    disp    `
+|  | JR addr    | `00 011 000` `    disp    `  `"unconditional jump"`
+
+#### Field Encoding
+
+**cc:** 100 for NZ, 101 for Z, 110 for NC, 111 for C
+
+### Example
+
+JR NZ,6000H
+
+_Before instruction execution:_
+
+| Register | Value |
+|-|-|
+F  | s0xhxvnc
+PC | 5FD4
+
+_After instruction execution:_
+
+| Register | Value |
+|-|-|
+F  | s0xhxvnc
+PC | 6000
+
+
+
