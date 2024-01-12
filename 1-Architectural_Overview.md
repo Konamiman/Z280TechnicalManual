@@ -7,7 +7,9 @@ of the various aspects of the processor provided in succeeding chapters.
 
 The Z280 MPU has a multiplexed address/data bus for communication with external memory and peripheral devices. Two different bus structures are supported by the 2280: an 8-bit data bus that uses Z80 Bus control signals, and a 16-bit data bus that uses Z-BUS® bus control signals. Zilog's Z80 and Z8500 families of peripherals are easily interfaced to the Z80 Bus; Zilog's Z8000® family of peripherals are easily interfaced to the Z-BUS.
 
-![Figure 1-1. Block Diagram](Images/Figure1.1.png)
+<br/>
+
+![Figure 1-1. Block Diagram](Images/Figure1.1.png)<br/>
 _Figure 1-1. Block Diagram_
 
 
@@ -76,7 +78,7 @@ The first three modes are compatible with the Z80 CPU interrupt modes; the fourt
 
 Traps are synchronous events that trigger a special CPU response when certain conditions occur during instruction execution. The Z280 CPU supports a sophisticated complement of traps including Division Exception, System Call, Privileged Instruction, Extended Instruction, Single-Step, Breakpoint-on-Halt, Memory Access Violation, and System Stack Overflow Warning traps.
 
-Hardware resets occur when the R̅E̅S̅E̅T̅ line is activated and override all other conditions. A reset causes certain CPU control registers to be initialized.
+Hardware resets occur when the <ins>RESET</ins> line is activated and override all other conditions. A reset causes certain CPU control registers to be initialized.
 
 
 ### 1.2.7 Memory Management
@@ -107,7 +109,7 @@ The Z280 MPU has an internal mechanism for refreshing dynamic memory. This mecha
 ### 1.2.10 On-Chip Peripherals
 
 Several programmable peripheral devices are included on-chip in the Z280 MPUs: four DMA
-channels, three 16-bit counter/timers, and a UART. Optionally, one of the DMA channels can be used with the UART as a bootstrap loader for the Z280 MPU’s memory after a reset.
+channels, three 16-bit counter/timers, and a UART. Optionally, one of the DMA channels can be used with the UART as a bootstrap loader for the Z280 MPU's memory after a reset.
 
 
 ### 1.2.11 Multiprocessor Mode
@@ -119,7 +121,7 @@ Z280-based system.
 
 The Z280 MPU architecture has a mechanism for extending the basic instruction set through the use of external devices called Extended Processing Units (EPUs). Special opcodes have been set aside to implement this feature. When the Z280 MPU encounters an instruction with one of these opcodes, it performs any indicated address calculations and data transfers; otherwise, it treats the "extended instruction" as if it were executed by the EPU.
 
-If an EPU is not present, the Z280 MPU can be programmed to trap when an extended instruction is encountered so that system software can emulate the EPU’s activity.
+If an EPU is not present, the Z280 MPU can be programmed to trap when an extended instruction is encountered so that system software can emulate the EPU's activity.
 
 
 ## 1.3 BENEFITS OF THE ARCHITECTURE

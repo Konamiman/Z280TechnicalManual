@@ -20,8 +20,12 @@ An on-chip memory refresh controller in the Z280 MPU is available for generating
 
 The format of the 8-bit Refresh Rate register is shown in Figure 9-1. This register enables the refresh mechanism and determines the frequency of refresh transactions. The fields in this register are described below
 
+<br/>
+
 ![Figure 9-1. Refresh Rate Register](Images/Figure9.1.png)<br/>
 _Figure 9-1. Refresh Rate Register_
+
+<br/>
 
 **Refresh Enable (E) bit.** When this bit is set to 1, the refresh mechanism is enabled. When this bit is cleared to 0, the refresh mechanism is disabled and refresh transactions are not generated.
 
@@ -31,7 +35,7 @@ The Refresh Rate register is accessed via byte I/O operations to I/O port addres
 
 A 10-bit refresh address is output on address lines A<sub>0</sub>-A<sub>9</sub> during a refresh transaction. This refresh address is incremented by one for Z80 bus (8-bit data bus) configuration and by two for Z-BUS (16-bit data bus) configuration of the Z280 MPU between refresh transactions. The refresh address is not accessible by the programmer and is not affected by a reset.
 
-During instruction execution, the actual refresh transactions are generated as soon as possible after the refresh period has elapsed. Generally, the refresh transaction is executed after the last clock cycle of the bus transaction in progress at the time that the refresh period elapsed. If the CPU receives an interrupt request during that same bus transaction, the refresh transaction is inserted before processing the interrupt. When the Z280 MPU does not have control of the bus due to a bus request, refresh transactions cannot be executed; while the MPU is in this state, internal circuitry records the number of refresh periods that have elapsed (that is, the number of "missed" refresh transactions). When the Z280 MPU regains control of the bus, the refresh mechanism automatically issues the missed refresh cycles. Similarly, if the refresh period elapses while the MPU is in a wait state (due to <u>WAIT</u> being asserted) during a bus transaction, the number of missed refresh transactions is recorded internally, and those refresh cycles are issued after <u>WAIT</u> is deactivated and the bus transaction is completed. The internal circuitry can record up to 236 such missed refresh operations.
+During instruction execution, the actual refresh transactions are generated as soon as possible after the refresh period has elapsed. Generally, the refresh transaction is executed after the last clock cycle of the bus transaction in progress at the time that the refresh period elapsed. If the CPU receives an interrupt request during that same bus transaction, the refresh transaction is inserted before processing the interrupt. When the Z280 MPU does not have control of the bus due to a bus request, refresh transactions cannot be executed; while the MPU is in this state, internal circuitry records the number of refresh periods that have elapsed (that is, the number of "missed" refresh transactions). When the Z280 MPU regains control of the bus, the refresh mechanism automatically issues the missed refresh cycles. Similarly, if the refresh period elapses while the MPU is in a wait state (due to <ins>WAIT</ins> being asserted) during a bus transaction, the number of missed refresh transactions is recorded internally, and those refresh cycles are issued after <ins>WAIT</ins> is deactivated and the bus transaction is completed. The internal circuitry can record up to 236 such missed refresh operations.
 
 Pseudo-static memories and some peripheral devices (such as the Z8000 family of peripherals) require a minimum transaction rate on the bus for correct operation. If the refresh mechanism is disabled by clearing the Refresh Enable bit in the Refresh Rate register, the rate field in this register is used to determine the minimum transaction rate on the bus. In this mode, if the refresh timer reaches 0 and no external bus transaction has occurred since the last time the refresh timer elapsed, then a refresh transaction will be generated. Thus, in a system that does not require memory refresh transactions, the Refresh Rate field in the Refresh Rate register must be initialized to an appropriate value even if memory refresh operations are disabled.
 
@@ -40,8 +44,12 @@ Pseudo-static memories and some peripheral devices (such as the Z8000 family of 
 
 The Z280 MPU's three on-chip 16-bit counter/timers can be configured to satisfy a broad range of counting and timing applications, including event counting, interval timing, watchdog timing, and clock generation. Each counter/timer is composed of a 16-bit downcounter, a 16-bit time constant register, and two 8-bit control and status registers (the Counter/Timer Configuration register and the Counter/Timer Command/Status register). The three independent devices are referred to as counter/timer 0 (C/T 0), counter/ timer 1 (C/T 1), and counter/timer 2 (C/T 2). Figure 9-2 is a block diagram of a Z280 MPU counter/timer.
 
+<br/>
+
 ![Figure 9-2. Counter/Timer Block Diagram](Images/Figure9.2.png)<br/>
 _Figure 9-2. Counter/Timer Block Diagram_
+
+<br/>
 
 C/T 0 and C/T 1 can be programmably linked to form a 32-bit counter/timer.
 
@@ -73,21 +81,34 @@ Gate signals are used in applications where counting or timing is to occur only 
 
 Figure 9-3 illustrates the gating facility in an application where the counter/timer is in counter mode with both the gate and the count signals coming from external pins. This example assumes that the software gate bit has been set to 1. The contents of the downcounter are decremented on a low-to-high transition of the count input only if the gate input is high.
 
+<br/>
+
 ![Figure 9-3. Counter Operation with Gate Only](Images/Figure9.3.png)<br/>
 _Figure 9-3. Counter Operation with Gate Only_
+
+<br/>
 
 If trigger mode is selected, a countdown sequence for a counter/timer begins only after a triggering condition occurs; a counting or timing operation can begin only after a low-to-high transition is detected on the trigger. If an external input is used as a trigger, that line is monitored by the counter/timer. Alternatively, a software trigger bit (one bit in the Counter/Timer Command/Status register) can be set to 1 from a previously cleared value to activate the counter/timer. The trigger condition is a logical OR of the hardware and software triggers; that is, either a hardware or software trigger will activate an enabled counter/timer.
 
 Figure 9-4 illustrates trigger operation in an application where the counter/timer is in the counter mode with both the trigger and count inputs provided by external pins. This example assumes that the software trigger bit does not make a low to high transition. The contents of the downcounter are decremented on a low-to-high transition of the count input only after a low-to-high transition on the trigger input has been detected.
 
+<br/>
+
 ![Figure 9-4. Counter Operation with Trigger Only](Images/Figure9.4.png)<br/>
 _Figure 9-4. Counter Operation with Trigger Only_
 
+<br/>
+
 Either a retriggerable or nonretriggerable operation can be specified. In the retriggerable mode, the occurrence of a trigger condition causes the counter/timer to reload its initial time constant value regardless of the current contents of the downcounter. This mode is used in applications such as watchdog timers. In the nonretriggerable mode, after the first trigger condition starts counter/timer activity, subsequent trigger conditions are ignored. Nonretriggerable mode is used in applications such as delay counters that measure a fixed delay from a given event.
+
 Gate and trigger operations can be combined in a single counter/timer. Separate gate and trigger inputs (either hardware or software) can be specified, or one external input can be used as both a gate and a trigger. In the latter case, a low-to-high transition on the input acts as a trigger that starts counter/timer activity, and then counting or timing continues only as long as the input signal remains high. Again, either retriggerable or nonretriggerable modes are available. Figure 9-5 illustrates counter/timer operation in an application where counter mode is selected, one input is a count input, and the other input is used as both the trigger and gate.
+
+<br/>
 
 ![Figure 9-5. Counter Operation with Gate and Trigger](Images/Figure9.5.png)<br/>
 _Figure 9-5. Counter Operation with Gate and Trigger_
+
+<br/>
 
 
 ### 9.4.3 Terminal Count Condition
@@ -112,15 +133,18 @@ If C/T 0 and C/T 1 are linked to form a 32-bit counter/timer, the functionality 
 
 The Counter/Timer Configuration register, shown in Figure 9-6, specifies the counter/timer's mode of operation.
 
-![Figure 9-6. Counter/Timer Configuration Register](Images/Figure9.6.png)<br/>
+<br/>
 
+![Figure 9-6. Counter/Timer Configuration Register](Images/Figure9.6.png)<br/>
 \* CTC Is present on counter/timer 0 only.
 
 _Figure 9-6. Counter/Timer Configuration Register_
 
+<br/>
+
 The five fields in this register are described below.
 
-**Continuous/Single Cycle (C/<u>S</u>).** While this bit is set to 1, the downcounter is automatically reloaded with the contents of the Time Constant register on the next count input signal after terminal count is reached, and the counting or timing operation continues. While this bit is cleared to 0, no automatic reloading occurs when terminal count is reached.
+**Continuous/Single Cycle (C/<ins>S</ins>).** While this bit is set to 1, the downcounter is automatically reloaded with the contents of the Time Constant register on the next count input signal after terminal count is reached, and the counting or timing operation continues. While this bit is cleared to 0, no automatic reloading occurs when terminal count is reached.
 
 **Retrigger Enable (RE).** While this bit is set to 1, the value of the Time Constant register is loaded into the downcounter whenever a trigger input is received (retriggerable mode). While this bit is 0, trigger conditions do not cause reloading of the downcounter.
 
@@ -160,9 +184,12 @@ The Counter/Timer Configuration registers are cleared to all zeros by a reset.
 
 The Counter/Timer Command/Status register provides for software control of counter/timer operation and reflects the current status of the counter/timer. Three control bits and three status bits are included in the Command/Status register. The format for this register is illustrated in Figure 9-7.
 
-![Figure 9-7. Counter/Timer Command/Status Register](Images/Figure9.7.png)<br/>
+<br/>
 
+![Figure 9-7. Counter/Timer Command/Status Register](Images/Figure9.7.png)<br/>
 _Figure 9-7. Counter/Timer Command/Status Register_
+
+<br/>
 
 **Enable (EN).** While this bit is set to 1, the counter/timer is enabled; operation begins on the first rising edge of the processor clock following the setting of this bit from a previously cleared state. Writing a 1 to this bit when its previous value was a 1 has no effect. While this bit is cleared to 0, the counter/timer is disabled and performs no counting or timing operations. While in the disabled state, the contents of the Time Constant register are continuously loaded into the downcounter.
 
@@ -170,7 +197,7 @@ _Figure 9-7. Counter/Timer Command/Status Register_
 
 **Software Trigger (TR).** While the counter/timer is enabled (the EN bit is a 1), the trigger condition is generated on the rising edge of the first scaled processor clock following the setting of this bit from a previously cleared value. If a previous trigger condition has not occurred, the contents of the Time Constant register are loaded into the downcounter and the counting or timing sequence begins. If a hardware or software trigger has already occurred and the Retrigger Enable bit is set to 1, the counter/timer will be retriggered. If a trigger has already occurred, the Retrigger Enable bit is cleared to 0, and a counting or timing operation is in progress (that is, the downcounter holds a count other than 0), then setting the TR bit has no effect on counter/timer operation. Clearing this bit to 0 also has no effect on counter/timer operation.
 
-**Count in Proqress (CIP).** This status bit indicates if a counting or timing operation is in progress. While this bit is a 1, the counter/timer has a time constant loaded and the downcounter holds a non-zero value. While this bit is a 0, the counter/timer is not operating. The state of this bit is determined by control logic in the counter/timer and cannot be altered by a write operation to this register.
+**Count in Progress (CIP).** This status bit indicates if a counting or timing operation is in progress. While this bit is a 1, the counter/timer has a time constant loaded and the downcounter holds a non-zero value. While this bit is a 0, the counter/timer is not operating. The state of this bit is determined by control logic in the counter/timer and cannot be altered by a write operation to this register.
 
 **End-of-Count Condition Has Been Reached (CC).** This status bit is set to 1 by control logic in the counter/timer when the end-of-count condition is reached (that is, the downcounter has been decremented to zero in the single-cycle mode or the downcounter has been reloaded in the continuous mode). While this bit is a 0, the
 downcounter has not been decremented to 0 since the last time that this bit was cleared by software. This bit can be read or written under program control.
@@ -219,7 +246,7 @@ _C/T 1 Configuration Register:_
 
 Bit | Active/Ignored | Comments
 |-|-|-|
-C/<u>S</u> | Active | Specifies continuous or single-cycle mode for 32-bit counter/timer.
+C/<ins>S</ins> | Active | Specifies continuous or single-cycle mode for 32-bit counter/timer.
 RE | Active | Specifies retriggerable or nonretriggerable mode for 32-bit counter/timer.
 IE | Active | Interrupt enable for 32-bit counter/timer.
 CTC | Ignored
@@ -234,7 +261,7 @@ _C/T 0 Configuration Register:_
 
 Bit | Active/Ignored | Comments
 |-|-|-|
-C/<u>S</u> | Ignored
+C/<ins>S</ins> | Ignored
 RE | Ignored
 IE | Active | Interrupt enable for lower half of 32-bit counter/timer.
 CTC | Active | Set to 1 to link counter/timers.
@@ -290,7 +317,7 @@ The reaction to triggers during the countdown operation depends on the state of 
 
 The current state of the downcounter can be determined by polling the status bits in the Command/Status register and by reading the current count from the Count-Time register. Reading these registers does not affect the current countdown sequence.
 
-The state of the C/<u>S</u> bit in the Configuration register controls the operation of the counter/timer upon reaching terminal count. If the C/<u>S</u> bit is a 1, specifying the continuous mode of operation, the downcounter is reloaded from the Time Constant register on the next count input after reaching terminal count, and a new countdown sequence begins. The Time Constant register can be programmably altered during counter/timer operation without affecting the current countdown sequence. If the C/<u>S</u> bit is 0, specifying single-cycle operation, the downcounter halts upon reaching terminal count until the next occurrence of a trigger condition reloads the downcounter.
+The state of the C/<ins>S</ins> bit in the Configuration register controls the operation of the counter/timer upon reaching terminal count. If the C/<ins>S</ins> bit is a 1, specifying the continuous mode of operation, the downcounter is reloaded from the Time Constant register on the next count input after reaching terminal count, and a new countdown sequence begins. The Time Constant register can be programmably altered during counter/timer operation without affecting the current countdown sequence. If the C/<ins>S</ins> bit is 0, specifying single-cycle operation, the downcounter halts upon reaching terminal count until the next occurrence of a trigger condition reloads the downcounter.
 
 If the IE bit in the Configuration register is a 1, an interrupt request is generated upon reaching the terminal count. If a counter/timer output signal is specified in the IPA field of the Configuration register, reaching terminal count causes a low-to-high transition on the output signal; this signal then remains high until the downcounter is reloaded with a non-zero value due to a trigger condition or disabling of the counter/timer with a non-zero value in the Time Constant register. Note that the counter/timer output line can be forced high by disabling the counter/timer with all zeros loaded into the Time Constant register.
 
@@ -301,7 +328,7 @@ The Z280 MPU has four on-chip Direct Memory Access (DMA) transfer controllers fo
 
 Ail four DMA channels, referred to as DMA0, DMA1, DMA2, and DMA3, are capable of controlling "flowthrough" type data transfers, wherein data is temporarily stored in the DMA device between reading from the source and writing to the destination. Two of the channels, DMA0 and DMA1, also support "flyby" mode data transfers, wherein the data is read from the source and written to the destination during a single bus transaction. Otherwise, the four DMA controllers are identical, although they have different priorities with respect to interrupt and bus requests.
 
-Two external signals provide the interface between the DMA channels and external memory or peripheral devices. The READY (<u>RDY</u>) input is used by an external device to request activity by a DMA channel. The DMA STRO8E (<u>DMASTB</u>) output is used to signal the I/O port when a flyby transaction is in progress; <u>DMASTB</u> is available only for DMA0 and DMA1.
+Two external signals provide the interface between the DMA channels and external memory or peripheral devices. The READY (<ins>RDY</ins>) input is used by an external device to request activity by a DMA channel. The DMA STRO8E (<ins>DMASTB</ins>) output is used to signal the I/O port when a flyby transaction is in progress; <ins>DMASTB</ins> is available only for DMA0 and DMA1.
 
 Two 24-bit addresses are generated by the DMA for each flowthrough transaction, and one 24-bit address for each flyby transaction. These addresses can be physical memory addresses or I/O port addresses. The addresses are automatically generated for each transaction, and can be fixed, incrementing, or decrementing. Two readable registers, the Source Address register and Destination Address register, hold the current address of the source and destination ports.
 
@@ -318,7 +345,7 @@ The Z280 MPU's on-chip DMA channels are capable of two basic types of operations
 
 All four on-chip DMA channels support flowthrough mode data transactions. In flowthrough mode, each DMA-controlled data transfer involves two bus operations: a read cycle to obtain the data from the source and a write cycle to transfer the data to the destination. The data is temporarily stored in the DMA device between the read and write operations. Flowthrough mode transactions use the same address, data, and control signals as CPU-initiated transactions and, therefore, require no additional external logic in a Z280-based system. Memory-to-memory, memory-to-peripheral, peripheral-to-memory, or peripheral-to-peripheral transfers are possible using flowthrough mode.
 
-Flyby mode data transactions are supported only by DMA0 and DMA1. In a flyby mode transaction, the data is read from the source and written to the destination in a single bus operation. There are two types of flyby transactions: memory-to-peripheral and peripheral-to-memory. For a memory-to-peripheral transaction, the DMA channel generates a memory read bus cycle and notifies the I/O devifce that a flyby transaction is in progress by activating the <u>DMASTB</u> output. The data must be written to the I/O device during the memory read operation. For a peripheral-to-memory flyby transaction, the DMA channel generates a memory write bus cycle while activating the <u>DMASTB</u> output; the data must be read from the I/O device during the memory write transaction. In other words, during flyby mode transactions, the DMA channel generates the bus signals needed to control the memory access, and <u>DMASTB</u> is used to notify the peripheral device when to read data from the bus (for memory-to-peripheral transfers) or when to put data onto the bus (for peripheral-to-memory transfers.) Thus, flyby mode transactions require additional external logic to activate the appropriate peripheral device when <u>DMASTB</u> is active. However, flyby mode transactions are faster than flowthrough mode transactions, since only one bus cycle is needed to complete a data transfer.
+Flyby mode data transactions are supported only by DMA0 and DMA1. In a flyby mode transaction, the data is read from the source and written to the destination in a single bus operation. There are two types of flyby transactions: memory-to-peripheral and peripheral-to-memory. For a memory-to-peripheral transaction, the DMA channel generates a memory read bus cycle and notifies the I/O devifce that a flyby transaction is in progress by activating the <ins>DMASTB</ins> output. The data must be written to the I/O device during the memory read operation. For a peripheral-to-memory flyby transaction, the DMA channel generates a memory write bus cycle while activating the <ins>DMASTB</ins> output; the data must be read from the I/O device during the memory write transaction. In other words, during flyby mode transactions, the DMA channel generates the bus signals needed to control the memory access, and <ins>DMASTB</ins> is used to notify the peripheral device when to read data from the bus (for memory-to-peripheral transfers) or when to put data onto the bus (for peripheral-to-memory transfers.) Thus, flyby mode transactions require additional external logic to activate the appropriate peripheral device when <ins>DMASTB</ins> is active. However, flyby mode transactions are faster than flowthrough mode transactions, since only one bus cycle is needed to complete a data transfer.
 
 
 ### 9.5.2 DMA Transfer Modes
@@ -327,16 +354,20 @@ When transferring data under DMA control (with either flowthrough or flyby trans
 
 In the single transaction mode, the DMA controller transfers only one byte or word of data at a time. Control of the system bus is returned to the CPU between each DMA transfer; the DMA must make a new request for the bus before performing the next data transfer.
 
-In the burst mode, once the DMA channel gains control of the bus, it continues to transfer data until the <u>RDY</u> input goes inactive. When the <u>RDY</u> line becomes inactive, the DMA releases the system bus; bus control then returns back to the CPU or to the next lower-priority DMA channel with a bus request pending.
+In the burst mode, once the DMA channel gains control of the bus, it continues to transfer data until the <ins>RDY</ins> input goes inactive. When the <ins>RDY</ins> line becomes inactive, the DMA releases the system bus; bus control then returns back to the CPU or to the next lower-priority DMA channel with a bus request pending.
 
-In the continuous mode, the DMA channel retains control of the system bus until the entire block of data has been transferred. If the <u>RDY</u> line goes inactive before the entire data block is transferred, the DMA simply waits until <u>RDY</u> becomes active again, without releasing the bus. This mode is the fastest mode since it has the least response-time overhead when the <u>RDY</u> line momentarily goes inactive and returns active again. However, this mode does not allow any CPU activity for the duration of the transfer. Figure 9-8 summarizes the DMA transfer modes.
+In the continuous mode, the DMA channel retains control of the system bus until the entire block of data has been transferred. If the <ins>RDY</ins> line goes inactive before the entire data block is transferred, the DMA simply waits until <ins>RDY</ins> becomes active again, without releasing the bus. This mode is the fastest mode since it has the least response-time overhead when the <ins>RDY</ins> line momentarily goes inactive and returns active again. However, this mode does not allow any CPU activity for the duration of the transfer. Figure 9-8 summarizes the DMA transfer modes.
+
+<br/>
 
 ![Figure 9-8. Modes of Operation](Images/Figure9.8.png)<br/>
 _Figure 9-8. Modes of Operation_
 
-In any transfer mode, once a DMA-controlled data transfer begins, that transaction is completed in an orderly fashion, regardless of the state of the <u>RDY</u> input.
+<br/>
 
-DMA0 and DMA1 include a software <u>RDY</u> signal in the DMA Master Control register. The <u>RDY</u> input to these DMA channels is the logical OR of the <u>RDY</u> pin and the software-controlled <u>RDY</u> signal.
+In any transfer mode, once a DMA-controlled data transfer begins, that transaction is completed in an orderly fashion, regardless of the state of the <ins>RDY</ins> input.
+
+DMA0 and DMA1 include a software <ins>RDY</ins> signal in the DMA Master Control register. The <ins>RDY</ins> input to these DMA channels is the logical OR of the <ins>RDY</ins> pin and the software-controlled <ins>RDY</ins> signal.
 
 A DMA channel can be programmed to perform data transfers on a byte (8-bit), word (16-bit), or long word (32-bit) basis. If a DMA's port address is a memory address that is auto-incremented or auto-decremented after each transfer, the size of the data transfer determines whether the memory address is incremented or decremented by a factor of 1, 2, or 4. For word and long word transfers to or from memory locations, the memory address must be even-valued (that is, the least significant bit of the memory address must be 0).
 
@@ -345,24 +376,24 @@ Transfers of unaligned data on 16-bit buses can be accomplished via byte transfe
 
 ### 9.5.3 End-of-Process
 
-An enable bit in the DMA Master Control register allows the Interrupt A input to be used as an end-of-process (<u>EOP</u>) input during DMA transactions. When enabled, transfers by DMA channels can be prematurely terminated by a low on the <u>EOP</u> (Interrupt A) line. Recognition of the <u>EOP</u> signal is not affected by the state of the Interrupt Request Enable bit for Interrupt A in the CPU's Master Status register.
+An enable bit in the DMA Master Control register allows the Interrupt A input to be used as an end-of-process (<ins>EOP</ins>) input during DMA transactions. When enabled, transfers by DMA channels can be prematurely terminated by a low on the <ins>EOP</ins> (Interrupt A) line. Recognition of the <ins>EOP</ins> signal is not affected by the state of the Interrupt Request Enable bit for Interrupt A in the CPU's Master Status register.
 
-If the <u>EOP</u> signal goes active during the read portion of a flowthrough transaction, the DMA activity is aborted before the write portion of that transaction. If <u>EOP</u> becomes active during the write portion of a flowthrough transaction or during, a flyby transaction, that transfer is completed before stopping the DMA operation.
+If the <ins>EOP</ins> signal goes active during the read portion of a flowthrough transaction, the DMA activity is aborted before the write portion of that transaction. If <ins>EOP</ins> becomes active during the write portion of a flowthrough transaction or during, a flyby transaction, that transfer is completed before stopping the DMA operation.
 
-When an active <u>EOP</u> signal terminates a DMA operation, the <u>EOP</u> Signaled (EPS) status bit in that channel's Transaction Descriptor register is automatically set to 1 and the Enable bit in that same register is cleared to 0. If that channel's Interrupt Enable bit is set to 1, an interrupt request to the CPU is generated.
+When an active <ins>EOP</ins> signal terminates a DMA operation, the <ins>EOP</ins> Signaled (EPS) status bit in that channel's Transaction Descriptor register is automatically set to 1 and the Enable bit in that same register is cleared to 0. If that channel's Interrupt Enable bit is set to 1, an interrupt request to the CPU is generated.
 
-The <u>EOP</u> signal is level-sensitive and shared by all four on-chip DMA channels. Thus, if an active <u>EOP</u> signal terminates the activity of one DMA channel and another DMA channel immediately requests the bus, the second DMA's activity is terminated before any transactions can be generated if <u>EOP</u> is still active. In other words, the second DMA channel also recognizes the <u>EOP</u> signal, and so on. Therefore, in order for the currently active DMA channel to be the only channel whose activity is terminated, <u>EOP</u> should be asserted for only one bus clock cycle in systems where the bus clock frequency is equal to or one-half of the processor clock frequency; <u>EOP</u> should be asserted for one-half of a bus clock cycle in systems where the bus clock frequency is one-fourth of the processor clock frequency.
+The <ins>EOP</ins> signal is level-sensitive and shared by all four on-chip DMA channels. Thus, if an active <ins>EOP</ins> signal terminates the activity of one DMA channel and another DMA channel immediately requests the bus, the second DMA's activity is terminated before any transactions can be generated if <ins>EOP</ins> is still active. In other words, the second DMA channel also recognizes the <ins>EOP</ins> signal, and so on. Therefore, in order for the currently active DMA channel to be the only channel whose activity is terminated, <ins>EOP</ins> should be asserted for only one bus clock cycle in systems where the bus clock frequency is equal to or one-half of the processor clock frequency; <ins>EOP</ins> should be asserted for one-half of a bus clock cycle in systems where the bus clock frequency is one-fourth of the processor clock frequency.
 
-If the end-of-process capability is enabled, a single input to the Z280 MPU can act as both the Interrupt A and the <u>EOP</u> signal; it acts as the Interrupt A Request line when the CPU controls the bus and as the <u>EOP</u> line when a DMA channel controls the bus. If an <u>EOP</u> signal terminates a DMA operation, and that signal is still asserted when the CPU regains control of the bus, then the signal is interpreted as an interrupt request. Thus, a single signal can be used to stop DMA activity and generate an interrupt, if so desired. Note that the interrupt request generated by the DMA channel and the interrupt request generated by an active signal on the Interrupt A line are different interrupt requests, each with its own priority and its own enabling bit in the CPU's Master Status register.
+If the end-of-process capability is enabled, a single input to the Z280 MPU can act as both the Interrupt A and the <ins>EOP</ins> signal; it acts as the Interrupt A Request line when the CPU controls the bus and as the <ins>EOP</ins> line when a DMA channel controls the bus. If an <ins>EOP</ins> signal terminates a DMA operation, and that signal is still asserted when the CPU regains control of the bus, then the signal is interpreted as an interrupt request. Thus, a single signal can be used to stop DMA activity and generate an interrupt, if so desired. Note that the interrupt request generated by the DMA channel and the interrupt request generated by an active signal on the Interrupt A line are different interrupt requests, each with its own priority and its own enabling bit in the CPU's Master Status register.
 
 
 ### 9.5.4 Priority Resolution
 
-Prioritization of the four on-chip DMA channels is implemented via an internal "service request" latch. A DMA channel generates a service request, indicating that the channel needs to gain control of the bus, if that channel's Enable bit in the Transaction Descriptor register is set to 1 and an active <u>RDY</u> signal is asserted. This service request signal is latched in the service request latch only if all preceding service requests have already been serviced (that is, there are no service requests active in the latch). Once a service request is latched, the service request latch is "closed" to all other service requests until the current requests are serviced; the latched requests are serviced in priority order, where DMA channel 0 has highest priority and DMA channel 3 has lowest priority. When all latched service requests have been serviced, the latch is "opened" so that new service requests can be latched.
+Prioritization of the four on-chip DMA channels is implemented via an internal "service request" latch. A DMA channel generates a service request, indicating that the channel needs to gain control of the bus, if that channel's Enable bit in the Transaction Descriptor register is set to 1 and an active <ins>RDY</ins> signal is asserted. This service request signal is latched in the service request latch only if all preceding service requests have already been serviced (that is, there are no service requests active in the latch). Once a service request is latched, the service request latch is "closed" to all other service requests until the current requests are serviced; the latched requests are serviced in priority order, where DMA channel 0 has highest priority and DMA channel 3 has lowest priority. When all latched service requests have been serviced, the latch is "opened" so that new service requests can be latched.
 
 This service request mechanism provides for non-preemptive prioritization of DMA activity. For example, if DMA channel 1 requires servicing while the other channels are quiescent (that is, not currently controlling the bus or making a service request), channel 1's service request is latched and the service request latch is closed. Thus, no other channel can preempt channel 1's activity. If channels 0 and 2 activate service requests while channel 1 is being serviced, both those requests will be latched after channel 1's activity is completed, and channel 0 will be serviced next, followed by channel 2. No new service requests are latched until both channels 0 and 2 have been serviced, and so on.
 
-All service requests from the on-chip DMA channels have priority over bus requests made via the <u>BUSREQ</u> input by external DMA controllers.
+All service requests from the on-chip DMA channels have priority over bus requests made via the <ins>BUSREQ</ins> input by external DMA controllers.
 
 
 ### 9.5.5 DMA Linking
@@ -382,7 +413,7 @@ When the linked DMA loads the master DMA's registers, the registers are written 
 
 After the six words have been written to the master DMA, the master DMA deasserts the ready signal to the linked DMA and begins the new transfer operation. For Z-BUS configurations of the Z280 MPU, the linked DMA uses six word transactions on the bus to program the master DMA; for Z80 Bus configurations, the linked DMA uses twelve byte transactions to program the master DMA, with the least significant byte of each word being transferred first.
 
-Control bits in the DMA Master Control register also allow DMA0 to be programmably linked to the on-chip UART's receiver and DMA1 to be linked to the UART's transmitter. If so linked, an internal "ready" signal to DMA0 is automatically generated when the UART's receive buffer is full. Similarly, an internal "ready" signal to DMA1 is automatically generated when the UARt's transmit buffer is empty. The external <u>RDY</u> inputs are ignored while in this configuration.
+Control bits in the DMA Master Control register also allow DMA0 to be programmably linked to the on-chip UART's receiver and DMA1 to be linked to the UART's transmitter. If so linked, an internal "ready" signal to DMA0 is automatically generated when the UART's receive buffer is full. Similarly, an internal "ready" signal to DMA1 is automatically generated when the UARt's transmit buffer is empty. The external <ins>RDY</ins> inputs are ignored while in this configuration.
 
 
 ### 9.5.6 DMA Registers
@@ -394,8 +425,12 @@ DMA registers consist of a DMA Master Control register that specifies the genera
 
 The 16-bit DMA Master Control register is illustrated in Figure 9-9.
 
+<br/>
+
 ![Figure 9-9. DMA Master Control Register](Images/Figure9.9.png)<br/>
 _Figure 9-9. DMA Master Control Register_
+
+<br/>
 
 The bit fields within this register are described below.
 
@@ -420,8 +455,12 @@ The DMA Master Control register is cleared to all zeros by a reset, unless boots
 
 Each DMA channel has its own 16-bit Transaction Descriptor register. The Transaction Descriptor register (Figure 9-10) describes the type of DMA transfer to be performed and contains control and status information.
 
+<br/>
+
 ![Figure 9.10. Transaction Descriptor Register](Images/Figure9.10.png)<br/>
 _Figure 9.10. Transaction Descriptor Register_
+
+<br/>
 
 **End-of-Process Signaled (EPS).** This status bit is set to 1 automatically when an active End-of-Process signal prematurely terminates a DMA transfer. This bit can be set to 1 or cleared to 0 under software control.
 
@@ -486,7 +525,7 @@ For DMA0, a reset loads a 0100<sub>H</sub> into the Transaction Descriptor regis
 
 #### 9.5.6.3 Count Register
 
-Each channel has a 16-bit Count register that is programmed to contain the number of DMA transfers to be performed. When the contents of the Count register reach zero (terminal count), further requests on the <u>RDY</u> line are ignored, and, if the IE bit in the Transaction Descriptor register is set to 1, an interrupt request is generated.
+Each channel has a 16-bit Count register that is programmed to contain the number of DMA transfers to be performed. When the contents of the Count register reach zero (terminal count), further requests on the <ins>RDY</ins> line are ignored, and, if the IE bit in the Transaction Descriptor register is set to 1, an interrupt request is generated.
 
 A reset loads a 0100<sub>H</sub> into DMA0's Count register; the other channels' Count registers are unaffected by a reset.
 
@@ -497,8 +536,12 @@ The 24-bit Source Address register and Destination Address register hold the por
 
 The entire 24-bit Source Address or Destination Address register is read and written via two word accesses to the register. Twelve, bits of the address are accessed by each word I/O operation; the format used when accessing these registers is shown in Figure 9-11.
 
+<br/>
+
 ![Figure 9-11. Source and Destination Address Registers Format](Images/Figure9.11.png)<br/>
 _Figure 9-11. Source and Destination Address Registers Format_
+
+<br/>
 
 DMA0's Destination Address register is cleared to 0 by a reset; all other Source and Destination Address registers are unaffected by a reset.
 
@@ -527,24 +570,24 @@ This section describes a typical sequence of events when a DMA channel is used i
 
 Before a DMA channel can begin operation, that DMA channel must be configured for the particular application by loading its Destination Address, Source Address, Count, and Transaction Descriptor registers. DMA operations cannot take place while the EN bit in the Transaction Descriptor register is cleared to 0. Thus, the EN bit should be cleared to zero while configuring the DMA channel, and set to 1 as the last step in the configuration process; the EN bit can be set at the same time that the other bit fields in the Transaction Descriptor register are specified.
 
-Once the EN bit is set to 1, the DMA channel requests use of the system bus only after an active <u>RDY</u> signal is received. The <u>RDY</u> signal is sampled by the DMA on the rising edge of each processor clock cycle. For DMA0 and DMA1, the <u>RDY</u> signal is the logical OR of the external <u>RDY</u> input and the software <u>RDY</u> bit in the DMA Master Control register.
+Once the EN bit is set to 1, the DMA channel requests use of the system bus only after an active <ins>RDY</ins> signal is received. The <ins>RDY</ins> signal is sampled by the DMA on the rising edge of each processor clock cycle. For DMA0 and DMA1, the <ins>RDY</ins> signal is the logical OR of the external <ins>RDY</ins> input and the software <ins>RDY</ins> bit in the DMA Master Control register.
 
 When the system bus is available for DMA transfers, the highest priority DMA channel with a request pending becomes the bus master. The priority of the on-chip DMA channels from highest to lowest is DMA0, DMA1, DMA2, and DMA3. The external Bus Request input has the next lowest priority after the on-chip DMA channels.
 
-The number of data transfers performed by a DMA that has gained control of the bus is determined by the current transfer mode (single transaction, burst, or continuous) and the contents of the Count register. A DMA channel in single transaction mode relinquishes the bus after a single data transfer; a DMA channel in burst mode relinquishes the bus when <u>RDY</u> is deasserted or when terminal count is reached; a DMA channel in continuous mode relinquishes the bus when the terminal count is reached. Regardless of the transfer mode, a DMA channel will relinquish the bus if an <u>EOP</u> is signalled or the terminal count is reached.
+The number of data transfers performed by a DMA that has gained control of the bus is determined by the current transfer mode (single transaction, burst, or continuous) and the contents of the Count register. A DMA channel in single transaction mode relinquishes the bus after a single data transfer; a DMA channel in burst mode relinquishes the bus when <ins>RDY</ins> is deasserted or when terminal count is reached; a DMA channel in continuous mode relinquishes the bus when the terminal count is reached. Regardless of the transfer mode, a DMA channel will relinquish the bus if an <ins>EOP</ins> is signalled or the terminal count is reached.
 
 If the destination for a DMA-controlled data transfer is a memory location that corresponds to an entry in the on-chip memory (in either the cache or fixed-address mode), the on-chip memory is updated to reflect the new contents of that memory location.
 
-For each DMA-controlled data transfer on the bus, that DMA's Count register is decremented by 1, regardless of the size of the data transferred. The Destination Address and Source Address registers might also be incremented or decremented, as determined by the DAD, SAD, and ST fields in the Transaction Descriptor register. When a DMA operation reaches completion, either by assertion of an <u>EOP</u> signal or by reaching terminal count (a count of 0) in the Count register, the EN bit in the Transaction Descriptor register is automatically cleared to 0. If the IE bit is set to 1, an interrupt request to the CPU is generated. If the DMA operation terminated due to an active <u>EOP</u> signal, the EPS status bit is set to 1; if the DMA operation terminated due to reaching terminal count, the TC status bit is set to 1.
+For each DMA-controlled data transfer on the bus, that DMA's Count register is decremented by 1, regardless of the size of the data transferred. The Destination Address and Source Address registers might also be incremented or decremented, as determined by the DAD, SAD, and ST fields in the Transaction Descriptor register. When a DMA operation reaches completion, either by assertion of an <ins>EOP</ins> signal or by reaching terminal count (a count of 0) in the Count register, the EN bit in the Transaction Descriptor register is automatically cleared to 0. If the IE bit is set to 1, an interrupt request to the CPU is generated. If the DMA operation terminated due to an active <ins>EOP</ins> signal, the EPS status bit is set to 1; if the DMA operation terminated due to reaching terminal count, the TC status bit is set to 1.
 
 
 ### 9.5.8 DMA Programming: Linked DMAs
 
-When two DMA channels are linked together, the master DMA's registers are written via memory-to-peripheral data transfers initiated by the linked DMA. Thus, to begin DMA operations, the linked DMA must be programmed to load the master DMA. While the linked DMA is being configured, the master DMA must be prohibited from asserting a <u>RDY</u> signal to the linked DMA. The internal <u>RDY</u> signal from the master DMA to the linked DMA is controlled by the TC status bit of the master DMA; therefore, before configuring the linked DMA, the TC bit of the master DMA's Transaction Descriptor register should be written with a 0. Then, the linked DMA is configured by writing to its registers. Finally, the TC bit in the master DMA should be set to 1; this causes the internal <u>RDY</u> signal to the linked DMA to go active, which in turn causes the linked DMA to request the bus and, upon acknowledgement of that request, initiates the transactions that program the master DMA.
+When two DMA channels are linked together, the master DMA's registers are written via memory-to-peripheral data transfers initiated by the linked DMA. Thus, to begin DMA operations, the linked DMA must be programmed to load the master DMA. While the linked DMA is being configured, the master DMA must be prohibited from asserting a <ins>RDY</ins> signal to the linked DMA. The internal <ins>RDY</ins> signal from the master DMA to the linked DMA is controlled by the TC status bit of the master DMA; therefore, before configuring the linked DMA, the TC bit of the master DMA's Transaction Descriptor register should be written with a 0. Then, the linked DMA is configured by writing to its registers. Finally, the TC bit in the master DMA should be set to 1; this causes the internal <ins>RDY</ins> signal to the linked DMA to go active, which in turn causes the linked DMA to request the bus and, upon acknowledgement of that request, initiates the transactions that program the master DMA.
 
 The linked DMA must be configured for flowthrough-type data transfers. The transfer size must match the size of the external data bus (that is, byte for Z80 bus configurations and word for Z-BUS configurations). The Source Address register is loaded with the starting address of the memory block that holds the data to be written to the master DMA's registers; for the Z-BUS, this starting address must be even-valued (A<sub>0</sub>=0). The SAD field of the Transaction Descriptor register should specify an auto-increment or auto-decrement of the memory address. The Destination Address register must be set to FFxx00<sub>H</sub> when DMA2 is the linked DMA, or FFxx08<sub>H</sub> when DMA3 is the linked DMA ("x" means don't care). The DAD field in the linked DMA's Transaction Descriptor register should be Set to 100<sub>H</sub> (auto-increment I/O address). Burst mode transactions must be specified. The contents of the Count register vary depending on the number of times that the linked DMA is required to reconfigure the master DMA.
 
-When the master DMA has completed a transaction (terminal count is reached), an internal <u>RDY</u> signal to the linked DMA is activated. If the linked DMA is enabled, the linked DMA will generate the transactions that program the master DMA's registers. (The linked DMA's external <u>RDY</u> input is ignored when DMA linking is specified.)
+When the master DMA has completed a transaction (terminal count is reached), an internal <ins>RDY</ins> signal to the linked DMA is activated. If the linked DMA is enabled, the linked DMA will generate the transactions that program the master DMA's registers. (The linked DMA's external <ins>RDY</ins> input is ignored when DMA linking is specified.)
 
 When the linked DMA loads the master DMA's registers, the registers are written in the following order:
 
@@ -582,9 +625,12 @@ The UART can be used in an interrupt-driven or polled environment. If enabled, s
 
 The UART uses two external pins, Transmit (Tx) and Receive (Rx). Data that is to be transmitted is placed serially on the Transmit pin and data that is to be received is read from the Receive pin.
 
+<br/>
+
 ![Figure 9-12. General Format for an Asynchronous Transmission](Images/Figure9.12.png)<br/>
 _Figure 9-12. General Format for an Asynchronous Transmission_
 
+<br/>
 
 The UART contains five registers. UART operation is controlled by three registers: the UART Configuration register, which contains controls for both the transmitter and receiver, the Transmitter Control/Status register, and the Receiver Control/Status register. Received data is read from the Receive Data register, and data to be transmitted is written to the Transmit Data register.
 
@@ -604,8 +650,12 @@ Receive operations are performed only when the Receiver Enable bit in the Receiv
 
 Received characters are read from the Receive Data register. If parity is enabled, the parity bit is assembled as part of the character for character lengths other than eight bits. If the resulting character is still less than eight bits, 1's are appended in the unused high-order bit positions. For example, Figure 9-13 illustrates how the character is assembled in the Receive Data register when receiving 5-bit characters with parity.
 
+<br/>
+
 ![Figure 9-13. Byte Assembled by Receiver for 5-bit Character with Parity](Images/Figure9.13.png)<br/>
 _Figure 9-13. Byte Assembled by Receiver for 5-bit Character with Parity_
+
+<br/>
 
 For each character assembled by the receiver, error flags in the Receiver Control/Status register indicate if an error condition was detected. These flags are loaded when the character assembly process is completed—that is, when the character is loaded into the Receive Data register from the receiver's shift register. The receiver checks for parity errors, framing errors, and overrun errors for each received character.
 
@@ -625,8 +675,12 @@ UART operation is controlled by three 8-bit registers: the UART Configuration re
 
 The 8-bit UART Configuration register (Figure 9-14) contains control information for both the receiver and transmitter.
 
+<br/>
+
 ![Figure 9-14. UART Configuration Register](Images/Figure9.14.png)<br/>
 _Figure 9-14. UART Configuration Register_
+
+<br/>
 
 The control fields within this register are described below.
 
@@ -670,9 +724,12 @@ A reset clears the UART Configuration register to all zeros, unless bootstrap mo
 
 The 8-bit Transmitter Control/Status register, shown in Figure 9-15, specifies the operation of the UART transmitter, as described below.
 
+<br/>
 
 ![Figure 9-15. Transmitter Control/Status Register](Images/Figure9.15.png)<br/>
 _Figure 9-15. Transmitter Control/Status Register_
+
+<br/>
 
 **Value (VAL).** This bit determines the value of the bits transmitted by the UART when the FRC bit is set to 1 and "dummy" characters are loaded into the Transmit Data register. When the VAL bit is set to 1, a mark character (all 1s) is transmitted; when the VAL bit is cleared to 0, a break character (all 0s) is transmitted.
 
@@ -693,8 +750,12 @@ A reset sets the Transmitter Control/Status register to a 01<sub>H</sub>. Bit 5 
 
 The 8-bit Receiver Control/Status register, shown in Figure 9-16, specifies the operation of the UART receiver, as described below.
 
+<br/>
+
 ![Figure 9-16. Receiver Control/Status Register](Images/Figure9.16.png)<br/>
 _Figure 9-16. Receiver Control/Status Register_
+
+<br/>
 
 **Receiver Error (ERR).** This bit is the logical OR of the PE, OVE, and FE bits.
 
@@ -723,7 +784,7 @@ Receive Data Register | FExx16
 Transmit Data Register | FExx18
 
 All addresses are in hexadecimal.<br/>
-"x" means "don’t care".
+"x" means "don't care".
 
 _Table 9-11. I/O Addresses of UART Registers_
 
@@ -745,7 +806,7 @@ Once the transmitter has been enabled, there are two ways to produce a break out
 
 The on-chip UART and DMA Channel 0 can be used to automatically initialize the Z280 MPU's memory with values received by the UART following a reset. This system bootstrapping capability permits ROMless system configurations, where memory is initialized using a serial link prior to the first Z280 MPU instruction fetch after the reset.
 
-As described in Section 3.2.1 and Chapter 11, bootstrap mode is selected by driving <u>WAIT</u> low and AD<sub>6</sub> high while <u>RESET</u> is asserted. The appropriate UART and DMA registers are automatically programmed as shown in Table 9-12 as a result of selecting bootstrap mode. The UART is initialized to receive data in 8-bit characters with odd parity, an external clock source, and a x16 clock rate. DMA Channel 0 is initialized with the link to the UART receiver and end-of-process capability enabled, and set up for flowthrough byte transfers in continuous mode. The destination address starts at memory location 0, with an autoincrement after each transfer, and a transfer count of 236 (100<sub>H</sub>).
+As described in Section 3.2.1 and Chapter 11, bootstrap mode is selected by driving <ins>WAIT</ins> low and AD<sub>6</sub> high while <ins>RESET</ins> is asserted. The appropriate UART and DMA registers are automatically programmed as shown in Table 9-12 as a result of selecting bootstrap mode. The UART is initialized to receive data in 8-bit characters with odd parity, an external clock source, and a x16 clock rate. DMA Channel 0 is initialized with the link to the UART receiver and end-of-process capability enabled, and set up for flowthrough byte transfers in continuous mode. The destination address starts at memory location 0, with an autoincrement after each transfer, and a transfer count of 236 (100<sub>H</sub>).
 
 Register | Initial Hex<br/>Value
 |-|-|
@@ -759,5 +820,5 @@ DMA Channel 0 Count register | 0100
 
 _Table 9-12. Reset Value of UART and DMA Registers When Bootstrap Mode Is Selected_
 
-If bootstrap mode is specified, the Z280 CPU automatically enters an idle state when <u>RESET</u> is deasserted. A minimum of 15 processor clock cycles must elapse after <u>RESET</u> is deasserted before tranmission of data to the UART receiver begins. DMA Channel 0 is then used to transfer characters received by the UART into memory. The data received is placed in memory starting at
+If bootstrap mode is specified, the Z280 CPU automatically enters an idle state when <ins>RESET</ins> is deasserted. A minimum of 15 processor clock cycles must elapse after <ins>RESET</ins> is deasserted before tranmission of data to the UART receiver begins. DMA Channel 0 is then used to transfer characters received by the UART into memory. The data received is placed in memory starting at
 physical address 0. If an error is detected by the UART receiver, the Transmit Output (Tx) line is driven low; external circuitry can use this signal to restart the initialization procedure, if so desired. After 256 bytes of data have been received and transferred to memory, the Z280 CPU automatically begins execution with an instruction fetch from memory location 0.

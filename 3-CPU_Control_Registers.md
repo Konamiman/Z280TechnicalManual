@@ -14,8 +14,12 @@ There are four 8-bit system configuration registers: the Bus Timing and Initiali
 
 The Bus Timing and Initialization register controls the scaling of the processor clock for bus timing, the duration of bus transactions to the lower half of physical memory, and the enabling of the multiprocessor and bootstrap modes. Figure 3-1 illustrates the bit fields in this register.
 
+<br/>
+
 ![Figure 3-1. Bus Timing and Initialization Register](Images/Figure3.1.png) <br/>
 _Figure 3-1. Bus Timing and Initialization Register_
+
+<br/>
 
 **Clock Scaling (CS) Field.** This 2-bit field governs the scaling of the CPU clock for generation of bus timing cycles. The state of the CS field determines the bus clock frequency for all bus transactions, as per Table 3-1. This field is initialized during a reset operation, as
 described below, and cannot be modified via software.
@@ -30,7 +34,7 @@ described below, and cannot be modified via software.
 _Table 3-1. CS Field of Bus Timing and Initialization Register_
 
 
-**Low Memory Wait Insertion (LM) Field.** This 2-bit field specifies the number of automatic wait states to insert in memory transactions to the lower 8 megabytes of physical memory (that is, all memory locations where bit 23 of the physical address is a 0), as per Table 3-2. Additional wait states can still be added to any given memory transaction via control of the <u>WAIT</u> input.
+**Low Memory Wait Insertion (LM) Field.** This 2-bit field specifies the number of automatic wait states to insert in memory transactions to the lower 8 megabytes of physical memory (that is, all memory locations where bit 23 of the physical address is a 0), as per Table 3-2. Additional wait states can still be added to any given memory transaction via control of the <ins>WAIT</ins> input.
 
 | LM Field | Number of Wait States for Lower 8M Bytes of Memory |
 |-|-|
@@ -48,14 +52,18 @@ _Table 3-2. LM Field of Bus Timing and Initialization Register_
 
 Bits 4 and 7 of the Bus Timing and Initialization register are reserved for special use by Zilog and should always be loaded with a zero when writing to this register. When this register is read, bits 4 and 7 may return a 1.
 
-The Bus Timing and Initialization register can be initialized with either of two methods during a reset operation. If the MPU's <u>WAIT</u> input is not asserted during reset, this register is automatically initialized to all zeros, thereby specifying a bus clock frequency of one-half the internal CPU clock, no automatic wait states during transactions to the lower 8M bytes of memory, and disabling of the multiprocessor and bootstrap modes. If the WAIT input is asserted during reset, the Bus Timing and Initialization register is set to the contents of the AD<sub>0</sub>-AD<sub>7</sub> bus lines, as read during the reset operation (see Chapter 12); this form of initialization is the only way to specify the bootstrap mode. Once the CS field has been loaded during reset, it cannot be modified via software; however, the LM and MP fields can be written using the LDCTL instruction.
+The Bus Timing and Initialization register can be initialized with either of two methods during a reset operation. If the MPU's <ins>WAIT</ins> input is not asserted during reset, this register is automatically initialized to all zeros, thereby specifying a bus clock frequency of one-half the internal CPU clock, no automatic wait states during transactions to the lower 8M bytes of memory, and disabling of the multiprocessor and bootstrap modes. If the WAIT input is asserted during reset, the Bus Timing and Initialization register is set to the contents of the AD<sub>0</sub>-AD<sub>7</sub> bus lines, as read during the reset operation (see Chapter 12); this form of initialization is the only way to specify the bootstrap mode. Once the CS field has been loaded during reset, it cannot be modified via software; however, the LM and MP fields can be written using the LDCTL instruction.
 
 ### 3.2.2 Bus Timing and Control Register
 
 The 8-bit Bus Timing and Control register determines the timing of bus transactions to the upper 8M bytes of memory and to all I/O devices, and the timing of interrupt acknowledge transactions. Figure 3-2 indicates the format of this register.
 
-![Figure 3-2. Bus Timing and Control Register](Images/Figure3.2.png) <br/>
+<br/>
+
+![Figure 3-2. Bus Timing and Control Register](Images/Figure3.2.png)<br/>
 _Figure 3-2. Bus Timing and Control Register_
+
+<br/>
 
 **I/O Wait Insertion (I/O) Field.** This 2-bit field specifies the number of automatic wait states (in addition to the one wait state always present during I/O transactions) to be inserted during each I/O read or write transaction, as per Table 3-3. The specified number of wait states is also added to the vector read portion of an interrupt acknowledge cycle.
 
@@ -82,7 +90,7 @@ states to be inserted during memory transactions to the upper 8M bytes of physic
 _Table 3-4. HM Field of Bus Timing and Initialization Register_
 
 
-**Daisy Chain Timing (DC).** This 2-bit field determines the number of automatic wait states to be inserted during interrupt acknowledge transactions while the interrupt acknowledge daisy chain is settling, as per Table 3-5. Normally, 2.5 bus clock cycles elapse between the assertion of Address Strobe and the assertion of Data Strobe during an interrupt acknowledge (for the Z-BUS) or between the assertion of <u>M1</u> and the assertion of <u>IORQ</u> (for the Z80 Bus). The value of the DC field determines if any additional clocks are to be added between the Address Strobe and Data Strobe (or <u>M1</u> and <u>IORQ</u>) assertions.
+**Daisy Chain Timing (DC).** This 2-bit field determines the number of automatic wait states to be inserted during interrupt acknowledge transactions while the interrupt acknowledge daisy chain is settling, as per Table 3-5. Normally, 2.5 bus clock cycles elapse between the assertion of Address Strobe and the assertion of Data Strobe during an interrupt acknowledge (for the Z-BUS) or between the assertion of <ins>M1</ins> and the assertion of <ins>IORQ</ins> (for the Z80 Bus). The value of the DC field determines if any additional clocks are to be added between the Address Strobe and Data Strobe (or <ins>M1</ins> and <ins>IORQ</ins>) assertions.
 
 | DC Field |Number of Walt States for DC Field Interrupt Acknowledge |
 |-|-|
@@ -94,7 +102,7 @@ _Table 3-4. HM Field of Bus Timing and Initialization Register_
 _Table 3-5. DC Field of Bus Timing and Control Register_
 
 
-The contents of the Bus Timing and Control register govern the number of automatic wait states to be inserted during various bus transactions. Additional wait states can be added to any bus transaction via control of the <u>WAIT</u> input.
+The contents of the Bus Timing and Control register govern the number of automatic wait states to be inserted during various bus transactions. Additional wait states can be added to any bus transaction via control of the <ins>WAIT</ins> input.
 
 The Bus Timing and Control register is set to 30H by a reset. Bits 4 and 5 should always be written with 0. When this register is read, bits 4 and 5 may return a 1.
 
@@ -107,9 +115,12 @@ If multiprocessor mode is enabled, the MPU automatically uses the Local Address 
 
 The format of the Local Address register is illustrated in Figure 3-3.
 
-![Figure 3-3. Local Address Register](Images/Figure3.3.png) <br/>
+<br/>
+
+![Figure 3-3. Local Address Register](Images/Figure3.3.png)<br/>
 _Figure 3-3. Local Address Register_
 
+<br/>
 
 **Base bit (B<sub>n</sub>):** For each ME<sub>n</sub> that is set to 1, the corresponding value of B<sub>n</sub> must match the value of address bit A<sub>n</sub> in order for the local bus to be used; otherwise, the transaction requires the use of the global bus.
 
@@ -124,10 +135,14 @@ The 8-bit Cache Control register controls the operation of the on-chip memory. T
 
 The Cache Control register contains five control bits, as described below. The format for this register is shown in Figure 3-4.
 
-![Figure 3-4. Cache Control Register](Images/Figure3.4.png) <br/>
+<br/>
+
+![Figure 3-4. Cache Control Register](Images/Figure3.4.png)<br/>
 _Figure 3-4. Cache Control Register_
 
-**Memory/Cache (M/<u>C</u>) Bit.** While this bit is set to 1, the on-chip memory is accessed as physical memory with fixed memory addresses; the user can programmably select the ranges of memory addresses for which the on-chip memory will respond. While this bit is cleared to 0, the on-chip memory is accessed associatively as a cache.
+<br/>
+
+**Memory/Cache (M/<ins>C</ins>) Bit.** While this bit is set to 1, the on-chip memory is accessed as physical memory with fixed memory addresses; the user can programmably select the ranges of memory addresses for which the on-chip memory will respond. While this bit is cleared to 0, the on-chip memory is accessed associatively as a cache.
 
 **Cache Instruction Disable (I) Bit.** While this bit and the M/C bit are cleared to 0, the on-chip memory is used as a cache during instruction fetches. While this bit is set to 1, instruction fetches do not use the cache. If the M/C bit is a 1, the state of this bit is ignored.
 
@@ -151,10 +166,14 @@ The 16-bit Master Status register (MSR) contains status information about the cu
 
 The format of the Master Status register is shown in Figure 3-5.
 
-![Figure 3-5. Master Status Register](Images/Figure3.5.png) <br/>
+<br/>
+
+![Figure 3-5. Master Status Register](Images/Figure3.5.png)<br/>
 _Figure 3-5. Master Status Register_
 
-**User/System (U/<u>S</u>) Bit.** While this bit is cleared to 0, the Z280 MPU is in the system mode of operation; while set to 1, the MPU is in the user mode of operation. The current operating mode determines which Stack Pointer is in use and which instructions can be executed; privileged instructions can be executed only while in system mode.
+<br/>
+
+**User/System (U/<ins>S</ins>) Bit.** While this bit is cleared to 0, the Z280 MPU is in the system mode of operation; while set to 1, the MPU is in the user mode of operation. The current operating mode determines which Stack Pointer is in use and which instructions can be executed; privileged instructions can be executed only while in system mode.
 
 **Breakpoint-on-Halt Enable (BH) Bit.** While this bit is set to 1, the CPU generates a breakpoint trap whenever a Halt instruction is encountered; while cleared to 0, the Halt instruction is executed normally.
 
@@ -171,9 +190,12 @@ The Master Status register is loaded with all zeros by a reset. Bits 7, 10, 11, 
 
 The 16-bit Interrupt Status register indicates which interrupt mode is in effect, which interrupt requests are pending, and which interrupt requests are to be vectored. Only the interrupt vector enable bits are writeable; all other bits in this register are read-only status bits. The fields in the Interrupt Status register are shown in Figure 3-6.
 
-![Figure 3-6. Interrupt Status Register](Images/Figure3.6.png) <br/>
+<br/>
+
+![Figure 3-6. Interrupt Status Register](Images/Figure3.6.png)<br/>
 _Figure 3-6. Interrupt Status Register_
 
+<br/>
 
 **Interrupt Vector Enable (I<sub>n</sub>) Bits.** These four bits indicate which of the four external interrupt inputs are to be vectored. While I<sub>n</sub> is set to 1, interrupts on the Interrupt n line are vectored when the CPU is in interrupt mode 3; while I<sub>n</sub> is cleared to 0, that interrupt is not vectored. These bits are ignored when not in interrupt mode 3.
 
@@ -188,9 +210,12 @@ On reset, the Interrupt Vector Enable bits are cleared to all zeros, interrupt m
 
 The 16-bit Interrupt/Trap Vector Table Pointer contains the twelve most significant bits of the physical memory address of the start of the Interrupt/Trap Vector Table. The Interrupt/Trap Vector Table is a memory area that holds the values that are loaded into the Master Status register and Program Counter during trap and interrupt processing under interrupt mode 3, as described in Chapter 6. The twelve low-order bits of the 24-bit physical address are assumed to be all zeros: thus, the Interrupt/Trap Vector Table must start on a 4K byte boundary in physical memory. The low-order four bits of the Interrupt/Trap Vector Table Pointer must be all zeros (Figure 3-7).
 
-![Figure 3-7. Interrupt/Trap Vector Table Pointer](Images/Figure3.7.png) <br/>
+<br/>
+
+![Figure 3-7. Interrupt/Trap Vector Table Pointer](Images/Figure3.7.png)<br/>
 _Figure 3-7. Interrupt/Trap Vector Table Pointer_
 
+<br/>
 
 The contents of the Interrupt/Trap Vector Table Pointer are unaffected by a reset and are undefined after power-up. When this register is read, bits 3,2,1 and 0 may return a 1.
 
@@ -199,8 +224,12 @@ The contents of the Interrupt/Trap Vector Table Pointer are unaffected by a rese
 
 The 8-bit I/O Page register determines the upper eight bits of the 24-bit peripheral address output during execution of an I/O transaction (Figure 3-8). I/O pages FEH and FFH are reserved for on-chip peripheral addresses.
 
-![Figure 3-8. I/O Page Register](Images/Figure3.8.png) <br/>
+<br/>
+
+![Figure 3-8. I/O Page Register](Images/Figure3.8.png)<br/>
 _Figure 3-8. I/O Page Register_
+
+<br/>
 
 The contents of the I/O Page register are cleared to all zeros by a reset.
 
@@ -209,8 +238,12 @@ The contents of the I/O Page register are cleared to all zeros by a reset.
 
 The 8-bit Trap Control register contains the enables for the maskable traps. Figure 3-9 illustrates the format of this register.
 
-![Figure 3-9. Trap Control Register](Images/Figure3.9.png) <br/>
+<br/>
+
+![Figure 3-9. Trap Control Register](Images/Figure3.9.png)<br/>
 _Figure 3-9. Trap Control Register_
+
+<br/>
 
 **Inhibit User I/O (I) Bit.** This bit determines whether or not I/O instructions are privileged instructions. While this bit is set to 1, all I/O instructions are treated as privileged instructions, and an attempt to execute an I/O instruction while in user mode results in a Privileged Instruction trap. While this bit is cleared to 0, I/O instructions can be successfully executed in user mode. I/O instructions can always be executed in system mode, regardless of the state of this bit.
 
@@ -225,7 +258,11 @@ The Trap Control register is cleared to all zeros by a reset, indicating that I/
 
 The 16-bit System Stack Limit register determines when a System Stack Overflow Warning trap is to be generated. Pushes onto the system-mode stack cause the 12 most significant bits of the logical address of the System Stack Pointer to be compared to the 12 most significant bits of this register; a System Stack Overflow Warning trap is generated if they match. The low-order four bits of this register must be zeros (Figure 3-10). This register has no effect on MPU operation if the System Stack Overflow Warning enable bit in the Trap Control register is cleared to 0.
 
-![Figure 3-10. System Stack Limit Register](Images/Figure3.10.png) <br/>
+<br/>
+
+![Figure 3-10. System Stack Limit Register](Images/Figure3.10.png)<br/>
 _Figure 3-10. System Stack Limit Register_
+
+<br/>
 
 The contents of the System Stack Limit register are cleared to zeros by a reset.

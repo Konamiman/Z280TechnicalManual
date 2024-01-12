@@ -22,8 +22,12 @@ Thie chapter describes the instruction set of the Z280 CPUs. First, flags and co
 
 The Flag register contains six bits of status information, that are set or cleared by CPU operations (Figure 5-1). Four of these bits are testable (C, P/V, Z, and S) for use with conditional jump, call, or return instructions. Two flags are not testable (H, N) and are used for binary-coded decimal (BCD) arithmetic.
 
-![Figure 5-1. Flag Register](Images/Figure5.1.png) <br/>
+<br/>
+
+![Figure 5-1. Flag Register](Images/Figure5.1.png)<br/>
 _Figure 5-1. Flag Register_
+
+<br/>
 
 The flags provide a link between sequentially executed instructions, in that the result of executing one instruction may alter the flags, and the resulting value of the flags can be used to determine the operation of a subsequent instruction. The program control instructions whose operation depends on the state of the flags are the Jump, Jump Relative, subroutine Call, and subroutine Return instructions; these instructions are referred to as conditional instructions.
 
@@ -172,7 +176,7 @@ This section presents an overview of the Z280 instruction set, arranged by funct
 
 ### 5.4.1 8-Bit Load Group
 
-This group of instructions (Table 5-2) includes load instructions for transferring data between byte registers, transferring data between a byte register and memory, and loading immediate data into byte registers or memory. All addressing modes are supported for loading between the accumulator and memory or for loading immediate values into memory. Loads between other registers and memory use the IR and SX addressing modes. An exchanqe instruction is available for swapping the contents of the accumulator with another register or with memory.
+This group of instructions (Table 5-2) includes load instructions for transferring data between byte registers, transferring data between a byte register and memory, and loading immediate data into byte registers or memory. All addressing modes are supported for loading between the accumulator and memory or for loading immediate values into memory. Loads between other registers and memory use the IR and SX addressing modes. An exchange instruction is available for swapping the contents of the accumulator with another register or with memory.
 
 The LDUD and LDUP instructions are available for loading to or from the user-mode memory address space while executing in system mode. The CPU flags are used to indicate if the transfer was successfully completed. LDUD and LDUP are privileged instructions. The other instructions in this group do not affect the flags, nor can their execution cause exception conditions.
 
@@ -391,11 +395,11 @@ _Table 5-8. Program Control Group Instructions_
 
 This group (Table 5-9) consists of instructions for transferring a byte, a word, or a string of bytes or words between peripheral devices and the CPU registers or memory. Byte I/O port addresses transfer bytes on AD<sub>0</sub>-AD<sub>7</sub> only. Thus in a 16-bit data bus environment, 8-bit peripherals must be connected to bus lines AD<sub>0</sub>-AD<sub>7</sub>. In an 8-bit data bus environment, word I/O instructions to external peripherals should not be used; however, on-chip peripherals can still be accessed by word I/O instructions.
 
-The instructions for transferring a single byte (IN, OUT) can transfer data between any 8-bit CPU reqister or memory address specified in the instruction and the peripheral port specified by the contents of the C reqister. The IN instruction sets the CPU flags according to the input data; however, special cases of these instructions, restricted to using the CPU accumulator and Direct Address mode, do not affect the CPU flags. Another variant tests an input port specified by the contents of the C register and sets the CPU flags without modifying CPU reqisters or memory.
+The instructions for transferring a single byte (IN, OUT) can transfer data between any 8-bit CPU register or memory address specified in the instruction and the peripheral port specified by the contents of the C register. The IN instruction sets the CPU flags according to the input data; however, special cases of these instructions, restricted to using the CPU accumulator and Direct Address mode, do not affect the CPU flags. Another variant tests an input port specified by the contents of the C register and sets the CPU flags without modifying CPU registers or memory.
 
-The instructions for transferring a single word (INW, OUTW) can transfer data between the HL register and the peripheral port specified by the contents of the C reqister. For word I/O, the contents of H appear on AD<sub>0</sub>-AD<sub>7</sub> and the contents of L appear as AD<sub>8</sub>-AD<sub>15</sub>. These instructions do not affect the CPU flags.
+The instructions for transferring a single word (INW, OUTW) can transfer data between the HL register and the peripheral port specified by the contents of the C register. For word I/O, the contents of H appear on AD<sub>0</sub>-AD<sub>7</sub> and the contents of L appear as AD<sub>8</sub>-AD<sub>15</sub>. These instructions do not affect the CPU flags.
 
-The remaining instructions in this qroup form a powerful and complete complement of instructions for transferring blocks of data between I/O ports and memory. The operation of these instructions is very similar to that of the block move instructions described earlier, with the exception that one operand is always an I/O port whose address remains unchanged while the address of the other operand (a memory location) is incremented or decremented. Both byte and word forms of these instructions are available. The automatically repeating forms of these instructions are interruptible.
+The remaining instructions in this group form a powerful and complete complement of instructions for transferring blocks of data between I/O ports and memory. The operation of these instructions is very similar to that of the block move instructions described earlier, with the exception that one operand is always an I/O port whose address remains unchanged while the address of the other operand (a memory location) is incremented or decremented. Both byte and word forms of these instructions are available. The automatically repeating forms of these instructions are interruptible.
 
 I/O instructions are not privileged if the Inhibit User I/O bit in the Trap Control register is clear; they can be executed in either system or user mode, so that I/O service routines can execute in user mode. The Memory Management Unit and on-chip peripherals' control and status registers are accessed using the I/O instructions. The contents of the I/O Page register are output on AD<sub>23</sub>-AD<sub>16</sub> with the I/O port address and can be used by external decoding to select specific devices. Pages FF and FE are reserved for on-chip I/O and no external bus transaction is generated. I/O devices can be protected from unrestricted access by using the I/O Page register to select among I/O peripherals.
 
@@ -431,7 +435,7 @@ _Table 5-9. Input/Output Instruction Group Instructions_
 
 ### 5.4.9 CPU Control Group
 
-The instructions in this group (Table 5-10) act upon the CPU control and status registers or perform other functions that do not fit into any of the other instruction groups. There are three instructions used for returning from an interrupt or trap service routine. Return from Nonmaskable Interrupt (REIN) and Return from Interrupt (RETI) are used in interrupt modes 0, 1, and 2 to pop the Program Counter from the stack and manipulate the Interrupt Mask reqister, or to signal a reset to Z8400 Family peripherals. The Return from Interrupt Long (RETIL) instruction pops a 4-byte program status from the System stack, and is used in interrupt mode 3 and trap processing.
+The instructions in this group (Table 5-10) act upon the CPU control and status registers or perform other functions that do not fit into any of the other instruction groups. There are three instructions used for returning from an interrupt or trap service routine. Return from Nonmaskable Interrupt (REIN) and Return from Interrupt (RETI) are used in interrupt modes 0, 1, and 2 to pop the Program Counter from the stack and manipulate the Interrupt Mask register, or to signal a reset to Z8400 Family peripherals. The Return from Interrupt Long (RETIL) instruction pops a 4-byte program status from the System stack, and is used in interrupt mode 3 and trap processing.
 
 Two of these instructions are not privileged: No Operation (NOP) and Purge Cache (PCACHE). The remaining instructions are privileged.
 
@@ -461,7 +465,7 @@ There are four types of extended instructions in the Z280 MPU instruction set: E
 
 A 4-byte long "template" is embedded in each of the extended instruction opcodes. These templates determine the operation to be performed in the EPU itself. The formats of these templates are described in the following pages. The descriptions are from the point of view of the CPU; that is, only CPU activities are described. The operation of the EPU is implied, but the full specification of the instruction template depends on the implementation of the EPU, and is beyond the scope of this manual. Fields in the template that are ignored by the CPU are indicated by asterisks, and would typically contain opcodes that determine any operation to be performed by the EPU in addition to the data transfers specified by the instruction. A 2-bit identification field is included in each template, for use in selecting one of up to four EPUs in a multiple-EPU system.
 
-The action taken by the CPU upon encountering an extended instruction depends upon the EPA control bit in the CPU's Trap Control reqister. When this bit is set to 1, indicating that EPUs are included in the system, extended instructions are executed. If this bit is cleared to 0, indicating that there are no EPUs in the system, the CPU executes an extended instruction trap whenever an extended instruction is encountered; this allows a trap service routine to emulate the desired operation in software.
+The action taken by the CPU upon encountering an extended instruction depends upon the EPA control bit in the CPU's Trap Control register. When this bit is set to 1, indicating that EPUs are included in the system, extended instructions are executed. If this bit is cleared to 0, indicating that there are no EPUs in the system, the CPU executes an extended instruction trap whenever an extended instruction is encountered; this allows a trap service routine to emulate the desired operation in software.
 
 | Instruction Name | Format
 |-|-|
@@ -2826,7 +2830,7 @@ CPU Halts
 
 The CPU operation is suspended until an interrupt or reset request is received. This instruction is used to synchronize the Z280 MPU with external events, preserving its state until an interrupt or reset request is accepted. After an interrupt is serviced, the instruction following HALT is executed. While halted, memory refresh cycles still occur, and bus requests are honored.
 
-For the Z80 Bus configuration of the Z280 MPU, the <u>HALT</u> signal is asserted when the Halt instruction is executed and remains asserted until an interrupt or reset request is accepted. For the Z-BUS configurations of the Z280 MPU, a special Halt bus transaction is performed when the halt instruction is executed.
+For the Z80 Bus configuration of the Z280 MPU, the <ins>HALT</ins> signal is asserted when the Halt instruction is executed and remains asserted until an interrupt or reset request is accepted. For the Z-BUS configurations of the Z280 MPU, a special Halt bus transaction is performed when the halt instruction is executed.
 
 If the Breakpoint-on-Halt control bit in the Master Status register is set to 1, the Halt instruction is not executed, and Breakpoint-on-Halt trap is taken instead.
 

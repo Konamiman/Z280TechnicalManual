@@ -7,17 +7,20 @@ The Z280 MPU has 256 bytes of on-chip memory. This on-chip memory can operate in
 
 ## 8.2 CACHE MEMORY MODE
 
-If the M/<u>C</u> bit in the Cache Control register is cleared to 0, then the 256 bytes of on-chip memory are treated as a cache. Cache memories are small, high-speed memory buffers situated between the processor and main memory. (Main memory is the semiconductor memory accessed via bus transactions.) For each memory access, control logic in the MPU checks if the memory location involved is currently stored in the cache. If so, the access is made to the cache, usually without generating an external bus transaction; if not, the access is made to main memory and the contents of the cache may be updated.
+If the M/<ins>C</ins> bit in the Cache Control register is cleared to 0, then the 256 bytes of on-chip memory are treated as a cache. Cache memories are small, high-speed memory buffers situated between the processor and main memory. (Main memory is the semiconductor memory accessed via bus transactions.) For each memory access, control logic in the MPU checks if the memory location involved is currently stored in the cache. If so, the access is made to the cache, usually without generating an external bus transaction; if not, the access is made to main memory and the contents of the cache may be updated.
 
 Z280 MPU cache organization is illustrated in Figure 8-1. The cache is arranged as 16 lines of 16 bytes each. Each line of the cache can hold a copy of sixteen consecutive bytes of memory in physical memory locations whose 20 most significant address bits are identical. Thus, for example, one line of the cache could hold the data from physical memory locations 153820<sub>H</sub> to 15382F<sub>H</sub>. The 20 bits of physical address associated with one line of 16 bytes in the cache is called the tag address for that line. Each line of the cache also has 16 valid bits associated with it; each byte in the line is associated with one valid bit. The valid bit is used to indicate if the corresponding byte in the cache holds a valid copy of the memory contents at the associated physical memory location.
+<br/>
 
-![Figure 8-1. Cache Organization](Images/Figure8.1.png)
+![Figure 8-1. Cache Organization](Images/Figure8.1.png)<br/>
 
 Tag n = the 20 Address bits associated with line n<br/>
 Valid bits = 16 bits that indicate which bytes in tha cache contain valid data<br/>
 Cache data = 16 bytes
 
 _Figure 8-1. Cache Organization_
+
+<br/>
 
 Lines in the cache are allocated using a Least-Recently Used (LRU) algorithm. If a read access is made to a physical memory address not currently stored in the cache (a cache "miss"), and the MMU does not assert cache inhibit, the line in the cache that has been least recently accessed is selected to hold the newly read data. All bytes in the selected line are marked invalid except for the bytes containing the newly accessed data. A cache miss on a data write does not cause a line to be allocated to the memory location accessed.
 
@@ -94,11 +97,11 @@ Effect on On-Chip Memory as Cache_
 
 ## 8.3 FIXED-ADDRESS MODE
 
-When the M/<u>C</u> bit in the Cache Control register is set to 1, the on-chip memory is treated as fixed physical memory locations. Accesses to these memory locations never generate external bus transactions and, therefore, are faster than memory accesses that use the external bus (Table 8-3).
+When the M/<ins>C</ins> bit in the Cache Control register is set to 1, the on-chip memory is treated as fixed physical memory locations. Accesses to these memory locations never generate external bus transactions and, therefore, are faster than memory accesses that use the external bus (Table 8-3).
 
 In this mode, the on-chip memory is still organized as 16 lines of 16 bytes each, with a 20-bit tag address that specifies the 16 physical memory locations in each line. All locations are assumed to contain valid information, whether or not they have been initialized; the individual valid bits associated with each byte in the line are ignored in this mode. The Cache Data Disable and Cache Instruction Disable bits in the Cache Control register are also ignored in this mode, and no distinction is made as to whether the CPU is accessing instructions or data.
 
-Before entering this mode, the user must initialize the tag addresses for all 16 lines of on-chip memory. The values for these tags determine the 256 physical memory addresses that are mapped into the on-chip memory. This is accomplished by enabling the on-chip memory as a cache for data only, reading data from 16 physical memory locations that are in different cache lines, and then setting the M/<u>C</u> bit in the Cache Control register to 1 to enable the fixed-address mode for the on-chip memory. Altering the M/<u>C</u> bit in the Cache Control register does not affect the contents of the on-chip memory, including the tag addresses.
+Before entering this mode, the user must initialize the tag addresses for all 16 lines of on-chip memory. The values for these tags determine the 256 physical memory addresses that are mapped into the on-chip memory. This is accomplished by enabling the on-chip memory as a cache for data only, reading data from 16 physical memory locations that are in different cache lines, and then setting the M/<ins>C</ins> bit in the Cache Control register to 1 to enable the fixed-address mode for the on-chip memory. Altering the M/<ins>C</ins> bit in the Cache Control register does not affect the contents of the on-chip memory, including the tag addresses.
 
 Note that each line of the on-chip memory must be assigned a unique tag address before entering this mode so that no unpredictable addresses are mapped into the on-chip memory. If instructions are to be fetched from the on-chip memory while in this mode, Return from Interrupt (RETI) instructions and the templates within extended instructions should never be resident in the on-chip memory; in each case, the operation of devices external to the MPU depends on these instructions being fetched with external bus transactions, as mentioned in section 8.2. Data to be transferred to or from an EPU cannot be resident in on-chip memory either, since this data must be transferred to the EPU over the external bus.
 

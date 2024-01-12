@@ -8,6 +8,7 @@ The MMU partitions the 64K logical address space of the Z280 CPU into fixed-size
 
 The MMU is programmed via I/O references to its control registers. The MMU records which pages have been modified and can inhibit the cache mechanism to prevent the writing of data to the on-chip cache. Access Violation traps are generated when an error condition is detected (such as an attempted write to a read-only page). Access violations cause the currently executing instruction to be aborted, and allow that instruction to be restarted in a manner compatible with virtual memory requirements. Upon reset, the MMU is disabled, allowing logical addresses to pass through to physical memory without translation.
 
+
 ## 7.2 MMU ARCHITECTURE
 
 The Z280 MMU consists of two sets of 16 page descriptor registers, used to translate addresses and assign memory attributes on a page-by-page basis, and a Master Control register that governs MMU operation. There is one page descriptor register associated with each logical page of memory. One set of 16 page descriptor registers is dedicated to system mode operation and the other set to user mode operation. The MMU registers are accessed using I/O instructions.
@@ -33,9 +34,12 @@ When translation is disabled for a particular mode (system or user), the MMU doe
 
 There are two sets of 16 page descriptor registers in the MMU, one set for system mode operation and one set for user mode operation. Each page descriptor register is 16 bits long, consisting of a 12-bit page frame address field and a 4-bit attribute field (Figure 7-1).
 
+<br/>
 
-![Figure 7-1. Page Descriptor Register](Images/Figure7.1.png)
+![Figure 7-1. Page Descriptor Register](Images/Figure7.1.png)<br/>
 _Figure 7-1. Page Descriptor Register_
+
+<br/>
 
 The page frame address field contains the most significant 12 bits (if program/data separation is not in effect) or most significant 11 bits (if program/data separation is in effect) of the starting physical address for that page. The low-order bits of the page's base physical address are assumed to be all zeros; thus, pages always start on 4K byte boundaries in physical memory without program/data separation, or 8K byte boundaries with program/data separation.
 
@@ -54,13 +58,17 @@ The least significant four bits of each page descriptor register are attribute a
 
 If address translation is enabled, logical addresses are translated to physical addresses in one of two ways, depending on the program/data separation mode, as specified in the MMU Master Control register. The format of the page descriptor registers is independent of which mode is in effect.
 
+
 ### 7.4.1 Address Translation Without Program/bata Separation
 
 When program/data separation is not in effect, the 16-bit logical address from the CPU is divided into two fields, a 4-bit index field used to select one of the 16 page descriptor registers, and a 12-bit offset field that forms the lower 12 bits of the resulting physical address. The upper 12 bits of the physical address are provided by the page frame address field of the selected page descriptor register. The pages are 4K bytes long. This translation mechanism is illustrated in Figure 7-2. Page descriptor register 0 is the descriptor for logical addresses 0000<sub>H</sub> to OFFF<sub>H</sub>, page descriptor register 1 is the descriptor for logical addresses 1000<sub>H</sub> to 1FFF<sub>H</sub>, and so on. Thus, the index portion of the logical address selects the page descriptor register. The page frame address field of that page descriptor register then determines the actual starting address for that page in physical memory; the low-order 12 bits of the logical address specify the offset within that 4K byte page.
 
+<br/>
 
-![Figure 7-2. Address Translation without Program/Data Separation](Images/Figure7.2.png)
+![Figure 7-2. Address Translation without Program/Data Separation](Images/Figure7.2.png)<br/>
 _Figure 7-2. Address Translation without Program/Data Separation_
+
+<br/>
 
 
 ### 7.4.2 Address Translation With Program/data Separation
@@ -68,8 +76,12 @@ _Figure 7-2. Address Translation without Program/Data Separation_
 When program/data separation is in effect, the 16-bit logical address from the CPU is divided into a 3-bit index and a 13-bit offset. A Program/Data address control signal from the CPU becomes the most significant bit of the 4-bit index that selects the appropriate page descriptor register; the three most significant bits of the logical address form the least significant bits of this index. The upper 11 bits of the page frame address field in the selected page descriptor register provide the upper 11 bits of the resulting physical address. The least significant 13 bits of the logical address form the low order 13 bits of the physical address, as illustrated in Figure
 7-3. Page descriptor register 0 is the descriptor for logical addresses 0000<sub>H</sub>-1FFF<sub>H</sub> in the data addres space, Page descriptor register 1 is the descriptor for logical addresses 2000<sub>H</sub>-3FFF<sub>H</sub> in the data address space, and so on through page descriptor register 7; page descriptor register 8 is the descriptor for logical addresses 0000<sub>H</sub>-1FFF<sub>H</sub> in the program address space, page descriptor register 9 is the descriptor for logical addresses 2000<sub>H</sub>-3FFF<sub>H</sub> in the program address space, and so on. Thus, each page is 8K bytes long, where the starting address of the page in physical memory is determined by the page frame address field in the selected page descriptor register, and the 13 least significant bits of the logical address specify the offset within that 8K byte page. In this mode, the least significant bit of the page frame address field in each page descriptor register is not used; this bit is modified by translation, and values read from it are unpredictable.
 
-![Figure 7-3. Address Translation with Program/Data Separation](Images/Figure7.3.png)
+<br/>
+
+![Figure 7-3. Address Translation with Program/Data Separation](Images/Figure7.3.png)<br/>
 _Figure 7-3. Address Translation with Program/Data Separation_
+
+<br/>
 
 
 ## 7.5 MMU CONTROL REGISTERS

@@ -8,22 +8,20 @@ The Z280 MPU architecture provides support for four types of multiprocessor conf
 <br/>
 
 ![Figure 10-1. Multiprocessor Configurations](Images/Figure10.1.png)<br/>
-
 _Figure 10-1. Multiprocessor Configurations_
-<br/><br/>
 
 
 ## 10.2 SLAVE PROCESSORS
 
 Slave processors, such as the Z8016 DMA Transfer Controller or other DMA devices, perform dedicated functions asynchronously to the CPU. The CPU and slave processors share a local bus, where the CPU is the default bus master. In order for a slave processor to use the bus, it must request control of the bus from the CPU and receive an acknowledgement of that request.
 
-Two Z280 MPU signals are provided for supporting slave processors: <u>BUSREQ</u> and <u>BUSACK</u>. A bus request is initiated by pulling the <u>BUSREQ</u> input low. Several bus requestors may be wire-ORed to the <u>BUSREQ</u> pin; priorities are resolved external to the MPU, usually <u>BUSREQ</u> a priority daisy chain. The external <u>BUSREQ</u> signal generates an internal, synchronous <u>BUSREQ</u>. If this signal is active at the beginning of any bus cycle, the Z280 MPU will relinquish the bus at the end of that bus cycle (with the exception of the TSET instruction, where the read-modify-write cycle is atomic). The MPU suspends execution of the current instruction and gives up control of the bus by 3-stating all address, address/data, bus timing, and bus status output pins. The BUSACK output is then asserted, signaling that the bus request has been accepted and the bus is free for use by the slave processor. The Z280 MPU remains in the bus disconnect state until <u>BUSACK</u> is deasserted.
+Two Z280 MPU signals are provided for supporting slave processors: <ins>BUSREQ</ins> and <ins>BUSACK</ins>. A bus request is initiated by pulling the <ins>BUSREQ</ins> input low. Several bus requestors may be wire-ORed to the <ins>BUSREQ</ins> pin; priorities are resolved external to the MPU, usually <ins>BUSREQ</ins> a priority daisy chain. The external <ins>BUSREQ</ins> signal generates an internal, synchronous <ins>BUSREQ</ins>. If this signal is active at the beginning of any bus cycle, the Z280 MPU will relinquish the bus at the end of that bus cycle (with the exception of the TSET instruction, where the read-modify-write cycle is atomic). The MPU suspends execution of the current instruction and gives up control of the bus by 3-stating all address, address/data, bus timing, and bus status output pins. The BUSACK output is then asserted, signaling that the bus request has been accepted and the bus is free for use by the slave processor. The Z280 MPU remains in the bus disconnect state until <ins>BUSACK</ins> is deasserted.
 
-The <u>BUSREQ</u> input is sampled during each processor clock period by the external bus interface logic of the Z280 MPU. If <u>BUSREQ</u> is sampled active low while the Z280 MPU is involved in an internal operation, the external bus is relinquished to the bus requestor immediately. Internal processing can continue until a transaction involving the external bus is required; the MPU then suspends activity until regaining control of the bus. If <u>BUSREQ</u> is sampled active during a CPU-generated transaction on the external bus, the bus is not relinquished nor CPU activity suspended until the current transaction is completed.
+The <ins>BUSREQ</ins> input is sampled during each processor clock period by the external bus interface logic of the Z280 MPU. If <ins>BUSREQ</ins> is sampled active low while the Z280 MPU is involved in an internal operation, the external bus is relinquished to the bus requestor immediately. Internal processing can continue until a transaction involving the external bus is required; the MPU then suspends activity until regaining control of the bus. If <ins>BUSREQ</ins> is sampled active during a CPU-generated transaction on the external bus, the bus is not relinquished nor CPU activity suspended until the current transaction is completed.
 
-The Z280 MPU regains control of the bus after <u>BUSREQ</u> rises, continuing execution from the point at which it was suspended. Any bus requestor desiring control of the bus must wait at least two bus cycles after <u>BUSREQ</u> has risen before asserting <u>BUSREQ</u> again.
+The Z280 MPU regains control of the bus after <ins>BUSREQ</ins> rises, continuing execution from the point at which it was suspended. Any bus requestor desiring control of the bus must wait at least two bus cycles after <ins>BUSREQ</ins> has risen before asserting <ins>BUSREQ</ins> again.
 
-In the case of simultaneous bus requests from multiple sources, the on-chip DMA channels have higher priority than external slave processors in Z280 MPU systems. After reset, the Z280 MPU acknowledges an active <u>BUSREQ</u> signal before performing any transactions.
+In the case of simultaneous bus requests from multiple sources, the on-chip DMA channels have higher priority than external slave processors in Z280 MPU systems. After reset, the Z280 MPU acknowledges an active <ins>BUSREQ</ins> signal before performing any transactions.
 
 
 ## 10.3 TIGHTLY COUPLED MULTIPLE PROCESSORS
@@ -32,7 +30,7 @@ Tightly coupled multiple CPUs execute independent instruction streams from their
 
 The Z280 MPU's multiprocessor mode of operation supports tightly coupled multiple CPU configurations. This mode is also useful when configuring the Z280 MPU as an I/O processor in a distributed processing system. Multiprocessor mode is selected by setting the Multiprocessor Configuration Enable (MP) bit in the Z280 CPU's Bus Timing and Initialization register (see Section 3.2.1). While in the multiprocessor mode, the Z280 MPU is able to support both a local bus and a global bus. The Z280 CPU is the default bus master of the local bus, but must make a request and receive an acknowledgement before performing transactions on the global bus. Only memory transactions can be performed on the global bus; I/O transactions always use the local bus. The range of memory addresses dedicated to the global and local buses is determined by the contents of the CPU's Local Address register.
 
-While in the multiprocessor mode, Counter/Timer 0's I/O and IN pins are used as global bus request (<u>GREQ</u>) and global bus acknowledge (<u>GACK</u>) signals, respectively. <u>GREQ</u> is a three-state output; an active low signal on this line requests use of the global bus. An active low level on the <u>GACK</u> input acknowledges a global bus request.
+While in the multiprocessor mode, Counter/Timer 0's I/O and IN pins are used as global bus request (<ins>GREQ</ins>) and global bus acknowledge (<ins>GACK</ins>) signals, respectively. <ins>GREQ</ins> is a three-state output; an active low signal on this line requests use of the global bus. An active low level on the <ins>GACK</ins> input acknowledges a global bus request.
 
 
 ### 10.3.1 The Local Address Register
@@ -42,16 +40,14 @@ During each memory transaction while in multiprocessor mode, the Z280 CPU uses t
 <br/>
 
 ![Figure 10-2. Local Address Register](Images/Figure10.2.png)<br/>
-
 _Figure 10-2. Local Address Register_
-<br/><br/>
 
 
 ### 10.3.2 Bus Request Protocols
 
-While in the multiprocessor mode, the <u>BUSREQ</u> and <u>BUSACK</u> signals control use of the local bus in the Same manner as described in section 10.2. When a local bus request is granted, as indicated by an active <u>BUSACK</u> signal, the CPU places all output signals, including <u>GREQ</u>, in the high-impedance state.
+While in the multiprocessor mode, the <ins>BUSREQ</ins> and <ins>BUSACK</ins> signals control use of the local bus in the Same manner as described in section 10.2. When a local bus request is granted, as indicated by an active <ins>BUSACK</ins> signal, the CPU places all output signals, including <ins>GREQ</ins>, in the high-impedance state.
 
-When in control of its local bus, a Z280 CPU can initiate transactions with devices on the global bus that are shared with other CPUs. At any one time, only one CPU can control transactions on the global bus. Control of the global bus is arbitrated by external circuitry. Before initiating a transaction on the global bus, the CPU requests control of the global bus from the external arbiter circuitry by asserting <u>GREQ</u> and waiting for an active <u>GACK</u> in response. (The timing diagrams for global bus requests are shown in Figures 12—15 and 13-19.) The <u>GACK</u> input is asynchronous to the CPU clock; the Z280 CPU synchronizes <u>GACK</u> internally. Once <u>GACK</u> is asserted, the CPU performs the transaction on the global bus. The CPU then deasserts <u>GREQ</u> and waits for the arbiter circuit to deassert <u>GACK</u>. The CPU always relinquishes the global bus by deasserting <u>GREQ</u> after each global transaction is completed, except during execution of a Test and Set (TSET) instruction (both the data read and write are completed before relinquishing the global bus) or during a burst-mode memory transfer (the entire sequence of burst-mode memory reads is completed before relinquishing the global bus).
+When in control of its local bus, a Z280 CPU can initiate transactions with devices on the global bus that are shared with other CPUs. At any one time, only one CPU can control transactions on the global bus. Control of the global bus is arbitrated by external circuitry. Before initiating a transaction on the global bus, the CPU requests control of the global bus from the external arbiter circuitry by asserting <ins>GREQ</ins> and waiting for an active <ins>GACK</ins> in response. (The timing diagrams for global bus requests are shown in Figures 12—15 and 13-19.) The <ins>GACK</ins> input is asynchronous to the CPU clock; the Z280 CPU synchronizes <ins>GACK</ins> internally. Once <ins>GACK</ins> is asserted, the CPU performs the transaction on the global bus. The CPU then deasserts <ins>GREQ</ins> and waits for the arbiter circuit to deassert <ins>GACK</ins>. The CPU always relinquishes the global bus by deasserting <ins>GREQ</ins> after each global transaction is completed, except during execution of a Test and Set (TSET) instruction (both the data read and write are completed before relinquishing the global bus) or during a burst-mode memory transfer (the entire sequence of burst-mode memory reads is completed before relinquishing the global bus).
 
 A state diagram of the bus request protocol is shown in Figure 10-3.
 
@@ -88,7 +84,7 @@ _Figure 10-3. State Diagram for CPU Bus Request Protocol_
 <br/><br/>
 
 
-While a Z280 CPU is asserting <u>GREQ</u> and waiting for an active <u>GACK</u>, if <u>BUSREQ</u> is asserted before <u>GACK</u>, the CPU releases the global bus request after <u>GACK</u> is asserted without performing any transactions.
+While a Z280 CPU is asserting <ins>GREQ</ins> and waiting for an active <ins>GACK</ins>, if <ins>BUSREQ</ins> is asserted before <ins>GACK</ins>, the CPU releases the global bus request after <ins>GACK</ins> is asserted without performing any transactions.
 
 The on-chip DMA channels may also initiate transactions on the global bus. During each DMA-controlled transaction, memory addresses generated by a DMA channel are compared to the contents of the Local Address register to determine if the global bus is to be requested, in the same manner as CPU-controlled bus transactions.
 
@@ -99,37 +95,34 @@ If the automatic memory refresh mechanism is enabled, refresh cycles are inhibit
 
 The Z280 MPU's multiprocessor mode of operation facilitates the development of tightly coupled multiprocessor systems and systems using the Z280 MPU as a front-end I/O processor.
 
-Figure 10-4 is a block diagram illustrating the use of multiple Z280 MPUs as tightly-coupled processors. Access to the global memory via the global bus is controlled by a centralized bus arbitration circuit. The <u>GACK</u> circuit controls the buffers that connect or isolate the global bus from each MPU's local bus. Each Z280 MPU can access its local memory independent of the other MPU's activity. Only one MPU at a time can access the shared global memory. Note that memory-mapped I/O devices could also be shared using the global bus.
+Figure 10-4 is a block diagram illustrating the use of multiple Z280 MPUs as tightly-coupled processors. Access to the global memory via the global bus is controlled by a centralized bus arbitration circuit. The <ins>GACK</ins> circuit controls the buffers that connect or isolate the global bus from each MPU's local bus. Each Z280 MPU can access its local memory independent of the other MPU's activity. Only one MPU at a time can access the shared global memory. Note that memory-mapped I/O devices could also be shared using the global bus.
 
 <br/>
 
 ![Figure 10-4. Tightly Coupled Processors with Shared Global Memory](Images/Figure10.4.png)<br/>
-
 _Figure 10-4. Tightly Coupled Processors with Shared Global Memory_
-<br/><br/>
+<br/>
 
 Figure 10-5 shows a tightly coupled multiple Z280 MPU system without a global memory, where each processor can directly access the local memory of the other processor. For this system, priority resolution logic would control both the local and global bus requests. A global bus request from
 one processor is used to generate a local bus request to the other processor. When one
-processor generates a global bus request, an active <u>GACK</u> signal is not returned to that processor until the other processor's local bus is available, as indicated by <u>BUSACK</u>.
+processor generates a global bus request, an active <ins>GACK</ins> signal is not returned to that processor until the other processor's local bus is available, as indicated by <ins>BUSACK</ins>.
 
 <br/>
 
 ![Figure 10-5. Tightly Coupled Processors without Global Memory](Images/Figure10.5.png)<br>
-
 _Figure 10-5. Tightly Coupled Processors without Global Memory_
-<br/><br/>
+<br/>
 
 Although both Figure 10-4 and 10-5 show only two tightly coupled processors, more processors could be added to these systems in a similar manner.
 
 Figure 10-6 illustrates the use of a Z280 MPU as an I/O processor in a Z8000-based system. The
-Z280 MPU's <u>GREQ</u> signal is used as the bus request signal to the Z8000 CPU; the Z8000 CPU's <u>BUSACK</u> signal is input directly to the Z280 MPU's <u>GACK</u>, as well as controlling the buffers that normally isolate the Z280 MPU's local bus from the Z8000 CPU's bus.
+Z280 MPU's <ins>GREQ</ins> signal is used as the bus request signal to the Z8000 CPU; the Z8000 CPU's <ins>BUSACK</ins> signal is input directly to the Z280 MPU's <ins>GACK</ins>, as well as controlling the buffers that normally isolate the Z280 MPU's local bus from the Z8000 CPU's bus.
 
 <br/>
 
 ![Figure 10-6. Z280 MPU as an I/O Processor](Images/Figure10.6.png)<br/>
-
 _Figure 10-6. Z280 MPU as an I/O Processor_
-<br/><br/>
+<br/>
 
 
 ## 10.4 LOOSELY COUPLED MULTIPLE CPUS
@@ -146,9 +139,8 @@ An Extended Processing Unit is a coprocessor that can be used to execute complex
 <br/>
 
 ![Figure 10-7. EPU Connection in Z280 MPU System](Images/Figure10.7.png)<br/>
-
 _Figure 10-7. EPU Connection in Z280 MPU System_
-<br/><br/>
+<br/>
 
 The underlying philosophy of the Extended Processing Architecture is that the CPU is an instruction processor; that is, the CPU fetches an instruction, fetches data associated with that instruction, performs the specified operation, and stores the result. Extending the number of operations that can be performed does not affect the instruction fetch and address calculation portion of the CPU activity. The extended instructions exploit this feature. The CPU is responsible for fetching instructions, performing address calculations, and generating the timing signals for bus transactions; however, the actual data manipulation for extended instructions is handled by an EPU. Both the CPU and EPUs are, therefore, controlled via a single instruction stream, eliminating many significant system software and bus contention problems that can occur with other multiprocessing configurations.
 
@@ -167,14 +159,13 @@ executed as the Extended Instruction trap service routine; when EPUs are added t
 
 ### 10.5.2 Extended Instruction Execution Sequence
 
-The CPU and EPU instruction execution sequence is diagrammed in Figure 10-8. When the CPU fetches an extended instruction, the EPU Enable bit in the Trap Control register is examined. If the EPU Enable bit is a 0, an Extended Instruction trap is executed. If the EPU Enable bit is a 1, indicating that there is an EPU in the system, then the CPU fetches the four-byte instruction template from memory. The fetching of the template is indicated by the ST<sub>3</sub>-ST<sub>0</sub> status lines from the CPU. EPUs must continuously monitor the address/data bus and ST<sub>3</sub>-ST<sub>0</sub> status lines for its templates. A 2-bit identification field in the template can select one of up to four EPUs for execution of a given extended instruction. If the extended instruction calls for the transfer of data between the CPU and EPU or between the EPU and memory, the CPU generates the appropriate bus transaction cycles. These transactions are identified by unique encodings of the ST<sub>3</sub>-ST<sub>0</sub> status lines. The EPU monitors the status and timing signals output by the CPU to determine when to participate in the data transaction; the EPU supplies or captures the data when <u>DS</u> is active. For transactions between an EPU and memory, the CPU 3-states its address/data lines while <u>DS</u> is active so that the EPU or memory can supply the data. (See section 13.5.5 for a description of the bus transaction timing.)
+The CPU and EPU instruction execution sequence is diagrammed in Figure 10-8. When the CPU fetches an extended instruction, the EPU Enable bit in the Trap Control register is examined. If the EPU Enable bit is a 0, an Extended Instruction trap is executed. If the EPU Enable bit is a 1, indicating that there is an EPU in the system, then the CPU fetches the four-byte instruction template from memory. The fetching of the template is indicated by the ST<sub>3</sub>-ST<sub>0</sub> status lines from the CPU. EPUs must continuously monitor the address/data bus and ST<sub>3</sub>-ST<sub>0</sub> status lines for its templates. A 2-bit identification field in the template can select one of up to four EPUs for execution of a given extended instruction. If the extended instruction calls for the transfer of data between the CPU and EPU or between the EPU and memory, the CPU generates the appropriate bus transaction cycles. These transactions are identified by unique encodings of the ST<sub>3</sub>-ST<sub>0</sub> status lines. The EPU monitors the status and timing signals output by the CPU to determine when to participate in the data transaction; the EPU supplies or captures the data when <ins>DS</ins> is active. For transactions between an EPU and memory, the CPU 3-states its address/data lines while <ins>DS</ins> is active so that the EPU or memory can supply the data. (See section 13.5.5 for a description of the bus transaction timing.)
 
 <br/>
 
 ![Figure 10-8. CPU-EPU Instruction Execution Sequence](Images/Figure10.8.png)<br/>
-
 _Figure 10-8. CPU-EPU Instruction Execution Sequence_
-<br/><br/>
+<br/>
 
 The number and type of bus cycles required to fetch the extended instruction template depends on whether the template is aligned on an even address boundary. The four-byte long template can be fetched with two word transactions if the template begins on an even memory address or with one byte and two word transactions if the template begins at an odd memory address, as described in Table 10-1. (In the case of an odd starting address for the template, the EPU captures only the upper byte from the bus during the second word transaction.) The template is always fetched from memory using the CPU's external bus interface, regardless of the current state of the on-chip cache memory.
 
@@ -191,11 +182,11 @@ Odd | 1 | n | Byte | 1101
 _Table 10-1. Bus Transactions Involved in Fetch of Extended Instruction Template_
 <br/><br/>
 
-If the extended instruction specifies an internal EPU operation, the Z280 CPU can proceed to fetch and execute subsequent instructions. Thus, the CPU and EPUs may be processing in parallel. The <u>PAUSE</u> signal is used to synchronize CPU-EPU activity in the case of overlapping extended instructions. If the CPU fetches another extended instruction template intended for an EPU that is still executing a previous instruction, the EPU activates the <u>PAUSE</u> input to the CPU to halt further CPU activity until the EPU can finish the original operation. While <u>PAUSE</u> is asserted, all CPU activity is suspended except responses to refresh requests, bus requests, and resets.
+If the extended instruction specifies an internal EPU operation, the Z280 CPU can proceed to fetch and execute subsequent instructions. Thus, the CPU and EPUs may be processing in parallel. The <ins>PAUSE</ins> signal is used to synchronize CPU-EPU activity in the case of overlapping extended instructions. If the CPU fetches another extended instruction template intended for an EPU that is still executing a previous instruction, the EPU activates the <ins>PAUSE</ins> input to the CPU to halt further CPU activity until the EPU can finish the original operation. While <ins>PAUSE</ins> is asserted, all CPU activity is suspended except responses to refresh requests, bus requests, and resets.
 
-CPU activity following the fetch of the extended instruction template is governed by the type of extended instruction being processed. In the case of an EPU internal operation, no further bus transactions are required by the extended instruction, so the CPU will proceed to fetch the next instruction. However, the CPU will still honor an active <u>PAUSE</u> input and suspend execution until PAUSE is released.
+CPU activity following the fetch of the extended instruction template is governed by the type of extended instruction being processed. In the case of an EPU internal operation, no further bus transactions are required by the extended instruction, so the CPU will proceed to fetch the next instruction. However, the CPU will still honor an active <ins>PAUSE</ins> input and suspend execution until PAUSE is released.
 
-In the case of an EPU-to-CPU transfer instruction, the next non-refresh transaction following the fetch of the template (and after an active <u>PAUSE</u> signal is deasserted) will be the EPU-to-CPU bus transaction. EPU-to-CPU bus transactions are identified by a 1110 status code on the ST<sub>3</sub>-ST<sub>0</sub> status lines and are word transactions. The address emitted by the CPU during this cycle is the memory address of the previous transaction (that is, the address used during the last fetch of the instruction template).
+In the case of an EPU-to-CPU transfer instruction, the next non-refresh transaction following the fetch of the template (and after an active <ins>PAUSE</ins> signal is deasserted) will be the EPU-to-CPU bus transaction. EPU-to-CPU bus transactions are identified by a 1110 status code on the ST<sub>3</sub>-ST<sub>0</sub> status lines and are word transactions. The address emitted by the CPU during this cycle is the memory address of the previous transaction (that is, the address used during the last fetch of the instruction template).
 
 In the case of EPU-to-memory or memory-to-EPU transfer instructions, the next one to sixteen non-refresh transactions following the fetch of the template (and after an active PAUSE signal is deasserted) will be the appropriate data transfer cycles. Up to 16 bytes of data may be transferred as the result of a single extended instruction; the number of data transfers to be performed is encoded in the instruction template. The 1010 status code on the ST<sub>3</sub>-ST<sub>0</sub> status lines identifies bus cycles that transfer data between an EPU and memory. The EPU must supply the data for write operations or capture the data for read operations during each transaction, just as if it were part of the CPU. The number and type of transactions generated also depends on whether the starting memory address of the data block to be moved is an even-valued address, as defined in Table 10-2. The case where only one byte is transferred is degenerate and shown separately in Table 10-2 for clarity. These transfers are always performed on the Z280 MPU's external bus, regardless of the current state of the on-chip cache memory.
 

@@ -22,6 +22,8 @@ The CPU register file is divided into five groups of registers (an apostrophe in
 * Stack Pointers (SSP, USP)
 * Program Counter, Interrupt register, and Refresh register (PC, I, R)
 
+<br/>
+
 ![Figure 2-1. Register File Organization](Images/Figure2.1.png)<br/>
 _Figure 2-1. Register File Organization_
 
@@ -49,6 +51,8 @@ Control register addresses are specified by the contents of the C register. No t
 
 The Z280 CPU control registers are the Bus Timing and Initialization register, the Bus Timing and Control register, the Master Status register, the Interrupt/Trap Vector Table Pointer, the I/O Page register, the System Stack Limit register, the Trap Control register, the Interrupt Status register, the Cache Control register, and the Local Address register (Figure 2-2). The CPU control registers are described in detail in Chapter 3.
 
+<br/>
+
 ![Figure 2-2. CPU Control Registers](Images/Figure2.2.png)<br/>
 _Figure 2-2. CPU Control Registers_
 
@@ -61,6 +65,7 @@ Each address space can be viewed as a string of 64K bytes nunbered consecutively
 
 The size of the data element being addressed depends on the instruction being executed. A bit can be addressed by specifying a byte and a bit within that byte. Bits are numbered from right to left, with the least significant bit being bit 0, as illustrated in Figure 2-3.
 
+<br/>
 
 ![Figure 2-3. Numbering of Bits within a Byte](Images/Figure2.3.png)<br/>
 _Figure 2-3. Numbering of Bits within a Byte_
