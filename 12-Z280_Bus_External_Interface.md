@@ -1,5 +1,7 @@
 # 12. Z280 Bus External Interface
 
+## 12.1 INTRODUCTION
+
 The Z280 MPU is typically only one component in a system that may include memory, peripherals, slave processors, coprocessors, and other CPUs, all connected via a system bus. Two different component-interconnect bus schemes are available with the Z280 MPU: the Z80 Bus and the Z-BUS.
 
 This chapter describes the external manifestations (that is, the activity on the pins) that result from CPU or on-chip peripheral activity for the Z80 Bus configurations of the Z280 MPU. (The Z-BUS external interface is described in Chapter 13.) Since the pins are connected to the system bus, most of this discussion will center on the bus and bus operations.
