@@ -107,6 +107,8 @@ The MMU Master Control register is programmed via a word output instruction to I
 
 The Page Descriptor registers in the MMU are accessed using the Page Descriptor Register Pointer (PDR Pointer). The 8-bit PDR Pointer contains the address of one of the Page Descriptor registers; the encoding is given in Table 7-1. The permissible contents of the PDR Pointer are 00<sub>H</sub> through 1F<sub>H</sub>. The PDR Pointer is accessed via byte I/O instructions to port address FFxxF1<sub>H</sub>.
 
+<br/>
+
 PDR Pointer or<br/>PFI Field | Selected Page Descriptor Register
 |-|-|
 00 | User Page Descriptor 0
@@ -148,6 +150,8 @@ For accesses to the Page Descriptor registers using the Descriptor Select port o
 
 The Valid bits in the Page Descriptor registers can be cleared to 0 via byte writes to I/O port address FFxxF2<sub>H</sub>, thereby invalidating the contents of the Page Descriptor registers. Individual Valid bits can subsequently be set by writing to individual Page Descriptor registers using the Descriptor Select port or the Block Move port. The Page Descriptor registers invalidated by a write to port FFxxF2<sub>H</sub> depend on the data written to that port, as delineated in Table 7-2. When writing to the invalidation port only the least significant four bits are sampled; the upper four bits are not used. Reading port FFxxF2<sub>H</sub> returns unpredictable data.
 
+<br/>
+
 Data Written to<br/>Port FFxxF2<br/>(Hexadecimal) | Page Descriptor Registers<br/>Invalidated
 |-|-|
 01 | System Page Descriptor Registers 0-7
@@ -159,7 +163,11 @@ Data Written to<br/>Port FFxxF2<br/>(Hexadecimal) | Page Descriptor Registers<br
 
 _Table 7-2. MMU Invalidation Port_
 
+<br/>
+
 The I/O port addresses for the MMU* registers are listed in Table 7-3.
+
+<br/>
 
 Port<br/>Address | Register
 |-|-|
@@ -170,6 +178,8 @@ FFxxF4<sub>H</sub> | Block Move Port
 FFxxF2<sub>H</sub> | Invalidation Port
 
 _Table 7-3. I/O Port Addresses for MMU Control Registers_
+
+<br/>
 
 Changing an MMU control register or Page Descriptor register does not cause a flush of the CPU instruction pipeline. While an instruction that changes an MMU register is executing, up to two subsequent instructions can be pre-fetched into the CPU pipeline; execution of these subsequent instructions must have benign results. In other words, when changing an MMU register, up to two subsequent instructions can be fetched before the change to the MMU register is guaranteed to take effect. (However, no data accesses are pre-fetched.) Therefore, when initially enabling the MMU for address translation, the instruction that enables the MMU and the next two instructions must be in a page whose logical addresses are identical to physical addresses (so that it is immaterial exactly when the MMU begins the translation process for those instruction fetches). When altering a page descriptor register while translation is enabled, neither of the next two instructions should reside in the page associated with the Page Descriptor register being changed.
 

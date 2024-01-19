@@ -154,6 +154,8 @@ The five fields in this register are described below.
 
 **Input Pin Assignments (IPA)**. The contents of this 4-bit field determine the operating mode of the counter/timer (counter or timer mode) and the functionality of the external pins associated with that counter/timer. The four bits in this field are associated with enabling the generation of an output pulse (EO), selecting the counter or timer mode (C/T), enabling the gating facility (G), and enabling the triggering facility (T). Table 9-1 shows the encoding of this field.
 
+<br/>
+
 EO | C/T | G | T | Counter/Timer I/O | Counter/Timer Input | Mode
 |-|-|-|-|-|-|-|
 0 | 0 | 0 | 0 | Unused | Unused | Timer
@@ -174,6 +176,8 @@ EO | C/T | G | T | Counter/Timer I/O | Counter/Timer Input | Mode
 1 | 1 | 1 | 1 | Unused | Unused | Reserved
 
 _Table 9-1. Encoding of the IPA Field in the Counterfllmer Configuration Register_
+
+<br/>
 
 If a reserved encoding of the IPA field is specified fur any counter/timer, counter/timer operation is unpredictable.
 
@@ -216,6 +220,8 @@ The 16-bit Count-Time register holds the current value in the downcounter and ca
 Both the Time Constant and Count-Time registers hold unpredictable values after a reset.
 
 Table 9-2 lists the I/O port addresses associated with each of the counter/timers' registers. The Counter/Timer Configuration register and Counter/Timer Command/Status register are accessed with byte I/O instructions and, with the exception of the read-only CIP bit, can be read or written. The Time Constant and Count-Time registers are accessed with word I/O instructions. The Time Constant register can be read or written; the Count-Time register is read-only.
+
+<br/>
 
 Register | C/T 0 | C/T 1 | C/T 2
 |-|-|-|-|
@@ -466,6 +472,8 @@ _Figure 9.10. Transaction Descriptor Register_
 
 **Destination Address Descriptor (DAD).** This 3-bit control field determines the type of location (memory or I/O) to be accessed as the destination port during DMA transfers, and whether the destination address is to be incremented, decremented, or left unchanged between transfers, as shown in Table 9-4. When memory addresses are auto-incremented or auto-decremented, the incrementing or decrementing value is determined by the size of the data transfer, as specified in the ST field. I/O port addresses are always auto-incremented and auto-decremented by 1.
 
+<br/>
+
 Encoding | Address Modification Operation
 |-|-|
 000 | Auto-increment memory location
@@ -479,9 +487,13 @@ Encoding | Address Modification Operation
 
 _Table 9-4. Encoding off DAD and SAD Fields In DMA Transaction Descriptor Register_
 
+<br/>
+
 **Transfer Complete (TC).** This status bit is set to 1 automatically when the Count register has reached zero. This bit can be set to 1 or cleared to 0 under software control.
 
 **Transaction Type (Type).** This 2-bit control field specifies the type of DMA operation to be performed, as shown in Table 9-5.
+
+<br/>
 
 Encoding | DMA Operation
 |-|-|
@@ -492,7 +504,11 @@ Encoding | DMA Operation
 
 _Table 9-5. Encoding of Type Field in Transaction Descriptor Register_
 
+<br/>
+
 **Bus Request Protocol (BRP).** This 2-bit control field determines the transfer mode for the DMA operation, as shown in Table 9-6.
+
+<br/>
 
 Encoding | DMA Transfer Mode
 |-|-|
@@ -503,7 +519,11 @@ Encoding | DMA Transfer Mode
 
 _Table 9-6. Encoding of BRP Field In Transaction Descriptor Register_
 
+<br/>
+
 **Size of Transfer (ST).** This 2-bit control field specifies the size of the entity to be transferred during each DMA-controlled transaction, as shown in Table 9-7. If auto-increment or auto-decrement of a source or destination memory address is specified in the SAD or DAD fields, then the state of this field determines the size of the increment or decrement operation.
+
+<br/>
 
 Encoding | Size of<br/>Transfer | Number to Increment<br/>or Decrement By
 |-|-|-|
@@ -513,6 +533,8 @@ Encoding | Size of<br/>Transfer | Number to Increment<br/>or Decrement By
 11 | Reserved
 
 _Table 9-7. Encoding of ST Field in Transaction Descriptor Register_
+
+<br/>
 
 **Interrupt Enable (IE).** While this bit is set to 1, the DMA channel generates an interrupt request to the CPU either when the Count register goes to zero, indicating the completion of a DMA operation, or when an End-of-Process signal prematurely terminates a DMA operation. While this bit is cleared to 0, no interrupt request is generated.
 
@@ -547,6 +569,8 @@ DMA0's Destination Address register is cleared to 0 by a reset; all other Source
 
 All DMA registers are located in I/O page FF<sub>H</sub>. The DMA Master Control register is accessed at I/O port address FFxx1F. Table 9-8 lists the I/O port addresses for the other DMA registers. All DMA registers can be read or written using word I/O instructions.
 
+<br/>
+
 Register | DMA0 | DMA1 | DMA2 | DMA3
 |-|-|-|-|-|
 Destination<br/>Address<br/>(bits 0-11) | FFxx00 | FFxx08 | FFxx10 | FFxx18
@@ -560,6 +584,8 @@ All addresses are in hexadecimal.<br/>
 "x" means "don't care".
 
 _Table 9-8. I/O Addresses of DMA Registers_
+
+<br/>
 
 No checking is performed by the hardware to determine if an invalid configuration is specified in the DMA registers, such as specifying word transactions on 8-bit data bus configuration of the Z280 MPU; in such cases, DMA behavior is unpredictable.
 
@@ -688,6 +714,8 @@ The control fields within this register are described below.
 
 **Clock Rate (CR).** This 2-bit field determines the multiplier between the UART clock and data rates (that is, the number of clocks per bit time), as specified in Table 9-9. The same data rate is used by both the transmitter and receiver. If the X1 clock rate is selected, bit synchronization must be accomplished externally. In the X1 mode, the transmitter sends data on the falling edge of the clock and the receiver samples data on the rising edge of the clock.
 
+<br/>
+
 CR Field | UART Clock Rate
 |-|-|
 00 | X1
@@ -696,6 +724,8 @@ CR Field | UART Clock Rate
 11 | X64
 
 _Table 9-9. CR Field of UART Configuration Register_
+
+<br/>
 
 **Clock Select (CS)**. The state of this bit specifies the clock input for the UART. When this bit is set to 1, counter/timer 1's output pulse supplies the UART clock. When this bit is cleared to 0, counter/timer 1's clock input pin provides the UART clock signal, thus allowing the use of an externally-generated clock. The content of the IPA field of C/T 1's Configuration register does not affect these UART clocking modes.
 
@@ -707,6 +737,7 @@ _Table 9-9. CR Field of UART Configuration Register_
 
 **Bits per Character (B/C).** This 2-bit field determines the number of bits per character in both the transmitter and receiver, as specified in Table 9-10. If this field is changed while a character is being transmitted or received, the results are unpredictable.
 
+<br/>
 
 BC Field | Bits per Character
 |-|-|
@@ -716,6 +747,8 @@ BC Field | Bits per Character
 11 | 8
 
 _Table 9-10. BC Field of UART Control Register_
+
+<br/>
 
 A reset clears the UART Configuration register to all zeros, unless bootstrap mode is selected (see section 9.7).
 
@@ -775,6 +808,8 @@ The Receiver Control/Status register is cleared to all zeros by a reset, unless 
 
 All UART registers are in I/O page FE and are accessed via byte I/O instructions. Table 9-11 lists the I/O port addresses for the UART registers.
 
+<br/>
+
 Register | I/O Port<br/>Address
 |-|-|
 UART Configuration Register | FExx10
@@ -808,6 +843,8 @@ The on-chip UART and DMA Channel 0 can be used to automatically initialize the Z
 
 As described in Section 3.2.1 and Chapter 11, bootstrap mode is selected by driving <ins>WAIT</ins> low and AD<sub>6</sub> high while <ins>RESET</ins> is asserted. The appropriate UART and DMA registers are automatically programmed as shown in Table 9-12 as a result of selecting bootstrap mode. The UART is initialized to receive data in 8-bit characters with odd parity, an external clock source, and a x16 clock rate. DMA Channel 0 is initialized with the link to the UART receiver and end-of-process capability enabled, and set up for flowthrough byte transfers in continuous mode. The destination address starts at memory location 0, with an autoincrement after each transfer, and a transfer count of 236 (100<sub>H</sub>).
 
+<br/>
+
 Register | Initial Hex<br/>Value
 |-|-|
 UART Configuration register | E2
@@ -819,6 +856,8 @@ DMA Channel 0 Source Address register | Undefined
 DMA Channel 0 Count register | 0100
 
 _Table 9-12. Reset Value of UART and DMA Registers When Bootstrap Mode Is Selected_
+
+<br/>
 
 If bootstrap mode is specified, the Z280 CPU automatically enters an idle state when <ins>RESET</ins> is deasserted. A minimum of 15 processor clock cycles must elapse after <ins>RESET</ins> is deasserted before tranmission of data to the UART receiver begins. DMA Channel 0 is then used to transfer characters received by the UART into memory. The data received is placed in memory starting at
 physical address 0. If an error is detected by the UART receiver, the Transmit Output (Tx) line is driven low; external circuitry can use this signal to restart the initialization procedure, if so desired. After 256 bytes of data have been received and transferred to memory, the Z280 CPU automatically begins execution with an instruction fetch from memory location 0.

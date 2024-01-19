@@ -180,6 +180,7 @@ This group of instructions (Table 5-2) includes load instructions for transferri
 
 The LDUD and LDUP instructions are available for loading to or from the user-mode memory address space while executing in system mode. The CPU flags are used to indicate if the transfer was successfully completed. LDUD and LDUP are privileged instructions. The other instructions in this group do not affect the flags, nor can their execution cause exception conditions.
 
+<br/>
 
 | Instruction Name     | Format   | R | RX | IM | IR | DA | X | SX | RA | SR | BX |
 |-|-|-|-|-|-|-|-|-|-|-|-|
@@ -200,11 +201,11 @@ R ... BX = Addressing Modes Available
 _Table 5-2. 8-Bit Load Group Instructions_
 
 
-
 ### 5.4.2 16-Bit Load and Exchange Group
 
 This group of load and exchange instructions (Table 5-3) allows words of data (two bytes equal one word) to be transferred between registers and memory. The exchange instructions allow for switching between the primary and alternate register files, exchanging the contents of two 16-bit registers, or exchanging the contents of an addressing register with the top word on the stack. The 16-bit loads include transfers between registers and memory and immediate loads of registers or memory. The Load Address instruction facilitates the loading of the address registers with a calculated address. The Push and Pop stack instructions are also included in this group. None of these instructions affect the CPU flags, except for EX AF, AF'. The Push instruction can cause a System Stack Overflow Warning trap; otherwise, no exceptions can arise from the execution of these instructions.
 
+<br/>
 
 | Instruction Name     | Format   | R | IM | IR | DA | X | SX | RA | SR | BX |
 |-|-|-|-|-|-|-|-|-|-|-|
@@ -237,6 +238,8 @@ This group of instructions (Table 5-4) supports block transfer and string search
 Various Z280 MPU registers are dedicated to specific functions for these instructions: the BC register for a counter, the DE and HL registers for memory pointers, and the accumulator for holding the byte value being sought. The repetitive forms of these instructions are
 interruptible; this is essential since the repetition count can be as high as 65,536. The instruction can be interrupted after any iteration, in which case the address of the instruction itself, rather than the next one, is saved on the system stack; the contents of the operand pointer registers, as well as the repetition counter, are such that the instruction can simply be reissued after returning from the interrupt without any visible difference in the instruction execution.
 
+<br/>
+
 | Instruction Name | Format |
 |-|-|
 | Compare and Decrement | CPD
@@ -260,6 +263,7 @@ The Increment and Decrement instructions operate on data in a register or in mem
 
 All these instructions except Extend Sign set the CPU flags according to the computed result. Only the Divide instructions can generate an exception.
 
+<br/>
 
 | Instruction Name     | Format   | R | RX | IM | IR | DA | X | SX | RA | SR | BX |
 |-|-|-|-|-|-|-|-|-|-|-|-|
@@ -296,6 +300,8 @@ the contents of the HL register.
 
 Except for Increment, Decrement, and Extend Sign, all the instructions in this group set the CPU flags to reflect the computed result. The only instructions that can generate exceptions are the Divide instructions.
 
+<br/>
+
 | Instruction Name     | Format   | R | IM | IR | DA | X | RA
 |-|-|-|-|-|-|-|-|
 | Add with Carry (Word) | ADC XX,src | •
@@ -327,6 +333,7 @@ The RLD and RRD instructions are provided for manipulating strings of BCD digits
 
 None of these instructions generate exceptions.
 
+<br/>
 
 | Instruction Name     | Format   | R | IR | SX
 |-|-|-|-|-|
@@ -371,6 +378,7 @@ A special instruction, Decrement and Jump if Non-Zero (DJNZ), implements the con
 
 System Call (SC) is used for controlled access to facilities provided by the operating system. It is implemented identically to a trap or interrupt in interrupt mode 3: the current program status is pushed onto the system stack, and a new program status is loaded from a dedicated part of memory.
 
+<br/>
 
 | Instruction Name     | Format   | IR | DA | RA
 |-|-|-|-|-|
@@ -403,6 +411,7 @@ The remaining instructions in this group form a powerful and complete complement
 
 I/O instructions are not privileged if the Inhibit User I/O bit in the Trap Control register is clear; they can be executed in either system or user mode, so that I/O service routines can execute in user mode. The Memory Management Unit and on-chip peripherals' control and status registers are accessed using the I/O instructions. The contents of the I/O Page register are output on AD<sub>23</sub>-AD<sub>16</sub> with the I/O port address and can be used by external decoding to select specific devices. Pages FF and FE are reserved for on-chip I/O and no external bus transaction is generated. I/O devices can be protected from unrestricted access by using the I/O Page register to select among I/O peripherals.
 
+<br/>
 
 | Instruction Name | Format |
 |-|-|
@@ -439,6 +448,8 @@ The instructions in this group (Table 5-10) act upon the CPU control and status 
 
 Two of these instructions are not privileged: No Operation (NOP) and Purge Cache (PCACHE). The remaining instructions are privileged.
 
+<br/>
+
 | Instruction Name | Format |
 |-|-|
 Disable Interrupt| DI mask
@@ -466,6 +477,8 @@ There are four types of extended instructions in the Z280 MPU instruction set: E
 A 4-byte long "template" is embedded in each of the extended instruction opcodes. These templates determine the operation to be performed in the EPU itself. The formats of these templates are described in the following pages. The descriptions are from the point of view of the CPU; that is, only CPU activities are described. The operation of the EPU is implied, but the full specification of the instruction template depends on the implementation of the EPU, and is beyond the scope of this manual. Fields in the template that are ignored by the CPU are indicated by asterisks, and would typically contain opcodes that determine any operation to be performed by the EPU in addition to the data transfers specified by the instruction. A 2-bit identification field is included in each template, for use in selecting one of up to four EPUs in a multiple-EPU system.
 
 The action taken by the CPU upon encountering an extended instruction depends upon the EPA control bit in the CPU's Trap Control register. When this bit is set to 1, indicating that EPUs are included in the system, extended instructions are executed. If this bit is cleared to 0, indicating that there are no EPUs in the system, the CPU executes an extended instruction trap whenever an extended instruction is encountered; this allows a trap service routine to emulate the desired operation in software.
+
+<br/>
 
 | Instruction Name | Format
 |-|-|
@@ -548,6 +561,8 @@ The notation "addr(n)" is used to refer to bit "n" of 8 given location, for exam
 
 The register field in the binary encoding of an instruction opcode is encoded as shown in Table 5-12.
 
+<br/>
+
 | Register | Encoding
 |-|-|
 A |111
@@ -560,6 +575,7 @@ L | 101
 
 _Table 5-12. Encoding of 8-Bit Registers in Instruction Opcodes_
 
+<br/>
 
 The remainder of this chapter consists of the individual descriptions of each Z280 MPU instruction.
 

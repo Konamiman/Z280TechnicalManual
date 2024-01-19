@@ -21,8 +21,9 @@ _Figure 3-1. Bus Timing and Initialization Register_
 
 <br/>
 
-**Clock Scaling (CS) Field.** This 2-bit field governs the scaling of the CPU clock for generation of bus timing cycles. The state of the CS field determines the bus clock frequency for all bus transactions, as per Table 3-1. This field is initialized during a reset operation, as
-described below, and cannot be modified via software.
+**Clock Scaling (CS) Field.** This 2-bit field governs the scaling of the CPU clock for generation of bus timing cycles. The state of the CS field determines the bus clock frequency for all bus transactions, as per Table 3-1. This field is initialized during a reset operation, as described below, and cannot be modified via software.
+
+<br/>
 
 | CS Field |Bus Clock Frequency |
 |----------|--------------------|
@@ -33,8 +34,11 @@ described below, and cannot be modified via software.
 
 _Table 3-1. CS Field of Bus Timing and Initialization Register_
 
+<br/>
 
 **Low Memory Wait Insertion (LM) Field.** This 2-bit field specifies the number of automatic wait states to insert in memory transactions to the lower 8 megabytes of physical memory (that is, all memory locations where bit 23 of the physical address is a 0), as per Table 3-2. Additional wait states can still be added to any given memory transaction via control of the <ins>WAIT</ins> input.
+
+<br/>
 
 | LM Field | Number of Wait States for Lower 8M Bytes of Memory |
 |-|-|
@@ -45,6 +49,7 @@ _Table 3-1. CS Field of Bus Timing and Initialization Register_
 
 _Table 3-2. LM Field of Bus Timing and Initialization Register_
 
+<br/>
 
 **Multiprocessor Configuration Enable (MP) Bit.** This 1-bit field enables the multiprocessor mode of operation, wherein the Z280 MPU is connected to both a local and a global bus. Transactions to addresses on the global bus require a special bus request and acknowledgement before the bus transaction can occur. (See Chapter 10 for details concerning this mode of operation.) Setting this bit to 1 enables the multiprocessor mode, and clearing this bit to 0 disables this mode.
 
@@ -67,6 +72,8 @@ _Figure 3-2. Bus Timing and Control Register_
 
 **I/O Wait Insertion (I/O) Field.** This 2-bit field specifies the number of automatic wait states (in addition to the one wait state always present during I/O transactions) to be inserted during each I/O read or write transaction, as per Table 3-3. The specified number of wait states is also added to the vector read portion of an interrupt acknowledge cycle.
 
+<br/>
+
 | I/O Field |Number of Walt States I/O Field for I/O |
 |-|-|
 | 00 | 0
@@ -76,9 +83,12 @@ _Figure 3-2. Bus Timing and Control Register_
 
 _Table 3-3. I/O Field of Bus Timing and Control Register_
 
+<br/>
 
 **High Memory Wait Insertion (HM) Field.** This 2-bit field specifies the number of automatic wait
 states to be inserted during memory transactions to the upper 8M bytes of physical memory (locations where address bit 23 of the physical address is a 1), as per Table 3-4.
+
+<br/>
 
 | HM Field |Number of Wait States for Higher 8M Bytes of Memory |
 |-|-|
@@ -89,8 +99,11 @@ states to be inserted during memory transactions to the upper 8M bytes of physic
 
 _Table 3-4. HM Field of Bus Timing and Initialization Register_
 
+<br/>
 
 **Daisy Chain Timing (DC).** This 2-bit field determines the number of automatic wait states to be inserted during interrupt acknowledge transactions while the interrupt acknowledge daisy chain is settling, as per Table 3-5. Normally, 2.5 bus clock cycles elapse between the assertion of Address Strobe and the assertion of Data Strobe during an interrupt acknowledge (for the Z-BUS) or between the assertion of <ins>M1</ins> and the assertion of <ins>IORQ</ins> (for the Z80 Bus). The value of the DC field determines if any additional clocks are to be added between the Address Strobe and Data Strobe (or <ins>M1</ins> and <ins>IORQ</ins>) assertions.
+
+<br/>
 
 | DC Field |Number of Walt States for DC Field Interrupt Acknowledge |
 |-|-|
@@ -101,6 +114,7 @@ _Table 3-4. HM Field of Bus Timing and Initialization Register_
 
 _Table 3-5. DC Field of Bus Timing and Control Register_
 
+<br/>
 
 The contents of the Bus Timing and Control register govern the number of automatic wait states to be inserted during various bus transactions. Additional wait states can be added to any bus transaction via control of the <ins>WAIT</ins> input.
 

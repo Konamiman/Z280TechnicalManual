@@ -66,6 +66,7 @@ Don't care | Don't care | Don't care | Don't care | Updated* | No change | Yes |
 
 _Table 8-1. CPU Accesses to On-Chip Memory as Cache_
 
+<br/>
 
 For read operations, a cache "hit" is a reference to a location with a valid entry in the cache, and a cache "miss" is a reference to a location that has no valid entry in the cache. In the general case (and assuming the transaction is cacheable), read operations that are cache hits cause the data to be read from the cache without generating an external bus transaction. Read operations that are cache misses cause the data to be read from the external memory via an external bus cycle and update the cache contents. Updating the cache contents may involve replacing the least-recently used line of the cache with a new line that contains the read location. For write operations, a cache hit is a write to a location in the cache, even if the destination byte is marked as invalid in the cache, and a cache miss is a write to a location that is not in the cache. Write operations that are cache hits cause both the cache and external memory to be updated, and write operations that are cache misses have no effect on the cache. Memory write operations always generate external bus transactions.
 
@@ -81,6 +82,7 @@ When the on-chip DMA controllers transfer data to memory, cache contents are mod
 
 On reset, all the valid bits in the cache are cleared to 0, marking all cache entries as invalid, and the on-chip memory is configured as a cache for instructions only.
 
+<br/>
 
 Operation | Hit/Miss | Cache<br/>Instruction | Cache Data | Cache Activity :<br/>Contents | Cache Activity :<br/>LRU | Bus<br/>Transaction | Cache/Memory<br/>Supplies<br/>Information
 |-|-|-|-|-|-|-|-|
@@ -104,6 +106,8 @@ In this mode, the on-chip memory is still organized as 16 lines of 16 bytes each
 Before entering this mode, the user must initialize the tag addresses for all 16 lines of on-chip memory. The values for these tags determine the 256 physical memory addresses that are mapped into the on-chip memory. This is accomplished by enabling the on-chip memory as a cache for data only, reading data from 16 physical memory locations that are in different cache lines, and then setting the M/<ins>C</ins> bit in the Cache Control register to 1 to enable the fixed-address mode for the on-chip memory. Altering the M/<ins>C</ins> bit in the Cache Control register does not affect the contents of the on-chip memory, including the tag addresses.
 
 Note that each line of the on-chip memory must be assigned a unique tag address before entering this mode so that no unpredictable addresses are mapped into the on-chip memory. If instructions are to be fetched from the on-chip memory while in this mode, Return from Interrupt (RETI) instructions and the templates within extended instructions should never be resident in the on-chip memory; in each case, the operation of devices external to the MPU depends on these instructions being fetched with external bus transactions, as mentioned in section 8.2. Data to be transferred to or from an EPU cannot be resident in on-chip memory either, since this data must be transferred to the EPU over the external bus.
+
+<br/>
 
 Operation | Hit/Miss | Cache<br/>Instruction | Cache Data | Cache Activity :<br/>Contents | Cache Activity :<br/>LRU | Bus<br/>Transaction | Cache/Memory<br/>Supplies<br/>Information
 |-|-|-|-|-|-|-|-|

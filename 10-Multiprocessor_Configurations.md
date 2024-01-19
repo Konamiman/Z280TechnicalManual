@@ -180,7 +180,8 @@ Odd | 1 | n | Byte | 1101
 | | 3 | n+3 | Word | 1100
 
 _Table 10-1. Bus Transactions Involved in Fetch of Extended Instruction Template_
-<br/><br/>
+
+<br/>
 
 If the extended instruction specifies an internal EPU operation, the Z280 CPU can proceed to fetch and execute subsequent instructions. Thus, the CPU and EPUs may be processing in parallel. The <ins>PAUSE</ins> signal is used to synchronize CPU-EPU activity in the case of overlapping extended instructions. If the CPU fetches another extended instruction template intended for an EPU that is still executing a previous instruction, the EPU activates the <ins>PAUSE</ins> input to the CPU to halt further CPU activity until the EPU can finish the original operation. While <ins>PAUSE</ins> is asserted, all CPU activity is suspended except responses to refresh requests, bus requests, and resets.
 

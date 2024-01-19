@@ -148,6 +148,8 @@ At any given time, one device (either the CPU or a bus requester) has control of
 
 On the rising edge <ins>AS</ins>, the bus status signals (ST<sub>0</sub>-ST<sub>3</sub>, R/<ins>W</ins>, and B/<ins>W</ins>) are valid. The ST<sub>0</sub>-ST<sub>3</sub> status lines indicate the type of transaction being performed (Table 13-1). Typically, these signals are decoded and used to enable the appropriate buffers, drivers, and chip select logic necessary for proper completion of the data transfer.
 
+<br/>
+
 Status Lines<br/>3..0 | Type of Transaction
 |-|-|
 0000 | Reserved
@@ -168,6 +170,8 @@ Status Lines<br/>3..0 | Type of Transaction
 1111 | Test and Set (data transfers)
 
 _Table 13-1. ST Status Line Decode_
+
+<br/>
 
 If the transaction requires an address, the address is valid on the rising edge of <ins>AS</ins>. Thus, <ins>AS</ins> can be used to latch Z280 MPU addresses to de-multiplex the Address/Data lines. No address is required for EPU-CPU or Interrupt Acknowledge transactions; the contents of the A and AD lines are undefined while <ins>AS</ins> is asserted during these transactions. If an address is generated for a transaction, the Output Enable (<ins>OE</ins>) signal is activated coincident with <ins>AS</ins> assertion.
 
