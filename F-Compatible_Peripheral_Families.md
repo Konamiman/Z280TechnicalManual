@@ -18,7 +18,7 @@ Z8430 | CTC Counter/Timer Circuit
 Z8440/1/2 | SIO Serial Input/Output Controller
 Z8470 | DART Dual Asynchronous Receiver/Ttansmitter
 
-_Table F-1 Z8400 Peripheral Family_
+_Table F-1. Z8400 Peripheral Family_
 
 <br/>
 

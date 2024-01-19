@@ -17,7 +17,8 @@ The Z-BUS on the Z280 MPU includes a 24-bit address bus, 16-bit data bus, and as
 \** Multiplexed with CTIO<sub>0</sub>
 
 _Figure 13-1a. Pin Functions_
-<br/><br/>
+
+<br/>
 
 ![Figure 13-1b. Pin Assignments](Images/Figure13.1b.png)<br/>
 _Figure 13-1b. Pin Assignments_

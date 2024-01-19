@@ -27,6 +27,7 @@ The CPU register file is divided into five groups of registers (an apostrophe in
 ![Figure 2-1. Register File Organization](Images/Figure2.1.png)<br/>
 _Figure 2-1. Register File Organization_
 
+<br/>
 
 Register addresses are either specified explicitly in the instruction or are implied by the semantics of the instruction.
 
@@ -69,6 +70,8 @@ The size of the data element being addressed depends on the instruction being ex
 
 ![Figure 2-3. Numbering of Bits within a Byte](Images/Figure2.3.png)<br/>
 _Figure 2-3. Numbering of Bits within a Byte_
+
+<br/>
 
 The address of a multiple-byte entity is the same as the address of the byte with the lowest memory address within the entity. Multiple-byte entities can be stored beginning with either even or odd memory addresses. A word (2-byte entity) is aligned if its address is even; otherwise it is unaligned. Multiple bus transactions, which may be required to access multiple-byte entities, can be minimized if alignment is maintained.
 

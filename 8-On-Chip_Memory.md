@@ -10,10 +10,10 @@ The Z280 MPU has 256 bytes of on-chip memory. This on-chip memory can operate in
 If the M/<ins>C</ins> bit in the Cache Control register is cleared to 0, then the 256 bytes of on-chip memory are treated as a cache. Cache memories are small, high-speed memory buffers situated between the processor and main memory. (Main memory is the semiconductor memory accessed via bus transactions.) For each memory access, control logic in the MPU checks if the memory location involved is currently stored in the cache. If so, the access is made to the cache, usually without generating an external bus transaction; if not, the access is made to main memory and the contents of the cache may be updated.
 
 Z280 MPU cache organization is illustrated in Figure 8-1. The cache is arranged as 16 lines of 16 bytes each. Each line of the cache can hold a copy of sixteen consecutive bytes of memory in physical memory locations whose 20 most significant address bits are identical. Thus, for example, one line of the cache could hold the data from physical memory locations 153820<sub>H</sub> to 15382F<sub>H</sub>. The 20 bits of physical address associated with one line of 16 bytes in the cache is called the tag address for that line. Each line of the cache also has 16 valid bits associated with it; each byte in the line is associated with one valid bit. The valid bit is used to indicate if the corresponding byte in the cache holds a valid copy of the memory contents at the associated physical memory location.
+
 <br/>
 
 ![Figure 8-1. Cache Organization](Images/Figure8.1.png)<br/>
-
 Tag n = the 20 Address bits associated with line n<br/>
 Valid bits = 16 bits that indicate which bytes in tha cache contain valid data<br/>
 Cache data = 16 bytes

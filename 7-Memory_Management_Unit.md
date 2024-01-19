@@ -68,8 +68,6 @@ When program/data separation is not in effect, the 16-bit logical address from t
 ![Figure 7-2. Address Translation without Program/Data Separation](Images/Figure7.2.png)<br/>
 _Figure 7-2. Address Translation without Program/Data Separation_
 
-<br/>
-
 
 ### 7.4.2 Address Translation With Program/data Separation
 
@@ -81,8 +79,6 @@ When program/data separation is in effect, the 16-bit logical address from the C
 ![Figure 7-3. Address Translation with Program/Data Separation](Images/Figure7.3.png)<br/>
 _Figure 7-3. Address Translation with Program/Data Separation_
 
-<br/>
-
 
 ## 7.5 MMU CONTROL REGISTERS
 
@@ -90,8 +86,12 @@ Besides the two sets of 16 page descriptor registers, the MMU contains a Master 
 
 The 16-bit MMU Master Control register is shown in Figure 7-4. This register consists of four control bits and a 5-bit status field; the fields in this register are described below:
 
-![Figure 74. MMU Master Control Register](Images/Figure7.4.png)
-_Figure 74. MMU Master Control Register_
+<br/>
+
+![Figure 7-4. MMU Master Control Register](Images/Figure7.4.png)<br/>
+_Figure 7-4. MMU Master Control Register_
+
+<br/>
 
 **User Mode Translate Enable (UTE).** When this bit is set to 1, logical memory addresses generated during user-mode operation are translated to physical addresses with attribute checking. When this bit is cleared to 0, the logical addresses are passed through the MMU to the address outputs with zeros in the most significant bits and no attribute checking or modified bit setting is performed.
 

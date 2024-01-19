@@ -14,7 +14,8 @@ The Z80 Bus on the Z280 MPU includes a 24-bit address bus, 8-bit data bus, and a
 
 ![Figure 12-1a. Pin Functions](Images/Figure12.1a.png)<br/>
 _Figure 12-1a. Pin Functions_
-<br/><br/>
+
+<br/>
 
 ![Figure 12-1b. Pin Assignments](Images/Figure12.1b.png)<br/>
 _Figure 12-1b. Pin Assignments_
