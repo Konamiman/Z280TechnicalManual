@@ -1,5 +1,28 @@
 # 10. Multiprocessor Configurations
 
+## Index
+
+[10.1 INTRODUCTION](#101-introduction)
+
+[10.2 SLAVE PROCESSORS](#102-slave-processors)
+
+[10.3 TIGHTLY COUPLED MULTIPLE PROCESSORS](#103-tightly-coupled-multiple-processors)
+
+[10.3.1 The Local Address Register](#1031-the-local-address-register)
+
+[10.3.2 Bus Request Protocols](#1032-bus-request-protocols)
+
+[10.3.3 Examples of the Use of the Global Bus](#1033-examples-of-the-use-of-the-global-bus)
+
+[10.4 LOOSELY COUPLED MULTIPLE CPUS](#104-loosely-coupled-multiple-cpus)
+
+[10.5 COPROCESSORS AND THE EXTENDED PROCESSING ARCHITECTURE](#105-coprocessors-and-the-extended-processing-architecture)
+
+[10.5.1 Extended Instructions](#1051-extended-instructions)
+
+[10.5.2 Extended Instruction Execution Sequence](#1052-extended-instruction-execution-sequence)
+
+
 ## 10.1 INTRODUCTION
 
 The Z280 MPU architecture provides support for four types of multiprocessor configurations

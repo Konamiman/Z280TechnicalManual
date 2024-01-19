@@ -1,5 +1,38 @@
 # 13. Z-BUS External Interface
 
+## Index
+
+[13.1 INTRODUCTION](#131-introduction)
+
+[13.2 BUS OPERATIONS](#132-bus-operations)
+
+[13.3 PIN DESCRIPTIONS](#133-pin-descriptions)
+
+[13.4 BUS CONFIGURATION AND TIMING](#134-bus-configuration-and-timing)
+
+[13.5 TRANSACTIONS](#135-transactions)
+
+[13.5.1 Memory Transactions](#1351-memory-transactions)
+
+[13.5.2. Halt and Refresh Transactions](#1352-halt-and-refresh-transactions)
+
+[13.5.3 I/O Transactions](#1353-io-transactions)
+
+[13.3.4 Interrupt Acknowledge Transactions](#1334-interrupt-acknowledge-transactions)
+
+[13.5.3 Extended Processing Unit (EPU) Transactions](#1353-extended-processing-unit-epu-transactions)
+
+[13.5.6 DMA Flyby Transactions](#1356-dma-flyby-transactions)
+
+[13.6 REQUESTS](#136-requests)
+
+[13.6.1 Interrupt Requests](#1361-interrupt-requests)
+
+[13.6.2 Local Bus Requests](#1362-local-bus-requests)
+
+[13.6.3 Global Bus Requests](#1363-global-bus-requests)
+
+
 ## 13.1 INTRODUCTION
 
 The Z280 MPU is typically only one component in a system that may include memory, peripherals, slave processors, coprocessors, and other CPUs, all connected via a system bus. Two different component-interconnect bus schemes are available with the Z280 MPU: the Z80 Bus and the Z-BUS.

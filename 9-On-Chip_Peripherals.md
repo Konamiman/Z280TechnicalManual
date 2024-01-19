@@ -1,5 +1,60 @@
 # 9. On-Chip Peripherals
 
+## Index
+
+[9.1 INTRODUCTION](#91-introduction)
+
+[9.2 CLOCK OSCILLATOR](#92-clock-oscillator)
+
+[9.3 REFRESH CONTROLLER](#93-refresh-controller)
+
+[9.4 COUNTER/TIMERS](#94-countertimers)
+
+[9.4.1 Counter/Timer Operating Nodes](#941-countertimer-operating-nodes)
+
+[9.4.2 Gates and Triggers](#942-gates-and-triggers)
+
+[9.4.3 Terminal Count Condition](#943-terminal-count-condition)
+
+[9.4.4 Counter/Timer Registers](#944-countertimer-registers)
+
+[9.4.5 Linking Counter/Timers](#945-linking-countertimers)
+
+[9.4.6 Counter/Timer Sequence of Events](#946-countertimer-sequence-of-events)
+
+[9.5 DMA CHANNELS](#95-dma-channels)
+
+[9.5.1 Types of DMA Operations](#951-types-of-dma-operations)
+
+[9.5.2 DMA Transfer Modes](#952-dma-transfer-modes)
+
+[9.5.3 End-of-Process](#953-end-of-process)
+
+[9.5.4 Priority Resolution](#954-priority-resolution)
+
+[9.5.5 DMA Linking](#955-dma-linking)
+
+[9.5.6 DMA Registers](#956-dma-registers)
+
+[9.5.7 DMA Sequence of Events](#957-dma-sequence-of-events)
+
+[9.5.8 DMA Programming: Linked DMAs](#958-dma-programming-linked-dmas)
+
+[9.5.9 DMA Programming: DMAs Linked to UART](#959-dma-programming-dmas-linked-to-uart)
+
+[9.6 UART](#96-uart)
+
+[9.6.1 Transmitter Operation](#961-transmitter-operation)
+
+[9.6.2 Receiver Operation](#962-receiver-operation)
+
+[9.6.3 UART Registers](#963-uart-registers)
+
+[9.6.4 UART Operation](#964-uart-operation)
+
+[9.7 UART BOOTSTRAPPING OPTION](#97-uart-bootstrapping-option)
+
+
 ## 9.1 INTRODUCTION
 
 The Z280 MPU features a number of peripheral devices on-chip in addition to the CPU, MMU, and cache memory. These peripheral devices include a clock oscillator, dynamic RAM refresh controller, four direct memory access (DMA) controllers, three counter/timers, and a universal asynchronous receiver/transmitter (UART).

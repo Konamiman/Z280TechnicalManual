@@ -1,5 +1,34 @@
 # 3. CPU Control Registers
 
+## Index
+
+[3.1 INTRODUCTION](#31-introduction)
+
+[3.2 SYSTEM CONFIGURATION REGISTERS](#32-system-configuration-registers)
+
+[3.2.1 Bus Timing and Initialization Register](#321-bus-timing-and-initialization-register)
+
+[3.2.2 Bus Timing and Control Register](#322-bus-timing-and-control-register)
+
+[3.2.3 Local Address Register](#323-local-address-register)
+
+[3.2.4 Cache Control Register](#324-cache-control-register)
+
+[3.3 SYSTEM STATUS REGISTERS](#33-system-status-registers)
+
+[3.3.1 Master Status Register](#331-master-status-register)
+
+[3.3.2 Interrupt Status Register](#332-interrupt-status-register)
+
+[3.3.3 Interrupt/Trap Vector Table Pointer](#333-interrupttrap-vector-table-pointer)
+
+[3.3.4 I/O Page Register](#334-io-page-register)
+
+[3.3.5 Trap Control Register](#335-trap-control-register)
+
+[3.3.6 System Stack Limit Register](#336-system-stack-limit-register)
+
+
 ## 3.1 INTRODUCTION
 
 Several CPU control and status registers specify the operating mode of the Z280 MPU. There are two types of CPU control registers: system configuration registers and system status registers. The system configuration registers contain information about the physical configuration of the Z280-based system, such as bus timing information. Typically, the system configuration registers are loaded once during system initialization and are not altered during subsequent operations. The system status registers contain information that may change during system operation, such as the current I/O page. Access to the CPU control registers is restricted to system mode operation only, using the privileged Load Control (LDCTL) instruction. Resets initialize the control registers so that a Z80 object program will execute successfully on the Z280 MPU. (Z80 programs do not affect these registers, since the Load Control instruction is not part of the Z80 CPU's instruction set.) Unused bits in these registers should always be loaded with zeros.
@@ -248,7 +277,7 @@ _Figure 3-8. I/O Page Register_
 The contents of the I/O Page register are cleared to all zeros by a reset.
 
 
-### 3.3.3 Trap Control Register
+### 3.3.5 Trap Control Register
 
 The 8-bit Trap Control register contains the enables for the maskable traps. Figure 3-9 illustrates the format of this register.
 

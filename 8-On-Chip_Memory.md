@@ -1,5 +1,14 @@
 # 8. On-Chip Memory
 
+## Index
+
+[8.1 INTRODUCTION](#81-introduction)
+
+[8.2 CACHE MEMORY MODE](#82-cache-memory-mode)
+
+[8.3 FIXED-ADDRESS MODE](#83-fixed-address-mode)
+
+
 ## 8.1 INTRODUCTION
 
 The Z280 MPU has 256 bytes of on-chip memory. This on-chip memory can operate in either of two modes, as determined by the contents of the Cache Control register (see Chapter 3). In one mode, the on-chip memory is dedicated to fixed physical memory locations; the memory addresses that are mapped into the on-chip memory are determined under program control. In the other mode, the on-chip memory acts as a cache for either instructions, data, or both. When acting as a cache, the set of memory locations mapped into the on-chip memory at a given time is determined by the action of the executing program; the memory locations that were most recently accessed are stored in the cache. Memory accesses to locations mapped into the on-chip memory do not generate external bus transactions and, therefore, are faster than accesses to external memory; thus, use of the on-chip memory leads to faster, more efficient program execution. On reset, the on-chip memory is automatically enabled for use as a cache for instructions only.

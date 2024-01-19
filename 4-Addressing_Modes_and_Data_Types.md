@@ -1,5 +1,31 @@
 # 4. Addressing Mode and Data Types
 
+## Index
+
+[4.1 INTRODUCTION](#41-introduction)
+
+[4.2 ADDRESSING MODE DESCRIPTIONS](#42-addressing-mode-descriptions)
+
+[4.2.1 Register (R, RX)](#421-register-r-rx)
+
+[4.2.2 Immediate (IM)](#422-immediate-im)
+
+[4.2.3 Indirect Register (IR)](#423-indirect-register-ir)
+
+[4.2.4 Direct Address (DA)](#424-direct-address-da)
+
+[4.2.5 Indexed (X)](#425-indexed-x)
+
+[4.2.6 Short Index (SX)](#426-short-index-sx)
+
+[4.2.7 Program Counter (PC) Relative Address (RA)](#427-program-counter-pc-relative-address-ra)
+
+[4.2.8 Stack Pbinter Relative (SR)](#428-stack-pbinter-relative-sr)
+
+[4.2.9 Base Index (BX)](#429-base-index-bx)
+
+[4.3 DATA TYPES](#43-data-types)
+
 
 ## 4.1 INTRODUCTION
 

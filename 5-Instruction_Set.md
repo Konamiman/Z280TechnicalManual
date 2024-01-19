@@ -1,5 +1,56 @@
 # 5. Instruction Set
 
+## Index
+
+[5.1 INTRODUCTION](#51-introduction)
+
+[5.2 PROCESSOR FLAGS](#52-processor-flags)
+
+[5.2.1 Carry Flag (C)](#521-carry-flag-c)
+
+[5.2.2 Add/Subtract Flag (N)](#522-addsubtract-flag-n)
+
+[5.2.3 Parity/Overflow Flag (P/V)](#523-parityoverflow-flag-pv)
+
+[5.2.4 Half-Carry Flag (H)](#524-half-carry-flag-h)
+
+[5.2.5 Zero Flag (Z)](#525-zero-flag-z)
+
+[5.2.6 Sign Flag (S)](#526-sign-flag-s)
+
+[5.2.7 Condition Codes](#527-condition-codes)
+
+[5.3 INSTRUCTION EXECUTION AND EXCEPTIONS](#53-instruction-execution-and-exceptions)
+
+[5.3.1 Instruction Execution and Interrupts](#531-instruction-execution-and-interrupts)
+
+[5.3.2 Instruction Execution and Traps](#532-instruction-execution-and-traps)
+
+[5.4 INSTRUCTION SET FUNCTIONAL GROUPS](#54-instruction-set-functional-groups)
+
+[5.4.1 8-Bit Load Group](#541-8-bit-load-group)
+
+[5.4.2 16-Bit Load and Exchange Group](#542-16-bit-load-and-exchange-group)
+
+[5.4.3 Block Transfer and Search Group](#543-block-transfer-and-search-group)
+
+[5.4.4 8-Bit Arithmetic and Logic Group](#544-8-bit-arithmetic-and-logic-group)
+
+[5.4.5 16-Bit Arithmetic Operations](#545-16-bit-arithmetic-operations)
+
+[5.4.6 Bit Manipulation, Rotate ands Shift Group](#546-bit-manipulation-rotate-ands-shift-group)
+
+[5.4.7 Program Control Group](#547-program-control-group)
+
+[5.4.8 Input/Output Instruction Group](#548-inputoutput-instruction-group)
+
+[5.4.9 CPU Control Group](#549-cpu-control-group)
+
+[5.4.10 Extended Instruction Group](#5410-extended-instruction-group)
+
+[5.5 NOTATION AND BINARY ENCODING](#55-notation-and-binary-encoding)
+
+
 ## 5.1 INTRODUCTION
 
 The Z280 CPU's instruction set is a superset of the Z80's; the Z280 CPU is opcode compatible with the Z80 CPU. Thus, a Z80 program can be executed on a Z280 MPU without modification. The instruction set is divided into ten groups by function:

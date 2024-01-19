@@ -1,5 +1,32 @@
 # 7. Memory Management Unit
 
+## Index
+
+[7.1 INTRODUCTION](#71-introduction)
+
+[7.2 MMU ARCHITECTURE](#72-mmu-architecture)
+
+[7.3 PAGE DESCRIPTOR REGISTERS](#73-page-descriptor-registers)
+
+[7.4 ADDRESS TRANSLATION](#74-address-translation)
+
+[7.4.1 Address Translation Without Program/bata Separation](#741-address-translation-without-programbata-separation)
+
+[7.4.2 Address Translation With Program/data Separation](#742-address-translation-with-programdata-separation)
+
+[7.5 MMU CONTROL REGISTERS](#75-mmu-control-registers)
+
+[7.6 ACCESSING PAGE DESCRIPTOR REGISTERS](#76-accessing-page-descriptor-registers)
+
+[7.6.1 Descriptor Select Port](#761-descriptor-select-port)
+
+[7.6.2 Block Move Port](#762-block-move-port)
+
+[7.6.3 Invalidation Port](#763-invalidation-port)
+
+[7.7 INSTRUCTION ABORTS](#77-instruction-aborts)
+
+
 ## 7.1 INTRODUCTION
 
 The Z280 MPUs include an on-chip paged Memory Management Unit (MMU), which allows the MPUs to address more than 64K bytes of physical memory. Memory management with the MMU involves two issues: memory allocation and memory protection. The allocation of memory is controlled by allowing the MMU to translate the 16-bit logical addresses from the Z280 CPU into the 24-bit physical addresses output by the MPU. Thus, a given programming task can be relocated to any area of physical memory, regardless of the logical addresses used by that task. During this translation process, the MMU also monitors the type of memory access being made; the MMU can inhibit accesses or write-protect memory areas, thereby allowing memory to be protected from unwanted or unintended modes of use.

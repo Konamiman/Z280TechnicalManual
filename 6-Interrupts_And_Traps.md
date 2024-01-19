@@ -1,5 +1,54 @@
 # 6. Interrupts and Traps
 
+## Index
+
+[6.1 INTRODUCTION](#61-introduction)
+
+[6.2 INTERRUPTS](#62-interrupts)
+
+[6.2.1 Interrupt Mode 0](#621-interrupt-mode-0)
+
+[6.2.2 Interrupt Mode 1](#622-interrupt-mode-1)
+
+[6.2.3 Interrupt Mode 2](#623-interrupt-mode-2)
+
+[6.2.4 Interrupt Mode 3](#624-interrupt-mode-3)
+
+[6.3 TRAPS](#63-traps)
+
+[6.3.1 Extended Instruction Trap](#631-extended-instruction-trap)
+
+[6.3.2 Privileged Instruction Trap](#632-privileged-instruction-trap)
+
+[6.3.3 System Call Trap](#633-system-call-trap)
+
+[6.3.4 Access Violation Trap](#634-access-violation-trap)
+
+[6.3.5 System Stack Overflow Warning Trap](#635-system-stack-overflow-warning-trap)
+
+[6.3.6 Division Exception Trap](#636-division-exception-trap)
+
+[6.3.7 Single-Step Trap](#637-single-step-trap)
+
+[6.3.8 Breakpoint-on-Halt Trap](#638-breakpoint-on-halt-trap)
+
+[6.4 INTERRUPT AND TRAP HAIDLING](#64-interrupt-and-trap-haidling)
+
+[6.4.1 Interrupt Acknowledge](#641-interrupt-acknowledge)
+
+[6.4.2 Status Saving](#642-status-saving)
+
+[6.4.3 Loading New Program Status](#643-loading-new-program-status)
+
+[6.4.4 Executing the Service Routine](#644-executing-the-service-routine)
+
+[6.4.5 Returning from a Service Routine](#645-returning-from-a-service-routine)
+
+[6.5 INTERRUPT/TRAP VECTOR TABLE](#65-interrupttrap-vector-table)
+
+[6.6 THE FATAL CONDITION](#66-the-fatal-condition)
+
+
 ## 6.1 INTRODUCTION
 
 Exceptions are conditions that can alter the normal flow of program execution. The Z280 CPU supports three kinds of exceptions: interrupts, traps, and resets.
