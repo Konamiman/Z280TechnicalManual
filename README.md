@@ -4,7 +4,7 @@ This repository contains a transcript of the _Z280™ MPU Microprocessor Unit Pr
 
 ## Index
 
-[1. Architectural_Overview](1-Architectural_Overview.md)
+[1. Architectural Overview](1-Architectural_Overview.md)
 
 [2. Address Spaces](2-Address_Spaces.md)
 
@@ -56,7 +56,7 @@ The transcript has been performed as follows:
 
 * All the text has been extracted from the OCR version. Missing styling have been added, and spotted OCR mistakes have been fixed.
   * Data tables have been converted to Markdown tables.
-  * MPU pins and register bits that are negated (because they are active when their value is 0) and are represented with a line on top in the original book are represented underlined here (e.g. R/<ins>W</ins>, <ins>BUSREQ</ins>). There's a CSS style for overline but unfortunately GitHub strips off all the custom CSS styles in MarkDown files before rendering them.
+  * MPU pins and register bits that are negated (because they are active when their value is 0) and are represented with a line on top in the original book are represented underlined here (e.g. R/<ins>W</ins>, <ins>BUSREQ</ins>). A CSS style for overline exists, but unfortunately GitHub strips off all the custom CSS styles in MarkDown files before rendering them.
 * Figures that represent a 8 bit or 16 bit register of the MPU have been recreated, and bit position numbers have been added.
 * Other figures have been captured directly from the original PDF, hopefully with a proper size and with enough quality for all the embedded texts to be recognizable.
 
@@ -77,8 +77,12 @@ Pull requests are welcome for the following:
 * Adding cross-links between chapters and sections.
 
 
-## Disclaimer
+## Disclaimer/Copyright
 
 Original book ©1987 by Zilog, Inc. Z280 is a trademark of Zilog, Inc. Z80, Z8000 and Z-BUS are registered trademarks of Zilog, Inc.
 
 This transcript has been created with the hope that it will be useful for the retrocomputing community. It will be put offline if so is formally requested by the copyright owners.
+
+The PDf files used for the transcription contain the following:
+
+![Scanned by Dridz(?)](Images/ScannedBy.png)
