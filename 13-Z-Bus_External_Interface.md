@@ -39,7 +39,7 @@ The Z280 MPU is typically only one component in a system that may include memory
 
 This chapter describes the external manifestations (that is, the activity on the pins) that result from CPU or on-chip peripheral activity for the Z-BUS configurations of the Z280 MPU. (The Z80 Bus external interface is described in Chapter 12.) Since the pins are connected to the system bus, most of this discussion will center on the bus and bus operations.
 
-The condition of the OPT pin determines the configuration of the bus interface for the Z280 MPUj the Z-BUS configuration is selected either by applying a logical 1 (Vcc) level on the OPT pin or by leaving the OPT pin disconnected.
+The condition of the OPT pin determines the configuration of the bus interface for the Z280 MPU: the Z-BUS configuration is selected either by applying a logical 1 (Vcc) level on the OPT pin or by leaving the OPT pin disconnected.
 
 The Z-BUS on the Z280 MPU includes a 24-bit address bus, 16-bit data bus, and associated status and control signals. The data bus is multiplexed with the low-order 16 bits of the address bus. The Z-BUS configuration of the Z280 MPU supports the use of Extended Processing Units and burst-mode memories. Figure 13-1 shows the pin functions and pin assignments for the Z-BUS configuration of the Z280 MPU. The Z-BUS described here is compatible with Zilog's Z8000 family of peripheral devices. Other Z-BUS compatible components include the Z8000 family of CPUs. Refer to Zilog's Component Data Book for a complete description of the Z-BUS Component Interconnect convention.
 
