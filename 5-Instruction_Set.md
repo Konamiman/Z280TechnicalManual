@@ -3751,4 +3751,153 @@ F  | s0xhxvnc
 PC | 6000
 
 
+## LD - Load Accumulator
 
+**LD** dst,src
+
+dst = R, RX, IR, DA, X, SX, RA, SR, BX<br/>
+src = A
+
+or
+
+dst = A<br/>
+src = R, RX, IM, IR, DA, X, SX, RA, SR, BX
+
+### Operation
+
+dst ← src
+
+The contents of the source are loaded into the destination. The contents of the source are not affected. Special instructions are provided so that the BC and DE registers can also be used in the IR addressing mode.
+
+### Flags
+
+No flags affected
+
+### Exceptions
+
+None
+
+### Instruction Formats - Load into Accumulator
+
+| Addressing<br/>Mode | Syntax | Instruction Format
+|-|-|-|
+R  | LD A,R  | `01 111  r `
+RX | LD A,RX | `11 *11 101` `01 111 rx ` 
+IM | LD A,n  | `00 111 110` `     n      `
+IR | LD A,(HL) | `01 111 110`
+|  | LD A,(RR) | `00 rra 010`
+DA | LD A,(addr) | `00 111 010` ` addr(low)  ` ` addr(high) `
+X  | LD A,(XX + dd) | `11 111 101` `01 111 xxa` `   d(low)   ` `  d(high)   `
+SX | LD A,(XY + d)  | `11 *11 101` `01 111 110` `     d      ` 
+RA | LD A,&lt;addr&gt; | `11 111 101` `01 111 000` ` disp(low)  ` ` disp(high) `
+SR | LD A,(SP + dd) | `11 011 101` `01 111 000` `   d(low)   ` `  d(high)   `
+BX | LD A,(XXA + XXB) | `11 011 101` `01 111 bx `
+
+### Instruction Formats - Load from Accumulator
+
+| Addressing<br/>Mode | Syntax | Instruction Format
+|-|-|-|
+R  | LD R,A  | `01  r  111`
+RX | LD RX,A | `11 *11 101` `01 rx  111`
+IR | LD (HL),A | `01 110 111`
+|  | LD (RR),A | `00 rrb 010`
+DA | LD (addr),A | `00 110 010` ` addr(low)  ` ` addr(high) `
+X  | LD (XX + dd),A | `11 101 101` `00 xxb 011` `   d(low)   ` `  d(high)   `
+SX | LD (XY + d),A | `11 *11 101` `01 110 111` `     d      `
+RA | LD &lt;addr&gt;,A | `11 101 101` `00 100 011` ` disp(low)  ` ` disp(high) `
+SR | LD (SP + dd),A | `11 101 101` `00 000 011` `   d(low)   ` `  d(high)   `
+BX | LD (XXA + XXB),A | `11 101 101` `00 bx  011`
+
+#### Field Encodings
+
+**\*:** 0 for IX, 1 for IY<br/>
+**rx:** 100 for high byte, 101 for low byte<br/>
+**rra:** 001 for BC, 011 for DE<br/>
+**rrb:** 000 for BC, 010 for DE<br/>
+**xxa:** 001 for (IX + dd), 010 for (IY + dd), 011 for (HL + dd)<br/>
+**xxb:** 101 for (IX + dd), 110 for (IY + dd), 111 for (HL + dd)<br/>
+**bx:** 001 for (HL + IX), 010 for (HL + IY), 011 for (IX + IY)
+
+### Example
+
+LD A,(HL)
+
+_Before instruction execution:_
+
+| Register | Value |
+|-|-|
+A  | 0F
+HL | 170C
+
+| Memory<br/>Address |Value |
+|-|-|
+170C | 0B
+
+_After instruction execution:_
+
+| Register | Value |
+|-|-|
+A  | 0B
+HL | 170C
+
+| Memory<br/>Address |Value |
+|-|-|
+170C | 0B
+
+
+## LD - Load from I or R Register
+
+**LD** A,src
+
+src = I, R
+
+### Operation
+
+A ← src
+
+The contents of the source are loaded into the accumulator. The contents of the source are not affected. The Sign and Zero flags are set according to the value of the data transferred; the Overflow flag is set according to the state of the Interrupt A Enable bit in the Master Status register. Note: The R register does not contain the refresh address and is not modified by refresh transactions.
+
+### Flags
+
+**S:** Set if the data loaded into the accumulator is negative; cleared otherwise
+
+**Z:** Set if the data loaded into the accumulator is zero; cleared otherwise
+
+**H:** Cleared
+
+**V:** Set when loading the accumulator if the interrupt A Enable bit is set; cleared otherwise
+
+**N:** Cleared
+
+**C:** Unaffected
+
+### Exceptions
+
+Privileged Instruction
+
+### Instruction Formats
+
+| Syntax | Instruction Format
+|-|-|
+LD A,I | `11 101 101` `01 010 111`
+LD A,R | `11 101 101` `01 011 111`
+
+### Example
+
+LD A,R
+
+_Before instruction execution:_
+
+| Register | Value |
+|-|-|
+AF | 10 szxhxvnc
+R | 42
+MSR | 407F
+
+_After instruction execution:_
+
+| Register | Value |
+|-|-|
+AF | 42 00x0x10c
+R | 42
+MSR | 407F
