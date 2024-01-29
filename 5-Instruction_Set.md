@@ -3901,3 +3901,184 @@ _After instruction execution:_
 AF | 42 00x0x10c
 R | 42
 MSR | 407F
+
+
+## LD - Load Immediate (Byte)
+
+**LD** dst,n
+
+dst = R, RX, IR, DA, X, SX, RA, SR, BX
+
+### Operation
+
+dst ← n
+
+The byte of immediate data is loaded into the destination.
+
+### Flags
+
+No flags affected
+
+### Exceptions
+
+None
+
+### Instruction Formats
+
+| Addressing<br/>Mode | Syntax | Instruction Format
+|-|-|-|
+R  | LD R,n  | `00  r  110` `     n      `
+RX | LD RX,n | `11 *11 101` `00 rx  110` `     n      `
+IR | LD (HL),n | `00 110 110` `     n      `
+DA | LD (addr),n | `11 011 101` `00 111 110` ` addr(low)  ` ` addr(high) ` `     n      `
+X  | LD (XX + dd),n | `11 111 101` `00 xx  110` `   d(low)   ` `  d(high)   ` `     n      `
+SX | LD (XY + d),n | `11 *11 101` `00 110 110` `     d      ` `     n      `
+RA | LD &lt;addr&gt;,n | `11 111 101` `00 000 110` ` disp(low)  ` ` disp(high) ` `     n      `
+SR | LD (SP + dd),n | `11 011 101` `00 000 110` `   d(low)   ` `  d(high)   ` `     n      `
+BX | LD (XXA + XXB),n | `11 011 101` `00 bx  110` `     n      `
+
+#### Field Encodings
+
+**\*:** 0 for IX, 1 for IY<br/>
+**rx:** 100 for high byte, 101 for low byte<br/>
+**xx:** 001 for (IX + dd), 010 for (IY + dd), 011 for (HL + dd)<br/>
+**bx:** 001 for (HL + IX), 010 for (HL + IY), 011 for (IX + IY)
+
+### Example
+
+LD A,55H
+
+_Before instruction execution:_
+
+| Register | Value |
+|-|-|
+A | 67
+
+_After instruction execution:_
+
+| Register | Value |
+|-|-|
+A | 55
+
+
+## LD - Load Register (Byte)
+
+**LD** dst,src
+
+dst = R<br/>
+src = R, RX, IM, IR, SX
+
+or
+
+dst = R, RX, IR, SX<br/>
+src = R
+
+### Operation
+
+dst ← src
+
+The contents of the source are loaded into the destination.
+
+### Flags
+
+No flags affected
+
+### Exceptions
+
+None
+
+### Instruction Formats - Load Into Register
+
+| Addressing<br/>Mode | Syntax | Instruction Format
+|-|-|-|
+R  | LD R1,R2 | `01 r1  r2 `
+RX | LD R*,RX | `11 *11 101` `01 r*  rx `
+|  | LD RXA, RXB | `11 *11 101` `01 rxa rxb`
+|  | LD RX,R* | `11 *11 101` `01 rx  r* `
+IM | LD R,n   | `00  r  110` `     n      `
+|  | LD RX,n  | `11 *11 101` `00 rx  110` `     n      `
+IR | LD R,(HL) | `01  r  110`
+SX | LD R,(XY + d) | `11 *11 101` `01  r  110` `     d      `
+
+### Instruction Formats - Load from Register
+
+| Addressing<br/>Mode | Syntax | Instruction Format
+|-|-|-|
+IR | LD (HL),R | `01 110  r `
+SX | LD (XY + d),R | `11 *11 101` `01 110 r  ` `     d      `
+
+#### Field Encodings
+
+**\*:** 0 for IX, 1 for IY<br/>
+**rx:** 100 for high byte, 101 for low byte<br/>
+**rxa:** 100 for high byte, 101 for low byte<br/>
+**rxa:** 100 for high byte, 101 for low byte<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;rxa and rxb refer to the same index register<br/>
+**r\*:** Only registers A, B, C, D and E can be accessed<br/>
+**r1, r2:** See Table 5-12
+
+### Example
+
+LD A,B
+
+_Before instruction execution:_
+
+| Register | Value |
+|-|-|
+A | 03
+B | 82
+
+_After instruction execution:_
+
+| Register | Value |
+|-|-|
+A | 82
+B | 82
+
+
+## LD - Load to I or R Register
+
+**LD** dst,A
+
+dst = I, R
+
+### Operation
+
+dst ← A
+
+The contents of the accumulator are loaded into the destination. Note: the R register does not contain the refresh address and is not modified by refresh transactions.
+
+### Flags
+
+No flags affected
+
+### Exceptions
+
+Privileged Instruction
+
+### Instruction Formats
+
+| Syntax | Instruction Format
+|-|-|
+LD I,A | `11 101 101` `01 000 111`
+LD R,A | `11 101 101` `01 001 111`
+
+### Example
+
+LD I,A
+
+_Before instruction execution:_
+
+| Register | Value |
+|-|-|
+A | 0D
+I | 22
+
+_After instruction execution:_
+
+| Register | Value |
+|-|-|
+A | 0D
+I | 0D
+
+
