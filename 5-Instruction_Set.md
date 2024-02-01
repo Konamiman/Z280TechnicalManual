@@ -4082,3 +4082,156 @@ A | 0D
 I | 0D
 
 
+## LDA - Load Address
+
+**LDA** dst,src
+
+dst = HL, IX, IY<br/>
+src = DA, X, RA, SR, BX
+
+### Operation
+
+dst ← address(src)
+
+The address of the source operand is computed and loaded into the destination. The contents of the source are not affected. The address translation mechanism in the MMU is not used to determine if the address is valid.
+
+### Flags
+
+No flags affected
+
+### Exceptions
+
+None
+
+### Instruction Formats
+
+| Addressing<br/>Mode | Syntax | Instruction Format
+|-|-|-|
+DA | LDA HL,(addr) | `00 100 001` ` addr(low)  ` ` addr(high) `
+|  | LDA XY,(addr) | `11 *11 101` `00 100 001` ` addr(low)  ` ` addr(high) `
+X  | LDA HL,(XX + dd) | `11 101 101` `00 xx  010` `   d(low)   ` `  d(high)   `
+|  | LDA XY,(XX + dd) | `11 *11 101` `11 101 101` `00 xx  010` `   d(low)   ` `  d(high)   `
+RA | LDA HL,&lt;addr&gt; | `11 101 101` `00 100 010` ` disp(low)  ` ` disp(high) `
+|  | LDA XY,&lt;addr&gt; | `11 *11 101` `11 101 101` `00 100 010` ` disp(low)  ` ` disp(high) `
+SR | LDA HL,(SP + dd)    | `11 101 101` `00 000 010` `   d(low)   ` `  d(high)   `
+|  | LDA XY,(SP + dd)    | `11 *11 101` `11 101 101` `00 000 010` `   d(low)   ` `  d(high)   `
+BX | LDA HL,(XXA + XXB)  | `11 101 101` `00 bx  010`
+|  | LDA XY,(XXA + XXB)  | `11 *11 101` `11 101 101` `00 bx  010`
+
+#### Field Encodings
+
+**\*:** 0 for IX, 1 for IY<br/>
+**xx:** 101 for (IX + dd), 110 for (IY + dd), 111 for (HL + dd)<br/>
+**bx:** 001 for (HL + IX), 010 for (HL + IY), 011 for (IX + IY)
+
+### Example
+
+LDA HL,(IX + 4)
+
+_Before instruction execution:_
+
+| Register | Value |
+|-|-|
+HL | 2308
+IX | E324
+
+_After instruction execution:_
+
+| Register | Value |
+|-|-|
+HL | E328
+IX | E324
+
+Address calculation:
+
+```
+  E324
+ +   4
+  ----
+  E328
+```
+
+
+## LDCTL - Load Control
+
+**LDCTL** dst,src
+
+dst = (C), USP<br/>
+src = HL, IX, IY
+
+or
+
+dst = HL, IX, IY<br/>
+src = (C), USP
+
+### Operation
+
+dst ← src
+
+This instruction loads the contents of a CPU control register into an addressing register, or the contents of an addressing register into a CPU control register. The contents of the source are loaded into the destination; the source register is unaffected. The address of the control register is specified by the contents of the C register, with the exception of the User Stack Pointer. The various CPU control registers have the following addresses:
+
+Register | Address<br/>(Hexadecimal)
+|-|-|
+Master Status register (MSR) | 00
+Interrupt Status register | 16
+Interrupt/Trap Vector Table Pointer | 06
+I/O Page register * | 08
+Bus Timing and Initialization register * | FF
+Bus Timing and Control register * | 02
+Stack Limit register | 04
+Trap Control register * | 10
+Cache Control register * | 12
+Local Address register * | 14
+
+\* 8-bit control register
+
+<br/>
+
+When writing to an 8-bit CPU control register, only the low-order byte of the specified source addressing register is written to the control register. When reading from an 8-bit CPU control register, the control register contents are loaded into the low-order byte of the destination addressing register, and the upper byte of the destination is undefined.
+
+Note that the User Stack Pointer control register is accessed using special opcodes; the contents of the C register are not used for these opcodes. This form of the Load Control instruction allows the user-mode Stack Pointer to be accessed while in system-mode operation.
+
+### Flags
+
+No flags affected
+
+### Exceptions
+
+Privileged Instruction
+
+### Instruction Formats
+
+| Syntax | Instruction Format
+|-|-|
+LDCTL HL,(C) | `11 101 101` `01 100 110`
+LDCTL XY,(C) | `11 *11 101` `11 101 101` `01 100 110`
+LDCTL (C),HL | `11 101 101` `01 101 110`
+LDCTL (C),XY | `11 *11 101` `11 101 101` `01 101 110`
+LDCTL HL,USP | `11 101 101` `10 000 111`
+LDCTL XY,USP | `11 *11 101` `11 101 101` `10 000 111`
+LDCTL USP,HL | `11 101 101` `10 001 111`
+LDCTL USP,XY | `11 *11 101` `11 101 101` `10 001 111`
+
+#### Field Encoding
+
+**\*:** 0 for IX, 1 for IY
+
+### Example
+
+LDCTL (C),HL
+
+_Before instruction execution:_
+
+| Register | Value |
+|-|-|
+C  | 08
+HL | 553A
+I/O page<br/>register | 00
+
+_After instruction execution:_
+
+| Register | Value |
+|-|-|
+C  | 08
+HL | 553A
+I/O page<br/>register | 3A
