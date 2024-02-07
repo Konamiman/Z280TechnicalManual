@@ -4235,3 +4235,305 @@ _After instruction execution:_
 C  | 08
 HL | 553A
 I/O page<br/>register | 3A
+
+
+## LDD - Load and Decrement
+
+**LDD**
+
+### Operation
+
+(DE) ← (HL)<br/>
+DE ← DE - 1<br/>
+HL ← HL - 1<br/>
+BC ← BC - 1
+
+This instruction is used for block transfers of strings of data. The byte of data at the location addressed by the HL register is loaded into the location addressed by the DE register. Both the DE and HL registers are then decremented by one, thus moving the pointers to the preceding elements in the string. The BC register, used as a counter, is then decremented by one.
+
+### Flags
+
+S: Unaffected
+
+Z: Unaffected
+
+H: Cleared
+
+V: Set if the result of decrementing BC is not equal to zero; cleared otherwise
+
+N: Cleared
+
+C: Unaffected
+
+### Exceptions
+
+None
+
+### Instruction Formats
+
+| Syntax | Instruction Format
+|-|-|
+LDD | `11 101 101` `10 101 000`
+
+### Example
+
+LDD
+
+_Before instruction execution:_
+
+| Register | Value |
+|-|-|
+F  | szxhxvnc
+HL | 1111
+DE | 2222
+BC | 0007
+
+| Memory<br/>Address |Value |
+|-|-|
+1111 | 88
+2222 | 66
+
+_After instruction execution:_
+
+| Register | Value |
+|-|-|
+F  | szx0x00c
+HL | 1110
+DE | 2221
+BC | 0006
+
+| Memory<br/>Address |Value |
+|-|-|
+1111 | 88
+2222 | 88
+
+
+## LDDR - Load, Decrement and Repeat
+
+**LDDR**
+
+### Operation
+
+Repeat until BC = 0:<br/>
+(DE) ← (HL)<br/>
+DE ← DE - 1<br/>
+HL ← HL - 1<br/>
+BC ← BC - 1<br/>
+
+This instruction is used for block transfers of strings of data. The bytes of data starting at the location addressed by HL are loaded into memory starting at the location addressed by the DE register. The number of bytes moved is determined by the contents of the BC register. If the BC register contains zero when this instruction is executed, 65,536 bytes are transferred. The effect of decrementing the pointers during the transfer is important if the source and destination strings overlap with the source string starting at a lower memory address. Placing the pointers at the highest address of the strings and decrementing the pointers ensures that the source string is copied without destroying the overlapping area.
+
+This instruction can be interrupted after each execution of the basic operation. The Program Counter value of the start of this instruction is saved before the interrupt request is accepted, so that the instruction can be properly resumed.
+
+### Flags
+
+S: Unaffected
+
+Z: Unaffected
+
+H: Cleared
+
+V: Cleared
+
+N: Cleared
+
+C: Unaffected
+
+### Exceptions
+
+None
+
+### Instruction Formats
+
+| Syntax | Instruction Format
+|-|-|
+LDDR | `11 101 101` `10 111 000`
+
+### Example
+
+LDDR
+
+_Before instruction execution:_
+
+| Register | Value |
+|-|-|
+F  | szxhxvnc
+HL | 1117
+DE | 2225
+BC | 0003
+
+| Memory<br/>Address |Value |
+|-|-|
+1115 | 88
+1116 | 36
+1117 | A5
+2223 | 96
+2224 | 11
+2225 | 26
+
+_After instruction execution:_
+
+| Register | Value |
+|-|-|
+F  | szx0x00c
+HL | 1114
+DE | 2222
+BC | 0000
+
+| Memory<br/>Address |Value |
+|-|-|
+1115 | 88
+1116 | 36
+1117 | A5
+2223 | 88
+2224 | 36
+2225 | A5
+
+
+## LDI - Load and Increment
+
+**LDI**
+
+### Operation
+
+(DE) ← (HL)<br/>
+DE ← DE + 1<br/>
+HL ← HL + 1<br/>
+BC ← BC - 1<br/>
+
+This instruction is used for block transfers of strings of data. The byte of data at the location addressed by the HL register is loaded into the location addressed by the DE register. Both the DE and HL registers are then incremented by one, thus moving the pointers to the next elements in the strings. The BC register, used as a counter, is then decremented by one.
+
+### Flags
+
+S: Unaffected
+
+Z: Unaffected
+
+H: Cleared
+
+V: Set if the result of decrementing BC is not equal to zero; cleared otherwise
+
+N: Cleared
+
+C: Unaffected
+
+### Exceptions
+
+None
+
+### Instruction Formats
+
+| Syntax | Instruction Format
+|-|-|
+LDI | `11 101 101` `10 100 000`
+
+### Example
+
+LDI
+
+_Before instruction execution:_
+
+| Register | Value |
+|-|-|
+F  | szxhxvnc
+HL | 1111
+DE | 2222
+BC | 0007
+
+| Memory<br/>Address |Value |
+|-|-|
+1111 | 88
+2222 | 66
+
+_After instruction execution:_
+
+| Register | Value |
+|-|-|
+F  | szx0x00c
+HL | 1112
+DE | 2223
+BC | 0006
+
+| Memory<br/>Address |Value |
+|-|-|
+1111 | 88
+2222 | 88
+
+
+## LDIR - Load, Increment and Repeat
+
+**LDIR**
+
+### Operation
+
+Repeat until BC = 0:<br/>
+(DE) ← (HL)<br/>
+DE ← DE + 1<br/>
+HL ← HL + 1<br/>
+BC ← BC - 1<br/>
+
+This instruction is used for block transfers of strings of data. The bytes of data starting at the location addressed by the HL register are loaded into memory starting at the location addressed by the DE register. The number of bytes moved is determined by the contents of the BC register. If the BC register contains zero when this instruction is executed, 65,536 bytes are transferred. The effect of incrementing the pointers during the transfer is important if the source and destination strings overlap with the source string starting at a higher memory address. Placing the pointers at the lowest address of the strings and incrementing the pointers ensures that the source string is copied without destroying the overlapping area.
+
+This instruction can be interrupted after each execution of the basic operation. The Program Counter value of the start of this instruction is saved before the interrupt request is accepted, so that the instruction can be properly resumed.
+
+### Flags
+
+S: Unaffected
+
+Z: Unaffected
+
+H: Cleared
+
+V: Cleared
+
+N: Cleared
+
+C: Unaffected
+
+### Exceptions
+
+None
+
+### Instruction Formats
+
+| Syntax | Instruction Format
+|-|-|
+LDIR | `11 101 101` `10 110 000`
+
+### Example
+
+LDIR
+
+_Before instruction execution:_
+
+| Register | Value |
+|-|-|
+F  | szxhxvnc
+HL | 1125
+DE | 2210
+BC | 0003
+
+| Memory<br/>Address |Value |
+|-|-|
+1125 | 5A
+1126 | B0
+1127 | 76
+2210 | FF
+2211 | 9A
+2212 | 27
+
+_After instruction execution:_
+
+| Register | Value |
+|-|-|
+F  | szx0x00c
+HL | 1128
+DE | 2213
+BC | 0000
+
+| Memory<br/>Address |Value |
+|-|-|
+1125 | 5A
+1126 | B0
+1127 | 76
+2210 | 5A
+2211 | B0
+2212 | 76
