@@ -4252,17 +4252,17 @@ This instruction is used for block transfers of strings of data. The byte of dat
 
 ### Flags
 
-S: Unaffected
+**S:** Unaffected
 
-Z: Unaffected
+**Z:** Unaffected
 
-H: Cleared
+**H:** Cleared
 
-V: Set if the result of decrementing BC is not equal to zero; cleared otherwise
+**V:** Set if the result of decrementing BC is not equal to zero; cleared otherwise
 
-N: Cleared
+**N:** Cleared
 
-C: Unaffected
+**C:** Unaffected
 
 ### Exceptions
 
@@ -4325,17 +4325,17 @@ This instruction can be interrupted after each execution of the basic operation.
 
 ### Flags
 
-S: Unaffected
+**S:** Unaffected
 
-Z: Unaffected
+**Z:** Unaffected
 
-H: Cleared
+**H:** Cleared
 
-V: Cleared
+**V:** Cleared
 
-N: Cleared
+**N:** Cleared
 
-C: Unaffected
+**C:** Unaffected
 
 ### Exceptions
 
@@ -4403,17 +4403,17 @@ This instruction is used for block transfers of strings of data. The byte of dat
 
 ### Flags
 
-S: Unaffected
+**S:** Unaffected
 
-Z: Unaffected
+**Z:** Unaffected
 
-H: Cleared
+**H:** Cleared
 
-V: Set if the result of decrementing BC is not equal to zero; cleared otherwise
+**V:** Set if the result of decrementing BC is not equal to zero; cleared otherwise
 
-N: Cleared
+**N:** Cleared
 
-C: Unaffected
+**C:** Unaffected
 
 ### Exceptions
 
@@ -4476,17 +4476,17 @@ This instruction can be interrupted after each execution of the basic operation.
 
 ### Flags
 
-S: Unaffected
+**S:** Unaffected
 
-Z: Unaffected
+**Z:** Unaffected
 
-H: Cleared
+**H:** Cleared
 
-V: Cleared
+**V:** Cleared
 
-N: Cleared
+**N:** Cleared
 
-C: Unaffected
+**C:** Unaffected
 
 ### Exceptions
 
@@ -4537,3 +4537,250 @@ BC | 0000
 2210 | 5A
 2211 | B0
 2212 | 76
+
+
+## LDUD - Load in User Data Space (Byte)
+
+**LDUD** dst,src
+
+dst = A<br/>
+src = IR or SX in user data space
+
+or
+
+dst = IR or SX in user data space<br/>
+src = A
+
+### Operation
+
+dst ← src
+
+The destination is loaded with the contents of the source. In loading from the user data space into the accumulator, the memory-mapping mechanism used in translating logical addresses for data in user mode operation is used to translate the source address. In loading into the user data space from the accumulator, the memory-mapping mechanism used in translating logical addresses for data in user-mode operation is used to translate the destination address. See Chapter 7 for an explanation of this mechanism. The contents of the source are unaffected.
+
+The flags are set to reflect the success or failure of the transfer. If the transfer is unsuccessful, no trap is generated and no information is saved in the MMU. If the transfer is successful, the Carry flag is cleared to 0; if the transfer is unsuccessful, the Carry flag is set to 1. The other flags are unaffected if the transfer is successful. If the transfer is unsuccessful, the value of the Write Protect (WP) bit in the Page Descriptor register used by the MMU is loaded into the Z flag and the value of that Page Descriptor's Valid bit is loaded into the V flag.
+
+### Flags
+
+**S:** Unaffected
+
+**Z:** For unsuccessful accesses, loaded with the value of the WP bit used by the MMU;
+unaffected otherwise
+
+**H:** Unaffected
+
+**V:** For unsuccessful accesses, loaded with the value of the Valid bit used by the MMU;
+unaffected otherwise
+
+**N:** Unaffected
+
+**C:** Set if the transfer is unsuccessful; cleared otherwise
+
+### Exceptions
+
+Privileged Instruction
+
+### Instruction Formats - Load from User Data Space
+
+| Addressing<br/>Mode | Syntax | Instruction Format
+|-|-|-|
+IR | LDUD A,(HL) | `11 101 101` `10 000 110`
+SX | LDUD A,(XY + d) | `11 *11 101` `11 101 101` `10 000 110` `     d      `
+
+### Instruction Formats - Load into User Data Space
+
+| Addressing<br/>Mode | Syntax | Instruction Format
+|-|-|-|
+IR | LDUD (HL),A | `11 101 101` `10 001 110`
+SX | LDUD (XY + d),A | `11 *11 101` `11 101 101` `10 001 110` `     d      `
+
+#### Field Encoding
+
+**\*:** 0 for IX, 1 for IY
+
+### Example
+
+LDUD A,(HL)
+
+_Before instruction execution:_
+
+| Register | Value |
+|-|-|
+AF | 0F szxhxvnc
+HL | 8D07
+
+User data memory:
+
+| Memory<br/>Address |Value |
+|-|-|
+8D07 | 55
+
+_After instruction execution:_
+
+| Register | Value |
+|-|-|
+AF | 55 szxhxvn0
+HL | 8D07
+
+User data memory:
+
+| Memory<br/>Address |Value |
+|-|-|
+8D07 | 55
+
+
+## LDUP - Load in User Program Space (Byte)
+
+**LDUP** dst,src
+
+dst = A<br>
+src = IR or SX in user program space 
+
+or
+
+
+dst = IR or SX in user program space<br/>
+src = A
+
+### Operation
+
+dst ← src
+
+The destination is loaded with the contents of the source. In loading from the user program space into the accumulator, the memory-mapping mechanism used in translating logical addresses for program fetches (instructions or data using PC Relative adddressing mode) in user-mode operation is used to translate the source address. When loading into the user program space from the accumulator, the memory-mapping mechanism used in translating logical addresses for program accesses (instructions or data using PC Relative addressing mode) in user-mode operation is used to translate the destination address. See Chapter 7 for an explanation of this mechanism. The contents of the source are unaffected.
+
+The flags are set to reflect the success or failure of the transfer. If the transfer is unsuccessful, no trap is generated and no information is saved in the MMU. If the transfer is successful, the Carry flag is cleared; if the transfer is unsuccessful, the Carry flag is set. The other flags are unaffected if the transfer is successful. If the transfer is unsuccessful, the value of the Write Protect (WP) bit in the Page Descriptor register used by the MMU is loaded into the Z flag and the value of that Page Descriptor's Valid bit is loaded into the V flag.
+
+### Flags
+
+**S:** Unaffected
+
+**Z:** For unsuccessful accesses, loaded with the value of the WP bit used by the MMU;
+unaffected otherwise
+
+**H:** Unaffected
+
+**V:** For unsuccessful accesses, loaded with the value of the Valid bit used by the MMU;
+unaffected otherwise
+
+**N:** Unaffected
+
+**C:** Set if the transfer is unsuccessful; cleared otherwise
+
+### Exceptions
+
+Privileged Instruction
+
+### Instruction Formats - Load from User Program Space
+
+| Addressing<br/>Mode | Syntax | Instruction Format
+|-|-|-|
+IR | LDUP A,(HL) | `11 101 101` `10 010 110`
+SX | LDUP A,(XY + d) | `11 *11 101` `11 101 101` `10 010 110` `     d      `
+
+### Instruction Formats - Load into User Program Space
+
+| Addressing<br/>Mode | Syntax | Instruction Format
+|-|-|-|
+IR | LDUP (HL),A | `11 101 101` `10 011 110`
+SX | LDUP (XY + d),A | `11 *11 101` `11 101 101` `10 011 110` `     d      `
+
+#### Field Encoding
+
+**\*:** 0 for IX, 1 for IY
+
+### Example
+
+LDUP A,(HL)
+
+_Before instruction execution:_
+
+| Register | Value |
+|-|-|
+AF | 0F szxhxvnc
+HL | 5390
+
+User data memory:
+
+| Memory<br/>Address |Value |
+|-|-|
+5390 | FF
+
+_After instruction execution:_
+
+| Register | Value |
+|-|-|
+AF | FF szxhxvn0
+HL | 5390
+
+User data memory:
+
+| Memory<br/>Address |Value |
+|-|-|
+5390 | FF
+
+
+## LDW - Load Immediate Word
+
+**LD[W]** dst,nn 
+
+dst = R
+
+or
+
+**LDW** dst,nn
+
+dst = IR, DA, RA
+
+### Operation
+
+dst ← src
+
+The two bytes of immediate data are loaded into the destination. For register destinations, the low byte of the immediate operand is loaded into the low byte of the register and the high byte of the operand is loaded into the high byte of the register. For memory destinations, the low byte of the operand is loaded into the addressed location and the high byte of the operand is loaded into the next higher memory byte (addressed location incremented by one).
+
+### Flags
+
+No flags affected
+
+### Exceptions
+
+None
+
+### Instruction Formats
+
+| Addressing<br/>Mode | Syntax | Instruction Format
+|-|-|-|
+R  | LDW RR,nn | `00 rr  001` `   n(low)   ` `  n(high)   `
+|  | LDW XY,nn | `11 *11 101` `00 100 001` `   n(low)   ` `  n(high)   `
+IR | LDW (HL),nn | `11 011 101` `00 000 001` `   n(low)   ` `  n(high)   `
+DA | LDW (addr),nn | `11 011 101` `00 010 001` ` addr(low)  ` ` addr(high) ` `   n(low)   ` `  n(high)   `
+RA | LDW &lt;addr&gt;,nn | `11 011 101` `00 110 001` ` disp(low)  ` ` disp(high) ` `   n(low)   ` `  n(high)   `
+
+### Field Encodings
+
+**rr:** 000 for BC, 010 for DE, 100 for HL, 110 for SP<br/>
+**\*:** 0 for IX, 1 for IY
+
+### Example
+
+LDW (HL),3825H
+
+_Before instruction execution:_
+
+| Register | Value |
+|-|-|
+HL | 2391
+
+| Memory<br/>Address |Value |
+|-|-|
+2391 | 1E
+2392 | A3
+
+_After instruction execution:_
+
+| Register | Value |
+|-|-|
+HL | 2391
+
+| Memory<br/>Address |Value |
+|-|-|
+2391 | 25
+2392 | 38
