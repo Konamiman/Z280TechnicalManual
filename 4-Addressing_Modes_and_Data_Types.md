@@ -155,7 +155,7 @@ LD A,(IX + 231AH)     ;load into the accumulator
 | Register | Before<br/> instruction execution | After<br/>instruction execution |
 |-|-|-|
 |A  | 23 | 3D
-|BC | 01FE | 01FE |
+|IX | 01FE | 01FE |
 
 |Data memory<br/> address | Data memory<br/> value |
 |-|-|
@@ -193,7 +193,7 @@ LD A,(IX - 1)     ;load into the accumulator
 | Register | Before<br/> instruction execution | After<br/>instruction execution |
 |-|-|-|
 |A  | 01 | 3D
-|BC | 203A | 203A |
+|IX | 203A | 203A |
 
 |Data memory<br/> address | Data memory<br/> value |
 |-|-|
@@ -339,7 +339,8 @@ LD A,(HL + IX)     ;load into the accunulator the
 | Register | Before<br/> instruction execution | After<br/>instruction execution |
 |-|-|-|
 |A  | BC | A2
-|HL | FFFE | FFFE |
+|HL | 1502 | 1502 |
+|IX | FFFE | FFFE |
 
 |Data memory<br/> address | Data memory<br/> value |
 |-|-|
