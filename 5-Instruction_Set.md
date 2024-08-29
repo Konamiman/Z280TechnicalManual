@@ -672,7 +672,7 @@ IR | ADC A,(HL) | `10 001 110`
 DA | ADC A,(addr)   | `11 011 101` `10 001 111` ` addr(low)  ` ` addr(high) `
 X | ADC A,(XX + dd) | `11 111 101` `10 001 xx ` `   d(low)   ` `  d(high)   `
 SX | ADC A,(XY + d) | `11 *11 101` `10 001 110` `     d      `
-RA | ADC A,<addr> | `11 111 101` `10 001 000` ` disp(low)  ` ` disp(high) `
+RA | ADC A,\<addr> | `11 111 101` `10 001 000` ` disp(low)  ` ` disp(high) `
 SR | ADC A,(SP + dd) | `11 011 101` `10 001 000` `   d(low)   ` `  d(high)   `
 BX | ADC A,(XXA + XXB) | `11 011 101` `10 001 bx `
 
@@ -894,7 +894,7 @@ IR | ADD A,(HL) | `10 000 110`
 DA | ADD A,(addr) | `11 011 101` `10 000 111` ` addr(low)  ` ` addr(high) `
 X | ADD A,(XX + dd) | `11 111 101` `10 000 xx ` `   d(low)   ` `  d(high)   `
 SX | ADD A,(XY + d) | `11 *11 101` `10 000 110` `     d      `
-RA | ADD A,<addr> | `11 111 101` `10 000 000` ` disp(low)  ` ` disp(high) `
+RA | ADD A,\<addr> | `11 111 101` `10 000 000` ` disp(low)  ` ` disp(high) `
 SR | ADD A,(SP + dd) | `11 011 101` `10 000 000` `   d(low)   ` `  d(high)   `
 BX | ADD A,(XXA + XXB) | `11 011 101` `10 000 bx `
 
