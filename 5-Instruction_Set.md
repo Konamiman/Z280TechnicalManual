@@ -672,7 +672,7 @@ IR | ADC A,(HL) | `10 001 110`
 DA | ADC A,(addr)   | `11 011 101` `10 001 111` ` addr(low)  ` ` addr(high) `
 X | ADC A,(XX + dd) | `11 111 101` `10 001 xx ` `   d(low)   ` `  d(high)   `
 SX | ADC A,(XY + d) | `11 *11 101` `10 001 110` `     d      `
-RA | ADC A,<addr> | `11 111 101` `10 001 000` ` disp(low)  ` ` disp(high) `
+RA | ADC A,&lt;addr&gt; | `11 111 101` `10 001 000` ` disp(low)  ` ` disp(high) `
 SR | ADC A,(SP + dd) | `11 011 101` `10 001 000` `   d(low)   ` `  d(high)   `
 BX | ADC A,(XXA + XXB) | `11 011 101` `10 001 bx `
 
@@ -894,7 +894,7 @@ IR | ADD A,(HL) | `10 000 110`
 DA | ADD A,(addr) | `11 011 101` `10 000 111` ` addr(low)  ` ` addr(high) `
 X | ADD A,(XX + dd) | `11 111 101` `10 000 xx ` `   d(low)   ` `  d(high)   `
 SX | ADD A,(XY + d) | `11 *11 101` `10 000 110` `     d      `
-RA | ADD A,<addr> | `11 111 101` `10 000 000` ` disp(low)  ` ` disp(high) `
+RA | ADD A,&lt;addr&gt; | `11 111 101` `10 000 000` ` disp(low)  ` ` disp(high) `
 SR | ADD A,(SP + dd) | `11 011 101` `10 000 000` `   d(low)   ` `  d(high)   `
 BX | ADD A,(XXA + XXB) | `11 011 101` `10 000 bx `
 
@@ -2059,7 +2059,7 @@ DI mask | `11 101 101` `01 110 111` `    mask    `
 
 Mask = byte specifying which interrupts to disable: mask(i) corresponds to interrupt source i; mask(7) must be zero.
 
-### Eample
+### Example
 
 DI 23H
 
@@ -2137,7 +2137,7 @@ IR | DIV HL,(HL) | `11 101 101` `11 100 100`
 **xx:** 001 for (IX + dd), 010 for (IY + dd), 011 for (HL + dd)<br/>
 **bx:** 001 for (HL + IX), 010 for (HL + IY), 011 for (IX + IY)
 
-### Eample
+### Example
 
 DIV HL,C
 
@@ -2219,7 +2219,7 @@ IR | DIVU HL,(HL) | `11 101 101` `11 110 101`
 **xx:** 001 for (IX + dd), 010 for (IY + dd), 011 for (HL + dd)<br/>
 **bx:** 001 for (HL + IX), 010 for (HL + IY), 011 for (IX + IY)
 
-### Eample
+### Example
 
 DIVU HL,C
 
@@ -2297,7 +2297,7 @@ IR | DIVUW DEHL,(HL) | `11 011 101` `11 101 101` `11 001 011`
 **rr:** 001 for BC, 011 for DE, 101 for HL, 111 for SP<br/>
 **xy:** 001 for (IX + dd), 011 for (IY + dd)
 
-### Eample
+### Example
 
 DIVUW DEHL,6
 
@@ -2375,7 +2375,7 @@ IR | DIVW DEHL,(HL) | `11 011 101` `11 101 101` `11 001 010`
 **rr:** 001 for BC, 011 for DE, 101 for HL, 111 for SP<br/>
 **xy:** 001 for (IX + dd), 011 for (IY + dd)
 
-### Eample
+### Example
 
 DIUW DEHL,6
 
@@ -2425,7 +2425,7 @@ None
 |-|-|
 DJNZ addr | `00 010 000` `    disp    `
 
-### Eample
+### Example
 
 DJNZ 1050H
 

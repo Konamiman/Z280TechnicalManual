@@ -54,7 +54,7 @@ _Table B-2. Format 2 Instruction Encodings_
 | | | Instruction Format | | Assembly | Machine Code (Hex)
 |-|-|-|-|-|-|
 | | CB | opcode | | RLC (HL) | CB 06
-| A.esc | CB | 1-byte displacement | opcode | RCL (IX + d) | DD CB d 06
+| A.esc | CB | 1-byte displacement | opcode | RLC (IX + d) | DD CB d 06
 
 _Table B-3. Format 3 Instruction Encodings_
 
