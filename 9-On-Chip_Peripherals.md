@@ -432,7 +432,7 @@ DMA0 and DMA1 include a software <ins>RDY</ins> signal in the DMA Master Control
 
 A DMA channel can be programmed to perform data transfers on a byte (8-bit), word (16-bit), or long word (32-bit) basis. If a DMA's port address is a memory address that is auto-incremented or auto-decremented after each transfer, the size of the data transfer determines whether the memory address is incremented or decremented by a factor of 1, 2, or 4. For word and long word transfers to or from memory locations, the memory address must be even-valued (that is, the least significant bit of the memory address must be 0).
 
-Transfers of unaligned data on 16-bit buses can be accomplished via byte transfers only. Long word transfers are used in applications where the Z280 MPU is acting as a DMA controller for a system with a 32-bit bus, such as a Z80,000-based system. During long word transactions, the Z280 MPU's DMA channel provides only 24 bits of the address; the upper 8 bits of the 32-bit address have to be generated with external logic. Long word transfers are supported only in the flyby mode with the on-chip cache programmdbly disabled.
+Transfers of unaligned data on 16-bit buses can be accomplished via byte transfers only. Long word transfers are used in applications where the Z280 MPU is acting as a DMA controller for a system with a 32-bit bus, such as a Z80,000-based system. During long word transactions, the Z280 MPU's DMA channel provides only 24 bits of the address; the upper 8 bits of the 32-bit address have to be generated with external logic. Long word transfers are supported only in the flyby mode with the on-chip cache programmably disabled.
 
 
 ### 9.5.3 End-of-Process
