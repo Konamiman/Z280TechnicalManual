@@ -4784,3 +4784,107 @@ HL | 2391
 |-|-|
 2391 | 25
 2392 | 38
+
+
+## LD[W] - Load Addressing Register
+
+**LD[W]** dst,src
+
+dst = HL, IX, IY
+
+src = IM, DA, X, RA, SR, BX
+
+or
+
+dst = DA, X, RA, SR, BX
+
+src = HL, IX, IY
+
+### Operation
+
+dst ← src
+
+The contents of the source are loaded Into the destination. The contents of the source are unaffected. For register-to-memory transfers, the effective address of the memory operand corresponds to the low byte of the register; and the memory byte at the effective address incremented by one corresponds to the high byte of the register.
+
+### Flags
+
+No flags affected
+
+### Exceptions
+
+None
+
+### Instruction Formats - Load into Addressing Register
+
+| Addressing<br/>Mode | Syntax | Instruction Format
+|-|-|-|
+| IM | LDW HL,nn | `00 100 001` `   n(low)   ` `  n(high)   `
+|    | LDW XY,nn | `11 *11 101` `00 100 001` `   n(low)   ` `  n(high)   `
+| DA | LDW HL,(addr) | `00 101 010` ` addr(low)  ` ` addr(high) `
+|    | LDW XY,(addr) | `11 *11 101` `00 101 010` ` addr(low)  ` ` addr(high) `
+| X  | LDW HL,(XX + dd) | `11 101 101` `00 xx  100` `   d(low)   ` `  d(high)   `
+|    | LDW XY,(XX + dd) | `11 *11 101` `11 101 101` `00 xx  100` `   d(low)   ` `  d(high)   `
+| RA | LDW HL,&lt;addr&gt; | `11 101 101` `00 100 100` ` disp(low)  ` ` disp(high) `
+|    | LDW XY,&lt;addr&gt; | `11 *11 101` `11 101 101` `00 100 100` ` disp(low)  ` ` disp(high) `
+| SR | LDW HL,(SP + dd) | `11 101 101` `00 000 100` `   d(low)   ` `  d(high)   `
+|    | LDW XY,(SP + dd) | `11 *11 101` `11 101 101` `00 000 100` `   d(low)   ` `  d(high)   `
+| BX | LDW HL,(XXA + XXB) | `11 101 101` `00 bx  100`
+|    | LDW XY,(XXA + XXB) | `11 *11 101` `11 101 101` `00 bx  100`
+
+### Instruction Formats - Load from Addressing Register
+
+| Addressing<br/>Mode | Syntax | Instruction Format
+|-|-|-|
+| DA | LDW (addr),hl | `00 100 010` ` addr(low)  ` ` addr(high) `
+|    | LDW (addr),XY | `11 *11 101` `00 100 010` ` addr(low)  ` ` addr(high) `
+| X  | LDW (XX + dd),HL | `11 101 101` `00 xx  101` `   d(low)   ` `  d(high)   `
+|    | LDW (XX + dd),XY | `11 *11 101` `11 101 101` `00 xx  101` `   d(low)   ` `  d(high)   `
+| RA | LDW &lt;addr&gt;,HL | `11 101 101` `00 100 101` ` disp(low)  ` ` disp(high) `
+|    | LDW &lt;addr&gt;,XY | `11 *11 101` `11 101 101` `00 100 101` ` disp(low)  ` ` disp(high) `
+| SR | LDW (SP + dd),HL | `11 101 101` `00 000 101` `   d(low)   ` `  d(high)   `
+|    | LDW (SP + dd),XY | `11 *11 101` `11 101 101` `00 000 101` `   d(low)   ` `  d(high)   `
+| BX | LDW (XXA + XXB),HL | `11 101 101` `00 bx  101`
+|    | LDW (XXA + XXB),XY | `11 *11 101` `11 101 101` `00 bx  101`
+
+#### Field Encodings
+
+**\*:** 0 for IX, 1 for IY<br/>
+**xx:** 101 for (IX + dd), 110 for (IY + dd), 111 for (HL + dd)<br/>
+**bx:** 001 for (HL + IX), 010 for (HL + IY), 011 for (IX + IY)
+
+### Example
+
+LDW HL,(HL + IX)
+
+_Before instruction execution:_
+
+| Register | Value |
+|-|-|
+| HL | 1502
+| IX | FFFE
+
+| Memory<br/>Address |Value |
+|-|-|
+| 1500 | A2
+| 1501 | 03
+
+_After instruction execution:_
+
+| Register | Value |
+|-|-|
+| HL | 03A2
+| IX | FFFE
+
+| Memory<br/>Address |Value |
+|-|-|
+| 1500 | A2
+| 1501 | 03
+
+Address calculation:
+
+```
+   1502
+ + FFFE
+   ----
+   1500
+```
