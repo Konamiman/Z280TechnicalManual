@@ -4790,14 +4790,12 @@ HL | 2391
 
 **LD[W]** dst,src
 
-dst = HL, IX, IY
-
+dst = HL, IX, IY<br/>
 src = IM, DA, X, RA, SR, BX
 
 or
 
-dst = DA, X, RA, SR, BX
-
+dst = DA, X, RA, SR, BX<br/>
 src = HL, IX, IY
 
 ### Operation
@@ -4888,3 +4886,137 @@ Address calculation:
    ----
    1500
 ```
+
+
+## LD[W] - Load Register Word
+
+**LD[W]** dst,src
+
+dst = BC, DE, HL, SP<br/>
+src = IM, IR, DA, SX
+
+or
+
+dst = IR, DA, SX<br/>
+src = BC, DE, HL, SP
+
+### Operation
+
+dst ← src
+
+The contents of the source are loaded into the destination. The contents of the source are unaffected. For transfers between a register and memory, the effective address of the memory operand corresponds to the low byte of the register and the memory byte at the effective address incremented by one corresponds to the high byte of the register.
+
+### Flags
+
+No flags affected
+
+### Exceptions
+
+None
+
+### Instruction Formats - Load into Register
+
+| Addressing<br/>Mode | Syntax | Instruction Format
+|-|-|-|
+| IM | LDW RR,nn | `00 rra 001` `   n(low)   ` `  n(high)   `
+| IR | LDW RR,(HL) | `11 101 101` `00 rra 110`
+| DA | LDW RR,(addr) | `11 101 101` `01 rrb 011` ` addr(low)  ` ` addr(high) ` (except HL)
+| SX | LDW RR,(XY + d) | `11 *11 101` `11 101 101` `00 rra 110` `     d      `
+
+### Instruction Formats - Load from Register
+
+| Addressing<br/>Mode | Syntax | Instruction Format
+|-|-|-|
+| IM | LDW (HL),RR | `11 101 101` `00 rrb 110`
+| IR | LDW (addr),RR | `11 101 101` `01 rra 011` ` addr(low)  ` ` addr(high) ` (except HL)
+| SX | LDW (XY + d),RR | `11 *11 101` `11 101 101` `00 rrb 110` `     d      `
+
+#### Field Encodings
+
+**rra**: 000 for BC, 010 for DE, 100 for HL, 110 for SP<br/>
+**rrb**: 001 for BC, 011 for DE, 101 for HL, 111 for SP<br/>
+**\*:** 0 for IX, 1 for IY<br/>
+
+### Example
+
+LDW BC,3824H
+
+_Before instruction execution:_
+
+| Register | Value |
+|-|-|
+| BC | 21F3
+
+_After instruction execution:_
+
+| Register | Value |
+|-|-|
+| BC | 3824
+
+
+## LD[W] - Load Stack Pointer
+
+**LD[W]** dst,src
+
+dst = SP<br/>
+src = HL, IX, IY, IM, IR, DA, SX
+
+or
+
+dst = IR, DA, SX<br/>
+src = SP
+
+### Operation
+
+dst ← src
+
+The contents of the source are loaded into the destination, where the source or destination is the Stack Pointer.
+
+### Flags
+
+No flags affected
+
+### Exceptions
+
+None
+
+### Instruction Formats - Load into Stack Pointer
+
+| Addressing<br/>Mode | Syntax | Instruction Format
+|-|-|-|
+| R  | LDW SP,HL | `11 111 001`
+|    | LDW SP,XY | `11 *11 101` `11 111 001`
+| IM | LDW SP,nn | `00 110 001` `   n(low)   ` `  n(high)   `
+| IR | LDW SP,(HL) | `11 101 101` `00 110 110`
+| DA | LDW SP,(addr) | `11 101 101` `01 111 011` ` addr(low)  ` ` addr(high) `
+| SX | LDW SP,(XY + d) | `11 *11 101` `11 101 101` `00 110 110` `     d      `
+
+### Instruction Formats - Load from Stack Pointer
+
+| Addressing<br/>Mode | Syntax | Instruction Format
+|-|-|-|
+| IR | LDW (HL),SP | `11 101 101` `00 111 110`
+| DA | LDW (addr),SP | `11 101 101` `01 110 011` ` addr(low)  ` ` addr(high) `
+| SX | LDW (XY + d),SP | `11 *11 101` `11 101 101` `00 111 110` `     d      `
+
+#### Field Encoding
+
+**\*:** 0 for IX, 1 for IY
+
+### Example
+
+LDW SP,IX
+
+_Before instruction execution:_
+
+| Register | Value |
+|-|-|
+| SP | 238D
+| IX | FFF0
+
+_After instruction execution:_
+
+| Register | Value |
+|-|-|
+| SP | FFF0
+| IX | FFF0
