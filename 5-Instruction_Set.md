@@ -1910,7 +1910,7 @@ The destination operand is decremented by one and the result is stored in the de
 
 **H:** Set if there is a borrow from bit 4 of the result; cleared otherwise
 
-**V:** Set if arithmetic overflow occurs, that is, if the destination was 80h; cleared otherwise
+**V:** Set if arithmetic overflow occurs, that is, if the destination was 80<sub>H</sub>; cleared otherwise
 
 **N:** Set
 
@@ -5020,3 +5020,421 @@ _After instruction execution:_
 |-|-|
 | SP | FFF0
 | IX | FFF0
+
+
+## MULT - Multiply (Byte)
+
+**MULT** [A,]src
+
+src = R, RX, IM, IR, DA, X, SX, RA, SR, BX
+
+### Operation
+
+HL ← A ☓ src
+
+The contents of the accumulator are multiplied by the source operand and the product is stored in the HL register. The contents of the accumulator and the source are unaffected. Both operands are treated as signed, twos-complement integers.
+
+The initial contents of the HL register are overwritten by the result. The Carry flag is set to 1 to indicate that the H register is required to represent the result; if the Carry flag is cleared to 0, the product can be correctly represented in eight bits and the H register merely holds sign-extension data.
+
+### Flags
+
+**S:** Set if the result is negative; cleared otherwise
+
+**Z:** Set if the result is zero; cleared otherwise
+
+**H:** Unaffected
+
+**V:** Cleared
+
+**N:** Unaffected
+
+**C:** Set if the product is less than -2<sup>7</sup> or greater than or equal to 2<sup>7</sup>; cleared otherwise
+
+### Exceptions
+
+None
+
+### Instruction Formats
+
+| Addressing<br/>Mode | Syntax | Instruction Format
+|-|-|-|
+| R  | MULT A,R  | `11 101 101` `11  r  000`
+| RX | MULT A,RX | `11 *11 101` `11 101 101` `11 rx  000`
+| IM | MULT A,n  | `11 111 101` `11 101 101` `11 111 000` `     n      `
+| IR | MULT A,(HL) | `11 101 101` `11 110 000`
+| DA | MULT A,(addr) | `11 011 101` `11 101 101` `11 111 000` ` addr(low)  ` ` addr(high) `
+| X  | MULT A,(XX + dd) | `11 111 101` `11 101 101` `11 xx  000` `   d(low)   ` `  d(high)   `
+| SX | MULT A,(XY + d) | `11 *11 101` `11 101 101` `11 110 000` `     d      `
+| RA | MULT A,&lt;addr&gt; | `11 111 101` `11 101 101` `11 000 000` ` disp(low)  ` ` disp(high) `
+| SR | MULT A,(SP + dd) | `11 011 101` `11 101 101` `11 000 000` `   d(low)   ` `  d(high)   `
+| BX | MULT A,(XXA + XXB) | `11 011 101` `11 101 101` `11 bx  000`
+
+#### Field Encodings
+
+**\*:** 0 for IX, 1 for IY<br/>
+**rx:** 100 for high byte, 101 for low byte<br/>
+**xx:** 001 for (IX + dd), 010 for (IY + dd), 011 for (HL + dd)<br/>
+**bx:** 001 for (HL + IX), 010 for (HL + IY), 011 for (IX + IY)
+
+### Example
+
+MULT A,H
+
+_Before instruction execution:_
+
+| Register | Value |
+|-|-|
+| AF | FE szxhxvnc
+| HL | 1200
+
+_After instruction execution:_
+
+| Register | Value |
+|-|-|
+| AF | FE 10xhx0n0
+| HL | FFDC
+
+
+## MULTU - Multiply Unsigned (Byte)
+
+**MULTU** [A,]src
+
+src = R, RX, IM, IR, DA, X, SX, RA, SR, BX
+
+### Operation
+
+HL ← A ☓ src
+
+The contents of the accumulator are multiplied by the source operand and the product is stored in the HL register. The contents of the accumulator and the source are unaffected. Both operands are treated as unsigned, binary integers.
+
+The initial contents of the HL register are overwritten by the result. The Carry flag is set to 1 to indicate that the H register is required to represent the result; if the Carry flag is cleared to 0, the product can be correctly represented in eight bits and the H register merely holds zero.
+
+### Flags
+
+**S:** Cleared
+
+**Z:** Set if the result is zero; cleared otherwise
+
+**H:** Unaffected
+
+**V:** Cleared
+
+**N:** Unaffected
+
+**C:** Set if the product is greater than or equal to 2<sup>8</sup>; cleared otherwise
+
+### Exceptions
+
+None
+
+### Instruction Formats
+
+| Addressing<br/>Mode | Syntax | Instruction Format
+|-|-|-|
+| R  | MULTU A,R  | `11 101 101` `11  r  001`
+| RX | MULTU A,RX | `11 *11 101` `11 101 101` `11 rx  001`
+| IM | MULTU A,n  | `11 111 101` `11 101 101` `11 111 001` `     n      `
+| IR | MULTU A,(HL) | `11 101 101` `11 110 001`
+| DA | MULTU A,(addr) | `11 011 101` `11 101 101` `11 111 001` ` addr(low)  ` ` addr(high) `
+| X  | MULTU A,(XX + dd) | `11 111 101` `11 101 101` `11 xx  001` `   d(low)   ` `  d(high)   `
+| SX | MULTU A,(XY + d) | `11 *11 101` `11 101 101` `11 110 001` `     d      `
+| RA | MULTU A,&lt;addr&gt; | `11 111 101` `11 101 101` `11 000 001` ` disp(low)  ` ` disp(high) `
+| SR | MULTU A,(SP + dd) | `11 011 101` `11 101 101` `11 000 001` `   d(low)   ` `  d(high)   `
+| BX | MULTU A,(XXA + XXB) | `11 011 101` `11 101 101` `11 bx  001`
+
+#### Field Encodings
+
+**\*:** 0 for IX, 1 for IY<br/>
+**rx:** 100 for high byte, 101 for low byte<br/>
+**xx:** 001 for (IX + dd), 010 for (IY + dd), 011 for (HL + dd)<br/>
+**bx:** 001 for (HL + IX), 010 for (HL + IY), 011 for (IX + IY)
+
+### Example
+
+MULT A,H
+
+_Before instruction execution:_
+
+| Register | Value |
+|-|-|
+| AF | FE szxhxvnc
+| HL | 02FB
+
+_After instruction execution:_
+
+| Register | Value |
+|-|-|
+| AF | FE 00xhx0n0
+| HL | 01FC
+
+
+## MULTUW - Multiply Unsigned (Word)
+
+**MULTUW** [HL],src
+
+src = R, IM, DA, X, RA
+
+### Operation
+
+DEHL ← HL ☓ src
+
+The contents of the HL register are multiplied by the source operand and the product is stored in the DE and HL registers. The contents of the source are unaffected. Both operands are treated as unsigned, binary integers.
+
+The initial contents of the HL register are overwritten by the result. The Carry flag is set to 1 to indicate that the DE register is required to represent the result; if the Carry flag is cleared to 0, the product can be represented correctly in 16 bits and the DE register merely holds zero.
+
+### Flags
+
+**S:** Cleared
+
+**Z:** Set if the result is zero; cleared otherwise
+
+**H:** Unaffected
+
+**V:** Cleared
+
+**N:** Unaffected
+
+**C:** Set if the product is greater than or equal to 2<sup>16</sup>; cleared otherwise
+
+### Exceptions
+
+None
+
+### Instruction Formats
+
+| Addressing<br/>Mode | Syntax | Instruction Format
+|-|-|-|
+| R  | MULTUW HL,RR | `11 101 101` `11 rr  011`
+|    | MULTUW HL,XY | `11 *11 101` `11 101 101` `11 100 011`
+| IM | MULTUW HL,nn | `11 111 101` `11 101 101` `11 110 011` `   n(low)   ` `  n(high)   `
+| DA | MULTUW HL,(addr) | `11 011 101` `11 101 101` `11 010 011` ` addr(low)  ` ` addr(high) `
+| X  | MULTUW HL,(XY + dd) | `11 111 101` `11 101 101` `11 xy  011` `   d(low)   ` `  d(high)   `
+| RA | MULTUW HL,&lt;addr&gt; | `11 011 101` `11 101 101` `11 110 011` ` disp(low)  ` ` disp(high) `
+| IR | MULTUW HL,(HL) | `11 011 101` `11 101 101` `11 000 011`
+
+#### Field Encodings
+
+**\*:** 0 for IX, 1 for IY<br/>
+**rr:** 000 for BC, 010 for DE, 100 for HL, 110 for SP<br/>
+**xy:** 000 for (IX + dd), 010 for (IY + dd)
+
+### Example
+
+MULTUW HL,DE
+
+_Before instruction execution:_
+
+| Register | Value |
+|-|-|
+| F | szxhxvnc
+| DE | 000A
+| HL | 0031
+
+_After instruction execution:_
+
+| Register | Value |
+|-|-|
+| F | 00xhx0n0
+| DE | 0000
+| HL | 01EA
+
+
+## MULTW - Multiply (Word)
+
+**MULTW** [HL],src
+
+src = R, IM, DA, X, RA
+
+### Operation
+
+DEHL ← HL ☓ src
+
+The contents of the HL register are multiplied by the source operand and the product is stored in the DE and HL registers. The contents of the source are unaffected. Both operands are treated as signed, twos-complement integers.
+
+The initial contents of the HL register are overwritten by the result. The Carry flag is set to 1 to indicate that the DE register is required to represent the result; if the Carry flag is cleared to 0, the product can be correctly represented in 16 bits and the DE register merely holds sign-extension data.
+
+### Flags
+
+**S:** Set if the result is negative; cleared otherwise
+
+**Z:** Set if the result is zero; cleared otherwise
+
+**H:** Unaffected
+
+**V:** Cleared
+
+**N:** Unaffected
+
+**C:** Set if the product is less than -2<sup>15</sup> or greater than or equal to 2<sup>15</sup>; cleared otherwise
+Exceptions:
+
+### Exceptions
+
+None
+
+### Instruction Formats
+
+| Addressing<br/>Mode | Syntax | Instruction Format
+|-|-|-|
+| R  | MULTW HL,RR | `11 101 101` `11 rr  010`
+|    | MULTW HL,XY | `11 *11 101` `11 101 101` `11 100 010`
+| IM | MULTW HL,nn | `11 111 101` `11 101 101` `11 110 010` `   n(low)   ` `  n(high)   `
+| DA | MULTW HL,(addr) | `11 011 101` `11 101 101` `11 010 010` ` addr(low)  ` ` addr(high) `
+| X  | MULTW HL,(XY + dd) | `11 111 101` `11 101 101` `11 xy  010` `   d(low)   ` `  d(high)   `
+| RA | MULTW HL,&lt;addr&gt; | `11 011 101` `11 101 101` `11 110 010` ` disp(low)  ` ` disp(high) `
+| IR | MULTW HL,(HL) | `11 011 101` `11 101 101` `11 000 010`
+
+#### Field Encodings
+
+**\*:** 0 for IX, 1 for IY<br/>
+**rr:** 000 for BC, 010 for DE, 100 for HL, 110 for SP<br/>
+**xy:** 000 for (IX + dd), 010 for (IY + dd)
+
+### Example
+
+MULTW HL,DE
+
+_Before instruction execution:_
+
+| Register | Value |
+|-|-|
+| F | szxhxvnc
+| DE | 000A
+| HL | 0031
+
+_After instruction execution:_
+
+| Register | Value |
+|-|-|
+| F | 00xhx0n0
+| DE | 0000
+| HL | 01EA
+
+
+## NEG - Negate Accumulator
+
+**NEG** [A]
+
+###  Operation
+
+A ← —A
+
+The contents of the accumulator are negated, that is, replaced by its twos-complement value. Note that 80<sub>H</sub> is replaced by Itself, because in twos-complement representation the negative number with greatest magnitude has no positive counterpart; for this case, the Overflow flag is set to 1.
+
+### Flags:
+
+**S:** Set if the result is negative, cleared otherwise
+
+**Z:** Set if the result is zero, cleared otherwise
+
+**H:** Set if there was a borrow from the least significant bit of the high-order four bits of the result (bit 4); cleared otherwise
+
+**V:** Set if the contents of the accumulator was 80<sub>H</sub> before the operation; cleared otherwise
+
+**N:** Set
+
+**C:** Set if the contents of the accumulator was not 00<sub>H</sub> before the operation; cleared otherwise
+
+### Exceptions
+
+None
+
+### Instruction Formats
+
+| Syntax | Instruction Format
+|-|-|
+| NEG A | `11 101 101` `01 000 100`
+
+### Example
+
+NEG A
+
+_Before instruction execution:_
+
+| Register | Value |
+|-|-|
+| AF | 28 szxhxvnc
+
+_After instruction execution:_
+
+| Register | Value |
+|-|-|
+| AF | D8 10x0x010
+
+
+## NEG - Negate HL
+
+**NEG** HL
+
+### Operation
+
+HL ← —HL
+
+The contents of the HL register are negated, that is, replaced by its twos-complement value. Note that 8000<sub>H</sub> is replaced by itself, because in twos-complement representation the negative number with greatest magnitude has no positive counterpart; for this case, the Overflow flag is set to 1.
+
+### Flags:
+
+**S:** Set if the result is negative, cleared otherwise
+
+**Z:** Set if the result is zero, cleared otherwise
+
+**H:** Set if there was a borrow from the least significant bit of the high-order four bits of the result (bit 12); cleared otherwise
+
+**V:** Set if the contents of HL was 8000<sub>H</sub> before the operation; cleared otherwise
+
+**N:** Set
+
+**C:** Set if the contents of HL was not 0000<sub>H</sub> before the operation; cleared otherwise
+
+### Exceptions
+
+None
+
+### Instruction Formats
+
+| Syntax | Instruction Format
+|-|-|
+| NEG HL | `11 101 101` `01 001 100`
+
+### Example
+
+NEG HL
+
+_Before instruction execution:_
+
+| Register | Value |
+|-|-|
+| F | szxhxvnc
+| HL | 0121
+
+_After instruction execution:_
+
+| Register | Value |
+|-|-|
+| F | 10x1x010
+| HL | FEDF
+
+
+## NOP - No Operation
+
+NOP
+
+## Operation
+
+None
+
+No operation.
+
+### Flags
+
+No flags affected
+
+### Exceptions
+
+None
+
+### Instruction Formats
+
+| Syntax | Instruction Format
+|-|-|
+| NOP | `00 000 000 `
