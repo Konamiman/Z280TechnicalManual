@@ -5438,3 +5438,230 @@ None
 | Syntax | Instruction Format
 |-|-|
 | NOP | `00 000 000 `
+
+
+## OR
+
+**OR** [A],src
+
+src = R, RX, IM, IR, DA, X, SX, RA, SR, BX
+
+### Operation
+
+A ← A OR src
+
+A logical OR operation is performed between the corresponding bits in the source operand and the accumulator and the result is stored in the accumulator. A 1 bit Is stored wherever either of the corresponding bits in the two operands is one; otherwise a 0 bit is stored. The contents of the source are unaffected.
+
+### Flags
+
+**S:** Set if the most significant bit of the result is set; cleared otherwise
+
+**Z:** Set if all bits of the result are zero; cleared otherwise
+
+**H:** Cleared
+
+**P:** Set if the parity of the result is even; cleared otherwise
+
+**N:** Cleared
+
+**C:** Cleared
+
+### Exceptions
+
+None
+
+### Instruction Formats
+
+| Addressing<br/>Mode | Syntax | Instruction Format
+|-|-|-|
+| R  | OR A,R | `10 110 r  `
+| RX | OR A,RX | `11 *11 101` `10 110 rx `
+| IM | OR A,n | `11 110 110` `     n      `
+| IR | OR A,(HL) | `10 110 110`
+| DA | OR A,(addr) | `11 011 101` `10 110 111` ` addr(low)  ` ` addr(high) `
+| X  | OR A,(XX + dd) | `11 111 101` `10 110 xx ` `   d(low)   ` `  d(high)   `
+| SX | OR A,(XY + d) | `11 *11 101` `10 110 110` `     d      `
+| RA | OR A,&lt;addr&gt; | `11 111 101` `10 110 000` ` disp(low)  ` ` disp(high) `
+| SR | OR A,(SP + dd) | `11 011 101` `10 110 000` `   d(low)   ` `  d(high)   `
+| BX | OR A,(XXA + XXB) | `11 011 101` `10 110 bx `
+
+#### Field Encodings
+
+**\*:** 0 for IX, 1 for IY<br/>
+**rx:** 100 for high byte, 101 for low byte<br/>
+**xx:** 001 for (IX + dd), 010 for (IY + dd), 011 for (HL + dd)<br/>
+**bx:** 001 for (HL + IX), 010 for (HL + IY), 011 for (IX + IY)
+
+### Example
+
+OR A,(HL)
+
+_Before instruction execution:_
+
+| Register | Value |
+|-|-|
+| AF | 48 szxhxvnc
+| HL | 2454
+
+| Memory<br/>Address |Value |
+|-|-|
+| 2454 | 18
+
+_After instruction execution:_
+
+| Register | Value |
+|-|-|
+| AF | 58 00x0x000
+| HL | 2454
+
+| Memory<br/>Address |Value |
+|-|-|
+| 2454 | 18
+
+
+## OTDR - Output, Decrement and Repeat (Byte, Word)
+
+**OTDR** <br/>
+**OTDRW**
+
+### Operation
+
+Repeat until B = 0:
+
+(C) ← (HL)<br/>
+B ← B — 1<br/>
+HL ← AUTODECREMENT HL (by one if byte, by two if word)
+
+This instruction is used for block output of strings of data. The string of data is loaded into the selected peripheral from memory at consecutive addresses, starting with the location addressed by the HL register and decreasing. During the I/O transactions, the peripheral address from the C register is placed on the low byte of the address bus, the contents of the B register are placed on address lines A<sub>8</sub>-A<sub>15</sub>, and the contents of the I/O Page register are placed on address lines A<sub>16</sub>-A<sub>23</sub>. The byle or word of data from the memory location addressed by the HL register is loaded into the selected peripheral. The B register, used as a counter, is decremented by one. The HL register is then decremented by one for byte transfers or by two for word transfers, thus moving the memory pointer to the next source for the output. If the result of decrementing the B register is zero, the instruction is terminated, otherwise the output sequence is repeated. Note that if the B register contains 0 at the start of the execution of this instruction, 256 bytes are output.
+
+This instruction can be interrupted after each execution of the basic operation. The Program Counter value of the start of this instruction is saved before the interrupt request is accepted, so that the instruction can be properly resumed.
+
+### Flags
+
+**S:** Unaffected
+
+**Z:** Set
+
+**H:** Unaffected
+
+**V:** Unaffected
+
+**N:** Set
+
+**C:** Unaffected
+
+### Exceptions
+
+Privileged Instruction (if the Inhibit User I/O bit in the Trap Control register is set to 1)
+
+### Instruction Formats
+
+| Syntax | Instruction Format
+|-|-|
+| OTDR | `11 101 101` `10 111 011`
+| OTDRW | `11 101 101` `10 011 011`
+
+### Example
+
+OTDR
+
+_Before instruction execution:_
+
+| Register | Value |
+|-|-|
+F  | szxhxvnc
+BC | 0346
+HL | 5218
+I/O page<br/>register | 17
+
+Byte 9B<sub>H</sub> written to I/O port 170346<sub>H</sub>,<br/>
+then byte FF<sub>H</sub> written to I/O port 170246<sub>H</sub>,<br/>
+then byte A3<sub>H</sub> written to I/O port 170146<sub>H.
+
+_After instruction execution:_
+
+| Register | Value |
+|-|-|
+F  | s1xhxv1c
+BC | 0046
+HL | 5215
+
+| Memory<br/>Address |Value |
+|-|-|
+5216 | A3
+5217 | FF
+5218 | 9B
+
+
+## OTIR - Output, Increment and Repeat (Byte, Word)
+
+**OTIR**<br/>
+**OTIRW**
+
+### Operation
+
+Repeat until B = 0:
+
+(C) ← (HL)<br/>
+B ←  B — 1<br/>
+HL AUTOINCREMENT (by one if byte, by two if word)
+
+This instruction is used for block output of strings of data. The string of data is loaded into the selected peripheral from memory at consecutive addresses, starting with the location addressed by the HL register and increasing. During the I/O transactions, the peripheral address from the C register is placed on the low byte of the address bus, the contents of the B register are placed on address lines A<sub>8</sub>-A<sub>15</sub>, and the contents of the I/O Page register are placed on address lines A<sub>16</sub>-A<sub>23</sub>. The byte or word of data from the memory location addressed by the HL register is loaded into the selected peripheral. The B register, used as a counter, is decremented by one. The HL register is then incremented by one for byte transfers or by two for word transfers, thus moving the memory pointer to the next source for the output. If the result of decrementing B is zero, the instruction is terminated, otherwise the output sequence is repeated. Note that if the B register contains 0 at the start of the execution of this instruction, 256 bytes are output.
+
+### Flags
+
+**S:** Unaffected
+
+**Z:** Set
+
+**H:** Unaffected
+
+**V:** Unaffected
+
+**N:** Set
+
+**C:** Unaffected
+
+### Exceptions
+
+Privileged Instruction (if the Inhibit User I/O bit in the Trap Control register is set to 1)
+
+### Instruction Formats
+
+| Syntax | Instruction Format
+|-|-|
+| OTIR | `11 101 101` `10 110 011`
+| OTIRW | `11 101 101` `10 010 011`
+
+### Example
+
+OTIRW
+
+_Before instruction execution:_
+
+| Register | Value |
+|-|-|
+F  | szxhxvnc
+BC | 0244
+HL | 5004
+I/O page<br/>register | 31
+
+Word 3A90<sub>H</sub> written to I/O port 310244<sub>H</sub>,<br/>
+then word B867<sub>H</sub> written to I/O port 310144<sub>H</sub>.
+
+_After instruction execution:_
+
+| Register | Value |
+|-|-|
+F  | s1xhxv1c
+BC | 0044
+HL | 5008
+
+| Memory<br/>Address |Value |
+|-|-|
+5004 | 90
+5005 | 3A
+5006 | 67
+5007 | B8
+
+**Note:** Example assumes that a 16-bit data bus configuration of the Z280 MPU is used.
