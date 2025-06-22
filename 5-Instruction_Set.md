@@ -5574,10 +5574,6 @@ BC | 0346
 HL | 5218
 I/O page<br/>register | 17
 
-Byte 9B<sub>H</sub> written to I/O port 170346<sub>H</sub>,<br/>
-then byte FF<sub>H</sub> written to I/O port 170246<sub>H</sub>,<br/>
-then byte A3<sub>H</sub> written to I/O port 170146<sub>H.
-
 _After instruction execution:_
 
 | Register | Value |
@@ -5585,6 +5581,10 @@ _After instruction execution:_
 F  | s1xhxv1c
 BC | 0046
 HL | 5215
+
+Byte 9B<sub>H</sub> written to I/O port 170346<sub>H</sub>,<br/>
+then byte FF<sub>H</sub> written to I/O port 170246<sub>H</sub>,<br/>
+then byte A3<sub>H</sub> written to I/O port 170146<sub>H.
 
 | Memory<br/>Address |Value |
 |-|-|
@@ -5646,9 +5646,6 @@ BC | 0244
 HL | 5004
 I/O page<br/>register | 31
 
-Word 3A90<sub>H</sub> written to I/O port 310244<sub>H</sub>,<br/>
-then word B867<sub>H</sub> written to I/O port 310144<sub>H</sub>.
-
 _After instruction execution:_
 
 | Register | Value |
@@ -5656,6 +5653,9 @@ _After instruction execution:_
 F  | s1xhxv1c
 BC | 0044
 HL | 5008
+
+Word 3A90<sub>H</sub> written to I/O port 310244<sub>H</sub>,<br/>
+then word B867<sub>H</sub> written to I/O port 310144<sub>H</sub>.
 
 | Memory<br/>Address |Value |
 |-|-|
@@ -5665,3 +5665,300 @@ HL | 5008
 5007 | B8
 
 **Note:** Example assumes that a 16-bit data bus configuration of the Z280 MPU is used.
+
+
+## OUT - Output
+
+**OUT** (C),src
+
+src = R, RX, DA, X, RA, SR, BX
+
+### Operation
+
+(C) ← src
+
+The byte of data from the source is loaded into the selected peripheral. During the I/O transaction, the peripheral address from the C register is placed on the low byte of the address bus, the contents of the B register are placed on address lines A<sub>8</sub>-A<sub>15</sub>, and the contents of the I/O Page register are placed on address lines A<sub>16</sub>-A<sub>23</sub>. The byte of data from the source is then loaded into the selected peripheral.
+
+### Flags
+
+No flags affected
+
+### Exceptions
+
+Privileged Instruction (if the Inhibit User I/O bit in the Trap Control register is set to 1)
+
+### Instruction Formats
+
+| Addressing<br/>Mode | Syntax | Instruction Format
+|-|-|-|
+| R  | OUT (C),R | `11 101 101` `01  r  001`
+| RX | OUT (C),RX | `11 *11 101` `11 101 101` `01 rx  001`
+| DA | OUT (C),(addr) | `11 011 101` `11 101 101` `01 111 001` ` addr(low)  ` ` addr(high) `
+| X  | OUT (C),(XX + dd) | `11 111 101` `11 101 101` `01 xx  001` `   d(low)   ` `  d(high)   `
+| RA | OUT (C),&lt;addr&gt; | `11 111 101` `11 101 101` `01 000 001` ` disp(low)  ` ` disp(high) `
+| SR | OUT (C),(SP + dd) | `11 011 101` `11 101 101` `01 000 001` `   d(low)   ` `  d(high)   `
+| BX | OUT (C),(XXA + XXB) | `11 011 101` `11 101 101` `01 bx  001`
+
+#### Field Encodings
+
+**\*:** 0 for IX, 1 for IY<br/>
+**rx:** 100 for high byte, 101 for low byte<br/>
+**xx:** 001 for (IX + dd), 010 for (IY + dd), 011 for (HL + dd)<br/>
+**bx:** 001 for (HL + IX), 010 for (HL + IY), 011 for (IX + IY)
+
+### Example
+
+OUT (C),IXH
+
+_Before instruction execution:_
+
+| Register | Value |
+|-|-|
+BC | 1650
+IX | FD07
+I/O page<br/>register | 32
+
+_After instruction execution:_
+
+Byte FD<sub>H</sub> written to I/O port 321650<sub>H</sub>
+
+
+## OUT - Output Accumulator
+
+**OUT** (n),A
+
+### Operation
+
+(n) ← A
+
+The contents of the accumulator are loaded into the selected peripheral. During the I/O transaction, the 8-bit peripheral address from the instruction is placed on the low byte of the address bus, the contents of the accumulator are placed on address lines A<sub>8</sub>-A<sub>15</sub>, and the contents of the I/O Page register are placed on address lines A<sub>16</sub>-A<sub>23</sub>. Then the contents of the accumulator are written into the selected port.
+
+### FlagsNo flags affected
+
+### Exceptions
+
+Privileged Instruction (if the Inhibit User I/O bit in the Trap Control register is set to 1)
+
+### Instruction Formats
+
+| Syntax | Instruction Format
+|-|-|
+| OUT (n),A | `11 010 011` `     n      `
+
+### Example
+
+OUT (55H),A
+
+_Before instruction execution:_
+
+| Register | Value |
+|-|-|
+A | 42
+I/O page<br/>register | 11
+
+_After instruction execution:_
+
+Byte 42<sub>H</sub> written to I/O port 114255<sub>H</sub>
+
+
+## OUTD - Output and Decrement (Byte, Word)
+
+**OUTD**<br/>
+**OUTDW**
+
+Operation
+
+(C) ← (HL)<br/>
+B ← B — 1<br/>
+HL ← AUTODECREMENT HL (by one if byte, by two if word)
+
+This instruction is used for block output of strings of data. During the I/O transaction, the peripheral address from the C register is placed on the low byte of the address bus, the contents of the B register are placed on address lines A<sub>8</sub>-A<sub>15</sub>, and the contents of the I/O Page register are placed on address lines A<sub>16</sub>-A<sub>23</sub>. The byte or word of data from the memory location addressed by the HL register is loaded into the selected peripheral. The B register, used as a counter, is decremented by one. The HL register is decremented by one for byte transfers or by two for word transfers, thus moving the memory pointer to the next source for the output.
+
+### Flags
+
+**S:** Unaffected
+
+**Z:** Set if the result of decrementing B is zero; cleared otherwise
+
+**H:** Unaffected
+
+**V:** Unaffected
+
+**N:** Set
+
+**C:** Unaffected
+
+### Exceptions
+
+Privileged Instruction (if the Inhibit User I/O bit in the Trap Control register is set to 1)
+
+### Instruction Formats
+
+| Syntax | Instruction Format
+|-|-|
+| OUTD | `11 101 101` `10 101 011`
+| OUTDW | `11 101 101` `10 001 011`
+
+### Example
+
+OUTDW
+
+_Before instruction execution:_
+
+| Register | Value |
+|-|-|
+F  | szxhxvnc
+BC | 1564
+HL | 5006
+I/O page<br/>register | 33
+
+_After instruction execution:_
+
+| Register | Value |
+|-|-|
+F  | s0xhxv1c
+BC | 1464
+HL | 5004
+
+Word 8D07<sub>H</sub> written to I/O port 331564<sub>H</sub>
+
+| Memory<br/>Address |Value |
+|-|-|
+5006 | 07
+5007 | 8D
+
+**Note:** Example assumes that a 16-bit data bus configuration of the Z280 MPU is used.
+
+
+## OUTI - Output and Increment (Byte, Word)
+
+**OUTI**<br/>
+**OUTIW**
+
+### Operation
+
+(C) ← (HL)<br/>
+B ← B — 1<br/>
+HL ← AUTOINCREMENT HL (by one if byte, by two if word)
+
+This instruction is used for block output of strings of data. During the I/O transaction, the peripheral address from the C register is placed on the low byte of the address bus, the contents of the B register are placed on address lines A<sub>8</sub>-A<sub>15</sub>, and the contents of the I/O Page register are placed on address lines A<sub>16</sub>-A<sub>23</sub>. The byte or word of data from the memory location addressed by the HL register is loaded into the selected peripheral. The B register, used as a counter, is decremented by one. The HL register is then incremented by one for byte transfers or by two for word transfers, thus moving the memory pointer to the next source for the output.
+
+### Flags
+
+**S:** Unaffected
+
+**Z:** Set if the result of decrementing B is zero; cleared otherwise
+
+**H:** Unaffected
+
+**V:** Unaffected
+
+**N:** Set
+
+**C:** Unaffected
+
+### Exceptions
+
+Privileged Instruction (if the Inhibit User I/O bit in the Trap Control register is set to 1)
+
+### Instruction Formats
+
+| Syntax | Instruction Format
+|-|-|
+| OUTI | `11 101 101` `10 100 011`
+| OUTIW | `11 101 101` `10 000 011`
+
+### Example
+
+OUTI
+
+_Before instruction execution:_
+
+| Register | Value |
+|-|-|
+F  | szxhxvnc
+BC | 1564
+HL | 5002
+I/O page<br/>register | 33
+
+_After instruction execution:_
+
+| Register | Value |
+|-|-|
+F  | s0xhxv1c
+BC | 1464
+HL | 5003
+
+Byte 7B<sub>H</sub> written to I/O port 331564<sub>H</sub>
+
+| Memory<br/>Address |Value |
+|-|-|
+5002 | 7B
+
+
+## OUT[W] - Output HL
+
+**OUT[W]** (C),HL
+
+### Operation
+
+(C) ← HL
+
+The contents of the HL register are loaded into the selected peripheral. During the I/O transaction, the 8-bit peripheral address from the C register is placed on the low byte of the address bus, the contents of the B register are placed on address lines A<sub>8</sub>-A<sub>15</sub>, and the contents of the I/O Page register are placed on address lines A<sub>16</sub>-A<sub>23</sub>. Then the contents of the HL register are written into the selected port. For 8-bit data buses, only the contents of the H register are transferred during a single bus transaction.
+
+### Flags
+
+No flags affected
+
+### Exceptions
+
+Privileged Instruction (if the Inhibit User I/O bit in the Trap Control register is set to 1)
+
+### Instruction Formats
+
+| Syntax | Instruction Format
+|-|-|
+| OUTW (C),HL | `11 101 101` `10 111 111`
+
+### Example
+
+OUTW (C),HL
+
+_Before instruction execution:_
+
+| Register | Value |
+|-|-|
+BC | 2650
+HL | 3A84
+I/O page<br/>register | 17
+
+_After instruction execution:_
+
+Word 843A<sub>H</sub> written to I/O port 172650<sub>H</sub>
+
+**Note:** Example assumes that a 16-bit data bus configuration of the Z280 MPU is used.
+
+
+## PCACHE - Purge Cache
+
+**PCACHE**
+
+### Operation
+
+All cache entries invalidated
+
+This instruction is used to invalidate all entries in the cache.
+
+### Flags
+
+No flags affected
+
+### Exceptions
+
+None
+
+### Instruction Formats
+
+| Syntax | Instruction Format
+|-|-|
+| PCACHE | `11 101 101` `01 100 101`
