@@ -6108,6 +6108,7 @@ dst = R, IR, SX
 The specified bit b within the destination operand is cleared to 0. The other bits in the destination are unaffected. The bit number b must be between 0 and 7.
 
 ### Flags
+
 No flags affected
 
 ### Exceptions
@@ -6420,3 +6421,314 @@ _After instruction execution:_
 |-|-|
 | FFC6 | 72
 | FFC7 | 19
+
+
+## RL - Rotate Left
+
+**RL** dst
+
+dst = R, IR, SX
+
+### Operation
+
+tmp ← dst<br/>
+dst(0) ← C<br/>
+C ← dst(7)<br/>
+dst(n + 1) ← tmp(n) for n = 0 to 6
+
+![](Images/RL.png)
+
+The contents of the destination operand are concatenated with the Carry flag and together they are rotated left one bit position. Bit 7 of the destination operand is moved to the Carry flag and the Carry flag is moved to bit 0 of the destination.
+
+### Flags
+
+**S:** Set if the most significant bit of the result is set; cleared otherwise
+
+**Z:** Set if the result is zero; cleared otherwise
+
+**H:** Cleared
+
+**P:** Set if the parity of the result is even; cleared otherwise
+
+**N:** Cleared
+
+**C:** Set if the bit rotated from bit 7 was a 1; cleared otherwise
+
+### Exceptions
+
+None
+
+### Instruction Formats
+
+| Addressing<br/>Mode | Syntax | Instruction Format
+|-|-|-|
+| R | RL R | `11 001 011` `00 010  r `
+| IR | RL (HL) | `11 001 011` `00 010 110`
+| SX | RL (XY + d) | `11 *11 101` `11 001 011` `     d      ` `00 010 110`
+
+#### Field Encoding
+
+**\*:** 0 for IX, 1
+
+### Example
+
+RL D
+
+_Before instruction execution:_
+
+| Register | Value |
+|-|-|
+| F | szxhxvn0
+| D | 10001111
+
+_After instruction execution:_
+
+| Register | Value |
+|-|-|
+| F | 00x0x101
+| D | 00011110
+
+
+## RLA - Rotate Left Accumulator
+
+**RLA**
+
+### Operation
+
+tmp ← A<br/>
+A(0) ← C<br/>
+C ← A(7)<br/>
+A(n + 1) ← tmp(n) for n = 0 to 6 A
+
+![](Images/RLA.png)
+
+The contents of the accumulator are concatenated with the Carry flag and together they are rotated left one bit position. Bit 7 of the accumulator is moved to the Carry flag and the Carry flag is moved to bit 0 of the destination.
+
+### Flags
+
+**S:** Unaffected
+
+**Z:** Unaffected
+
+**H:** Cleared
+
+**P:** Unaffected
+
+**N:** Cleared
+
+**C:** Set if the bit rotated from bit 7 was a 1; cleared otherwise
+
+### Exceptions
+
+None
+
+### Instruction Formats
+
+| Addressing<br/>Mode | Syntax | Instruction Format
+|-|-|-|
+| R | RLA | `00 010 111`
+
+### Example
+
+RLA
+
+_Before instruction execution:_
+
+| Register | Value |
+|-|-|
+| AF | 01110110 szxhxvn1
+
+_After instruction execution:_
+
+| Register | Value |
+|-|-|
+| AF | 11101101 szx0xp00
+
+
+## RLC - Rotate Left Circular
+
+**RLC** dst
+
+dst = R, IR, SX
+
+### Operation
+
+tmp ← dst<br/>
+C ← dst(7)<br/>
+dst(0) ← tmp(7)<br/>
+dst(n + 1) ← tmp(n) for n = 0 to 6
+
+![](Images/RLC.png)
+
+
+The contents of the destination operand are rotated left one bit position. Bit 7 of the destination operand is moved to the bit 0 position and also replaces the Carry flag.
+
+### Flags
+
+**S:** Set if the most significant bit of the result is set; cleared otherwise
+
+**Z:** Set if the result is zero; cleared otherwise
+
+**H:** Cleared
+
+**P:** Set if the parity of the result is even; cleared otherwise
+
+**N:** Cleared
+
+**C:** Set if the bit rotated from bit 7 was a 1; cleared otherwise
+
+### Exceptions
+
+None
+
+### Instruction Formats
+
+| Addressing<br/>Mode | Syntax | Instruction Format
+|-|-|-|
+| R  | RLC R | `11 001 011` `00 000  r `
+| IR | RLC (HL) | `11 001 011` `00 000 110`
+| SX | RLC (XY + d) | `11 *11 101` `11 001 011` `     d      ` `00 000 110`
+
+#### Field Encoding
+
+**\*:** 0 for IX, 1
+
+### Example
+
+RLC B
+
+_Before instruction execution:_
+
+| Register | Value |
+|-|-|
+| F | szxhxvnc
+| B | 10001000
+
+_After instruction execution:_
+
+| Register | Value |
+|-|-|
+| F | 00x0x101
+| B | 00010001
+
+
+## RLCA - Rotate Left Circular (Accumulator)
+
+**RLCA**
+
+### Operation
+
+tmp ← A<br/>
+C ← A(7)<br/>
+A(0) ← tmp(7)<br/>
+A(n + 1 ← tmp(n) for n = 0 to 6
+
+![](Images/RLCA.png)
+
+The contents of the accumulator are rotated left one bit position. Bit 7 of the accumulator is moved to the bit 0 position and also replaces the Carry flag.
+
+### Flags
+
+**S:** Unaffected
+
+**Z:** Unaffected
+
+**H:** Cleared
+
+**P:** Unaffected
+
+**N:** Cleared
+
+**C:** Set if the bit rotated from bit 7 was a 1; cleared otherwise
+
+### Exceptions
+
+None
+
+### Instruction Formats
+
+| Syntax | Instruction Format
+|-|-|
+| RLCA | `00 000 111`
+
+### Example
+
+RLCA
+
+_Before instruction execution:_
+
+| Register | Value |
+|-|-|
+| AF | 10001000 szxhxvnc
+
+_After instruction execution:_
+
+| Register | Value |
+|-|-|
+| AF | 00010001 szx0xp01
+
+
+## RLD - Rotate Left Digit
+
+**RLD**
+
+### Operation
+
+tmp(0:3) ← A(0:3)<br/>
+A(0:3) ← dst(4:7)<br/>
+dst(4:7) ← dst(0:3)<br/>
+dst(0:3) ← tmp(0:3)
+
+![](Images/RLD.png)
+
+The low digit of the accumulator is logically concatenated to the destination byte whose memory address is in the HL register. The resulting three-digit quantity is rotated to the left by one BCD digit (four bits). The lower digit of the source is moved to the upper digit of the source; the upper digit of the source is moved to the lower digit of the accumulator, and the tower digit of the accumulator is moved to the lower digit of the source. The upper digit of the accumulator is unaffected. In multiple-digit BCD arithmetic, this instruction can be used to shift to the left a string of BCD digits, thus multiplying it by a power of ten. The accumulator serves to transfer digits between successive bytes of the string. This is analogous to the use of the Carry flag in multiple-precision shifting using the RL instruction.
+
+### Flags
+
+**S:** Set if the accumulator is negative after the operation; cleared otherwise
+
+**Z:** Set if the accumulator is zero after the operation; cleared otherwise
+
+**H:** Cleared
+
+**P:** Set if the parity of the accumulator is even after the operation; cleared otherwise
+
+**N:** Cleared
+
+**C:** Unaffected
+
+### Exceptions
+
+None
+
+### Instruction Formats
+
+| Syntax | Instruction Format
+|-|-|
+| RLD | `11 101 101` `01 101 111`
+
+### Example
+
+RLD
+
+_Before instruction execution:_
+
+| Register | Value |
+|-|-|
+| AF | 37 szxhxvnc
+| HL | 5000
+
+| Memory<br/>Address |Value |
+|-|-|
+| 5000 | 04
+
+_After instruction execution:_
+
+| Register | Value |
+|-|-|
+| AF | 30 00x0x10c
+| HL | 5000
+
+| Memory<br/>Address |Value |
+|-|-|
+| 5000 | 47
