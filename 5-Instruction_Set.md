@@ -5962,3 +5962,461 @@ None
 | Syntax | Instruction Format
 |-|-|
 | PCACHE | `11 101 101` `01 100 101`
+
+
+## POP - Pop
+
+**POP** dst
+
+dst = BC, DE, HL, AF, IX, IY, IR, DA, RA
+
+### Operation
+
+dst ← (SP)<br/>
+SP ← SP + 2
+
+The content of the memory location addressed by the Stack Pointer (SP) are loaded into the destination. For register destinations, the byte at the memory location specified by the contents of the SP is loaded into the low byte of the destination register (or Flag register for AF) and the byte at the memory location one greater than the contents of the SP is loaded into the high byte of the destination register. The SP is then incremented by two. If the destination is a memory location, the destination and the top of the stack must be non-overlapping.
+
+### Flags
+
+No flags affected (unless dst = AF)
+
+### Exceptions
+
+None
+
+### Instruction Formats
+
+| Addressing<br/>Mode | Syntax | Instruction Format
+|-|-|-|
+| R  | POP RR | `11 rr  001`
+|    | POP XY | `11 *11 101` `11 100 001`
+| IR | POP (HL) | `11 011 101` `11 000 001`
+| DA | POP (addr) | `11 011 101` `11 010 001` ` addr(low)  ` ` addr(high) `
+| RA | POP &lt;addr&gt; | `11 011 101` `11 110 001` ` disp(low)  ` ` disp(high) `
+
+#### Field Encodings
+
+**\*:** 0 for IX, 1 for IY<br/>
+**rr:** 001 for BC, 011 for DE, 101 for add register to itself, 111 for SP
+
+### Example
+
+POP BC
+
+_Before instruction execution:_
+
+| Register | Value |
+|-|-|
+| BC | 2308
+| SP | FE32
+
+| Memory<br/>Address |Value |
+|-|-|
+| FE32 | 23
+| FE33 | 09
+
+_After instruction execution:_
+
+| Register | Value |
+|-|-|
+| BC | 0923
+| SP | FE34
+
+| Memory<br/>Address |Value |
+|-|-|
+| FE32 | 23
+| FE33 | 09
+
+
+## PUSH - Push
+
+**PUSH** src
+
+src = BC, DE, HL, AF, IX, IY, IM, IR, DA, RA
+
+### Operation
+
+SP ← SP — 2<br/>
+(SP) ← src
+
+The Stack Pointer (SP) is decremented by two and the source is loaded into the location addressed by the updated SP; the low byte of the source (or Flag register for AF) is loaded into the addressed memory location and the upper byte of the source is loaded into the addressed memory location incremented by one. The contents of the source are unaffected. If the source is a memory location, the source and the new top of the stack must be non-overlapping.
+
+### Flags
+
+No flags affected
+
+### Exceptions
+
+System Stack Overflow Warning
+
+### Instruction Formats
+
+| Addressing<br/>Mode | Syntax | Instruction Format
+|-|-|-|
+| R  | PUSH RR | `11 rr  101`
+|    | PUSH XY | `11 *11 101` `11 100 101`
+| IM | PUSH nn | `11 111 101` `11 110 101` `   n(low)   ` `  n(high)   `
+| IR | PUSH (HL) | `11 011 101` `11 000 101`
+| DA | PUSH (addr) | `11 011 101` `11 010 101` ` addr(low)  ` ` addr(high) `
+| RA | PUSH &lt;addr&gt; | `11 011 101` `11 110 101` ` disp(low)  ` ` disp(high) `
+
+#### Field Encodings
+
+**\*:** 0 for IX, 1 for IY<br/>
+**rr:** 001 for BC, 011 for DE, 101 for add register to itself, 111 for SP
+
+### Example
+
+PUSH BC
+
+_Before instruction execution:_
+
+| Register | Value |
+|-|-|
+| BC | 0923
+| SP | FE34
+
+| Memory<br/>Address |Value |
+|-|-|
+| FE32 | 00
+| FE33 | 00
+
+_After instruction execution:_
+
+| Register | Value |
+|-|-|
+| BC | 0923
+| SP | FE32
+
+| Memory<br/>Address |Value |
+|-|-|
+| FE32 | 23
+| FE33 | 09
+
+
+## RES - Reset Bit
+
+**RES** b,dst
+
+dst = R, IR, SX
+
+### Operation
+
+ dst(b) ← 0
+
+The specified bit b within the destination operand is cleared to 0. The other bits in the destination are unaffected. The bit number b must be between 0 and 7.
+
+### Flags
+No flags affected
+
+### Exceptions
+
+None
+
+### Instruction Formats
+
+| Addressing<br/>Mode | Syntax | Instruction Format
+|-|-|-|
+| R  | RES b,R | `11 011 011` `10  b   r `
+| IR | RES b,(HL) | `11 001 011` `10  b  110`
+| SX | RES b,(XY + d) | `11 *11 101` `11 011 011` `     d      ` `10  b  110`
+
+#### Field Encoding
+
+**\*:** 0 for IX, 1 for IY<br/>
+
+### Example
+
+RES 1,A
+
+_Before instruction execution:_
+
+| Register | Value |
+|-|-|
+| A | 00010110
+
+_After instruction execution:_
+
+| Register | Value |
+|-|-|
+| A | 00010100
+
+
+## RET - Return
+
+**RET** [cc]
+
+### Operation
+
+If the cc is satisfied then:
+
+PC ← (SP)<br/>
+SP ← SP + 2
+
+This instruction is used to return to a previously executing procedure at the end of a procedure entered by a Call instruction. For a conditional return, one of the Zero, Carry, Sign, or Parity/Overflow flags is checked to see if its setting matches the condition code "cc" encoded in the instruction; if the condition is not satisfied, the instruction following the Return instruction is executed, otherwise a value is popped from the stack and loaded into the Program Counter (PC), thereby specifying the location of the next instruction to be executed. For an unconditional return, the return is always taken and a condition code is not specified.
+
+The following figure illustrates the format of the PC on the stack for the Return instruction:
+
+| | | |
+|-|-|-|
+SP before → | PC (low) | low address
+| | PC (high)
+SP after → | | high address
+| | ← 1 byte → |
+
+### Flags
+
+No flags affected
+
+### Exceptions
+
+None
+
+### Instruction Formats
+
+| Syntax | Instruction Format
+|-|-|
+| RET cc | `11 cc  000`
+| RET | `11 001 001`
+
+### Field Encodings
+
+**cc:** 000 for NZ, 001 for Z, 010 for NC, 011 for C, 100 for PO or NV, 101 for PE or V, 110 for P or NS, 111 for M or S
+
+### Example
+
+RET NC
+
+### Example
+
+RET NC
+
+_Before instruction execution:_
+
+| Register | Value |
+|-|-|
+| F | szxhxvn0
+| PC | 2528
+| SP | FF24
+
+| Memory<br/>Address |Value |
+|-|-|
+| FF24 | 33
+| FF25 | 16
+
+_After instruction execution:_
+
+| Register | Value |
+|-|-|
+| F | szxhxvn0
+| PC | 1633
+| SP | FF26
+
+| Memory<br/>Address |Value |
+|-|-|
+| FF24 | 33
+| FF25 | 16
+
+
+## RETI - Return from Interrupt
+
+**RETI**
+
+### Operation
+
+PC ← (SP)<br/>
+SP ← SP + 2
+
+This instruction is used to return to a previously executing procedure at the end of a procedure entered by an interrupt while in interrupt mode 0, 1, or 2. The contents of the location addressed by the Stack Pointer (SP) are popped into the Program Counter (PC).
+
+The following figure illustrates the format of the PC on the stack for the Return from Interrupt instruction:
+
+| | | |
+|-|-|-|
+SP before → | PC (low) | low address
+| | PC (high)
+SP after → | | high address
+| | ← 1 byte → |
+
+A special sequence of bus transactions is performed when this instruction is encountered in order to control Z80 family peripherals; see Chapter 12.
+
+### Flags
+
+No flags affected
+
+### Exceptions
+
+Privileged Instruction
+
+### Instruction Formats
+
+| Syntax | Instruction Format
+|-|-|
+| RETI | `11 101 101` `01 001 101`
+
+### Example
+
+RETI
+
+_Before instruction execution:_
+
+| Register | Value |
+|-|-|
+| PC | 8410
+| SP | FFC6
+
+| Memory<br/>Address |Value |
+|-|-|
+| FFC6 | 72
+| FFC7 | 19
+
+_After instruction execution:_
+
+| Register | Value |
+|-|-|
+| PC | 1972
+| SP | FFC8
+
+| Memory<br/>Address |Value |
+|-|-|
+| FFC6 | 72
+| FFC7 | 19
+
+
+## RETIL - Return from Interrupt Long
+
+**RETIL**
+
+### Operation:
+
+PC ← (SP)<br/>
+SP ← SP + 4
+
+This instruction is used to return to a previously executing procedure at the end of a procedure entered by an interrupt while in interrupt mode 3 or a trap. The contents of the location addressed by the Stack Pointer (SP) are popped into the Program Counter (PC) and Master Status register (MSR).
+
+The following figure illustrates the format of the program status (PC and MSR) on the system stack for the Return from Interrupt Long instruction:
+
+| | | |
+|-|-|-|
+SP before → | MSR (low) | low address
+| | MSR (high)
+| | PC (low)
+| | PC (high)
+SP after → | | high address
+| | ← 1 byte → |
+
+### Flags
+
+No flags affected
+
+### Exceptions
+
+Privileged Instruction
+
+### Instruction Formats
+
+| Syntax | Instruction Format
+|-|-|
+| RETIL | `11 101 101` `01 010 101`
+
+### Example
+
+RETIL
+
+_Before instruction execution:_
+
+| Register | Value |
+|-|-|
+| PC | 8410
+| SP | FFC6
+| MSR | 0000
+
+| Memory<br/>Address |Value |
+|-|-|
+| FFC6 | 7F
+| FFC7 | 40
+| FFC8 | 72
+| FFC9 | 19
+
+_After instruction execution:_
+
+| Register | Value |
+|-|-|
+| PC | 1972
+| SP | FFCA
+| MSR | 407F
+
+| Memory<br/>Address |Value |
+|-|-|
+| FFC6 | 7F
+| FFC7 | 40
+| FFC8 | 72
+| FFC9 | 19
+
+
+## RETN - Return from Nonmaskable Interrupt
+
+**RETN**
+
+### Operation
+
+PC ← (SP)<br/>
+SP ← SP + 2<br/>
+MSR(0-7) ← IFF(0-7)
+
+This instruction is used to return to a previously executing procedure at the end of a procedure entered by a nonmaskable interrupt while in interrupt mode 0,1, or 2. The contents of the location addressed by the Stack Pointer (SP) are popped into the Program Counter (PC). The previous setting of the interrupt masks in the Master Status register are restored.
+
+The following figure illustrates the format of the PC on the stack for the Return from Nonmaskable Interrupt instruction:
+
+| | | |
+|-|-|-|
+SP before → | PC (low) | low address
+| | PC (high)
+SP after → | | high address
+| | ← 1 byte → |
+
+### Flags
+
+No flags affected
+
+### Exceptions
+
+Privileged Instruction
+
+### Instruction Formats
+
+| Syntax | Instruction Format
+|-|-|
+| RETN | `11 101 101` `01 000 101`
+
+### Example
+
+RETN
+
+_Before instruction execution:_
+
+| Register | Value |
+|-|-|
+| PC | 8410
+| SP | FFC6
+| MSR | 4000
+| Shadow interrupt<br/>register | 7F
+
+| Memory<br/>Address |Value |
+|-|-|
+| FFC6 | 72
+| FFC7 | 19
+
+_After instruction execution:_
+
+| Register | Value |
+|-|-|
+| PC | 1972
+| SP | FFC8
+| MSR | 407F
+
+| Memory<br/>Address |Value |
+|-|-|
+| FFC6 | 72
+| FFC7 | 19
