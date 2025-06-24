@@ -7403,3 +7403,219 @@ _After instruction execution:_
 | Register | Value |
 |-|-|
 | A | 00010110
+
+
+## SLA - Shift Left Arithmetic
+
+**SLA** dst
+
+dst = R, IR, SX
+
+### Operation
+
+tmp ← dst<br/>
+C ← dst(7)
+dst(0) ← 0<br/>
+dst(n + 1) ← tmp(n) for n = 0 to 6
+
+![](Images/SLA.png)
+
+The contents of the destination operand are shifted left one bit position. Bit 7 of the destination operand is moved to the Carry flag and zero is shifted into bit 0 of the destination.
+
+### Flags
+
+**S:** Set if the most significant bit of the result is set; cleared otherwise
+
+**Z:** Set if the result is zero; cleared otherwise
+
+**H:** Cleared
+
+**P:** Set if the parity of the result is even; cleared otherwise
+
+**N:** Cleared
+
+**C:** Set if the bit shifted from bit 7 was a 1; cleared otherwise
+
+### Exceptions
+
+None
+
+### Instruction Formats
+
+| Addressing<br/>Mode | Syntax | Instruction Format
+|-|-|-|
+| R  | SLA R | `11 001 011` `00 100  r `
+| IR | SLA (HL) | `11 001 011` `00 100 110`
+| SX | SLA (XY + d) | `11 *11 101` `11 001 011` `     d      ` `00 100 110`
+
+#### Field Encoding
+
+**\*:** 0 for IX, 1 for IY<br/>
+
+### Example
+
+SLA L
+
+_Before instruction execution:_
+
+| Register | Value |
+|-|-|
+| F | szxhxpnc
+| L | 10110001
+
+_After instruction execution:_
+
+| Register | Value |
+|-|-|
+| F | 00x0x001
+| L | 01100010
+
+
+## SRA - Shift Right Arithmetic
+
+**SRA** dst
+
+dst = R, IR, SX
+
+### Operation
+
+tmp ← dst<br/>
+C ← dst(0)<br/>
+dst(7) ← tmp(7)<br/>
+dst(n) ← tmp(n + 1) for n = 0 to 6
+
+![](Images/SRA.png)
+
+The contents of the destination operand are shifted right one bit position. Bit 0 of the destination operand is moved to the Carry flag and bit 7 remains unchanged.
+
+### Flags
+
+**S:** Set if the result is negative; cleared otherwise
+
+**Z:** Set if the result is zero; cleared otherwise
+
+**H:** Cleared
+
+**P:** Set if the parity of the result is even; cleared otherwise
+
+**N:** Cleared
+
+**C:** Set if the bit shifted from bit 0 was 1; cleared otherwise
+
+### Exceptions
+
+None
+
+### Instruction Formats
+
+| Addressing<br/>Mode | Syntax | Instruction Format
+|-|-|-|
+| R  | SRA R | `11 001 011` `00 101  r `
+| IR | SRA (HL) | `11 001 011` `00 101 110`
+| SX | SRA (XY + d) | `11 *11 101` `11 001 011` `     d      ` `00 101 110`
+
+#### Field Encoding
+
+**\*:** 0 for IX, 1 for IY<br/>
+
+### Example
+
+SRA (IX + 3)
+
+_Before instruction execution:_
+
+| Register | Value |
+|-|-|
+| F | szxhxpnc
+| IX | 1000
+
+| Memory<br/>Address |Value |
+|-|-|
+| 1003 | 10111000
+
+_After instruction execution:_
+
+| Register | Value |
+|-|-|
+| F | 10x0x000
+| IX | 1000
+
+| Memory<br/>Address |Value |
+|-|-|
+| 1003 | 11011100
+
+Address calculation:
+
+```
+  1000
+ +   3
+  ----
+  1003
+```
+
+
+# SRL - Shift Right Logical
+
+**SRL** dst
+
+dst = R, IR, SX
+
+### Operation
+
+tmp ← dst<br/>
+C ← dst(0)<br/>
+dst(7) ← 0<br/>
+dst(n) ← tmp(n + 1) for n = 0 to 6
+
+![](Images/SRL.png)
+
+The contents of the destination operand are shifted right one bit position. Bit 0 of the destination operand is moved to the Carry flag and zero is shifted into bit 7 of the destination.
+
+### Flags
+
+**S:** Cleared
+
+**Z:** Set if the result is zero; cleared otherwise
+
+**H:** Cleared
+
+**P:** Set if the parity of the result is even; cleared otherwise
+
+**N:** Cleared
+
+**C:** Set if the bit shifted from bit 0 was 1; cleared otherwise
+
+### Exceptions
+
+None
+
+### Instruction Formats
+
+| Addressing<br/>Mode | Syntax | Instruction Format
+|-|-|-|
+| R  | SRL R | `11 001 011` `00 111  r `
+| IR | SRL (HL) | `11 001 011` `00 111 110`
+| SX | SRL (XY + d) | `11 *11 101` `11 001 011` `     d      ` `00 111 110`
+
+#### Field Encoding
+
+**\*:** 0 for IX, 1 for IY<br/>
+
+### Example
+
+SRL B
+
+_Before instruction execution:_
+
+| Register | Value |
+|-|-|
+| F | szxhxpnc
+| B | 10001111
+
+_After instruction execution:_
+
+| Register | Value |
+|-|-|
+| F | 00x0x101
+| B | 01000111
+
