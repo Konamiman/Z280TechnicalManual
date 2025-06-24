@@ -7971,3 +7971,252 @@ _After instruction execution:_
 | Memory<br/>Address |Value |
 |-|-|
 | 2454 | 18
+
+
+## EXTENDED INSTRUCTION - EPU Internal Operation
+
+### Operation
+
+EPU ← template
+
+If the EPU Enable bit In the Trap Control register is set to 1, indicating an EPU is in the system, then the 4-byte template embedded in the instruction is fetched from memory and loaded into the EPU, thus indicating to the EPU the operation to be performed.
+
+If the EPU Enable control bit in the Trap Control register is cleared to 0, an EPU trap is initiated. The trap causes the following information to be pushed onto the system stack (in the following order): Program Counter (PC) of the next instruction, Master Status register (MSR), and template address. The format of the system stack after the trap is indicated by the following figure:
+
+| | | |
+|-|-|-|
+| new SP → | template address (low) | low address
+| | template address (high)
+| | MSR (low)
+| | MSR (high)
+| | PC (low)
+| | PC (high)
+| new SP → | | high address
+| | ← 1 byte →
+
+The format for the EPU template for this instruction is indicated in the following figure:
+
+| | |
+|-|-|
+| 10001110 | low address
+| ****01ID
+| ********
+| ****0000 | high address
+| ← 1 byte →
+
+where ID is the two bit ID number specifying the EPU to process this instruction and * indicates bits that encode the operation to be performed.
+
+The template has no alignment restriction. The CPU fetches the template from external memory using two word transactions if the template is aligned on an even address, or a byte transaction followed by two word transactions if the template is unaligned.
+
+### Flags
+
+No flags affected
+
+### Exceptions
+
+Extended Instruction
+
+### Instruction Formats
+
+| Operation | Instruction Format
+|-|-|
+EPU Internal Operation | `11 101 101` `10 011 111` `template 1` `template 2` `template 3` `template 4`
+
+The template is a 4-byte field.
+
+
+## EXTENDED INSTRUCTION - Load Accumulator from EPU
+
+### Operation
+
+EPU ← template<br/>
+A ← EPU
+
+If the EPU Enable bit in the Trap Control register is set to 1, indicating an EPU is in the system, then the 4-byte template embedded in the instruction is fetched from memory and loaded into the EPU, thus indicating to the EPU the operation to be performed. Next data from the EPU is loaded into the accumulator.
+
+If the EPU Enable control bit in the Trap Control register is cleared to 0, an EPU trap is initiated. The trap causes the following information to be pushed onto the system stack (in the following order): Program Counter (PC) of the next instruction, Master Status register (MSR), and template address. The format of the system stack after the trap is indicated by the following figure:
+
+| | | |
+|-|-|-|
+| new SP → | template address (low) | low address
+| | template address (high)
+| | MSR (low)
+| | MSR (high)
+| | PC (low)
+| | PC (high)
+| new SP → | | high address
+| | ← 1 byte →
+
+The format for the EPU template for this instruction is indicated in the following figure:
+
+| | |
+|-|-|
+| 10001110 | low address
+| ****00ID
+| ****0000
+| ****0000 | high address
+| ← 1 byte →
+
+where ID is the 2-bit ID number specifying the EPU to process this instruction and * indicates bits that encode the operation to be performed.
+
+The template has no alignment restriction. The CPU fetches the template from external memory using two word transactions if the template is aligned on an even address, or a byte transaction followed by two word transactions if the template is unaligned. The CPU places the data on AD<sub>8</sub>-AD<sub>15</sub> into the accumulator.
+
+### Flags
+
+**S:** Set if the byte loaded into the accumulator has a 1 in bit 7; cleared otherwise
+
+**Z:** Set if the byte loaded into the accumulator is zero; cleared otherwise
+
+**H:** Cleared
+
+**P:** Set if the parity of the byte loaded into the accumulator is even; cleared otherwise
+
+**N:** Cleared
+
+**C:** Unaffected
+
+### Exceptions
+
+Extended Instruction
+
+### Instruction Formats
+
+| Operation | Instruction Format
+|-|-|
+A ← EPU | `11 101 101` `10 010 111` `template 1` `template 2` `template 3` `template 4`
+
+The template is a 4-byte field.
+
+
+## EXTENDED INSTRUCTION - Load EPU from Memory
+
+### Operation
+
+EPU ← template<br/>
+EPU ← src
+
+src = IR, DA, X, RA, SR, BX
+
+If the EPU Enable bit in the Trap Control register is set to 1, indicating an EPU is in the system, then the 4-byte template embedded in the instruction is fetched from memory and loaded into the EPU, thus indicating to the EPU the operation to be performed on the input operand. Next the data starting at the memory location determined by the source calculation is fetched from memory and loaded into the EPU; successive transfers are performed until the entire operand has been fetched. The number of bytes in the source operand is encoded in the fourth byte of the template. For PC Relative addressing mode, the address of the template is used instead of the address of the next instruction.
+
+If the EPU Enable control bit in the Trap Control register is cleared to 0, an EPU trap is initiated. The trap causes the following information to be pushed onto the system stack (in the following order): Program Counter (PC) of the following instruction, Master Status register (MSR), operand logical address, and template logical address. The format of the system stack after the trap is indicated by the following figure:
+
+| | | |
+|-|-|-|
+| new SP → | template address (low) | low address
+| | template address (high)
+| | operand address (low)
+| | operand address (high)
+| | MSR (low)
+| | MSR (high)
+| | PC (low)
+| | PC (high)
+| new SP → | | high address
+| | ← 1 byte →
+
+The format for the EPU template for this instruction is indicated in the following figure:
+
+| | |
+|-|-|
+| 0p001110 | low address
+| ****01ID
+| ********
+| n — 1    | high address
+| ← 1 byte →
+
+where p encodes whether the data resides in program memory (p = 1; Relative addressing mode) or data memory; ID is the 2-bit ID number specifying the EPU to process this instruction, * indicates bits that encode the operation to be performed, and n specifies the number of bytes of data to be transferred to the EPU.
+
+Neither the template nor the operand has an alignment restriction. The CPU fetches the template from external memory using two word transactions if the template is aligned on an even address, or a byte transaction followed by two yvord transactions if the template is unaligned. Table 10-2 shows the sequences of transactions for the various cases of data transfers to the EPU.
+
+### Flags
+
+No flags affected
+
+### Exceptions
+
+Extended instruction
+
+### Instruction Formats
+
+| Addressing<br/>Mode | Operation | Instruction Format
+|-|-|-|
+| IR | EPU ← (HL) | `11 101 101` `10 100 110`<br/>`template 1` `template 2` `template 3` `template 4`
+| DA | EPU ← (addr) | `11 101 101` `10 100 111` ` addr(low)  ` ` addr(high) `<br/> `template 1` `template 2` `template 3` `template 4`
+| X  | EPU ← (XX + dd) | `11 101 101` `10 xx  100` `   d(low)   ` `  d(high)   `<br/> `template 1` `template 2` `template 3` `template 4`
+| RA | EPU ← &lt;addr&gt; | `11 101 101` `100 100 100` ` disp(low)  ` ` disp(high) `<br/> `template 1` `template 2` `template 3` `template 4`
+| SR | EPU ← (SP + dd) | `11 101 101` `10 000 100` `   d(low)   ` `  d(high)   `<br/> `template 1` `template 2` `template 3` `template 4`
+| BX | EPU ← (XXA + XXB) | `11 101 101` `10 bx  100`<br/> `template 1` `template 2` `template 3` `template 4`
+
+#### Field Encodings
+
+**xx:** 101 for (IX + dd), 110 for (IY + dd), 111 for (HL + dd)<br/>
+**bx:** 001 for (HL + IX), 010 for (HL + IY), 011 for (IX + IY)
+
+All templates are 4-byte fields.
+
+
+## EXTENDED INSTRUCTION - Load Memory from EPU
+
+### Operation
+
+EPU ← template<br/>
+dst ← EPU
+
+dst = IR, DA, X, RA, SR, BX
+
+If the EPU Enable bit in the Trap Control register is set to 1, indicating an EPU is in the system, then the 4-byte template embedded in the instruction is fetched from memory and loaded into the EPU, thus indicating to the EPU the operation to be performed. Next the data from the EPU is stored into memory starting at the location specified by the destination address; successive transfers are performed until the entire operand has been stored. The number of bytes in the source operand is encoded in the fourth byte of the template. For PC Relative addressing mode, the address of the template is used instead of the address of the next instruction.
+
+If the EPU Enable control bit in the Trap Control register is cleared to 0, an EPU trap is initiated. The trap causes the following information to be pushed onto the system stack (in the following order): Program Counter (PC) of the next instruction, Master Status register (MSR), operand address, and template address. The format of the system stack after the trap is indicated by the following figure:
+
+| | | |
+|-|-|-|
+| new SP → | template address (low) | low address
+| | template address (high)
+| | operand address (low)
+| | operand address (high)
+| | MSR (low)
+| | MSR (high)
+| | PC (low)
+| | PC (high)
+| new SP → | | high address
+| | ← 1 byte →
+
+The format for the EPU template for this instruction is indicated in the following figure:
+
+| | |
+|-|-|
+| 0p001110 | low address
+| 000011ID
+| ********
+| n — 1    | high address
+| ← 1 byte →
+
+where p encodes whether the data resides in program space (p = 1; Relative addressing mode) or data memory; ID is the 2-bit ID number specifying the EPU to process this instruction, * indicates bits that encode the operation to be performed, and n specifies the number of bytes of data to be transferred from the EPU.
+
+Neither the template nor the operand has an alignment restriction. The CPU fetches the template from external memory using two word transactions if the template is aligned on an even address, or a byte transaction followed by two word transactions if the template is unaligned. Table 10-2 shows the sequences of transactions for the various cases of data transfers from the EPU.
+
+### Flags
+
+No flags affected
+
+### Exceptions
+
+Extended instruction
+
+### Instruction Formats
+
+| Addressing<br/>Mode | Operation | Instruction Format
+|-|-|-|
+| IR | (HL) ← EPU | `11 101 101` `10 101 110`<br/>`template 1` `template 2` `template 3` `template 4`
+| DA | (addr) ← EPU | `11 101 101` `10 101 111` ` addr(low)  ` ` addr(high) `<br/> `template 1` `template 2` `template 3` `template 4`
+| X  | (XX + dd) ← EPU| `11 101 101` `10 xx  101` `   d(low)   ` `  d(high)   `<br/> `template 1` `template 2` `template 3` `template 4`
+| RA | &lt;addr&gt; ← EPU | `11 101 101` `100 100 101` ` disp(low)  ` ` disp(high) `<br/> `template 1` `template 2` `template 3` `template 4`
+| SR | (SP + dd) ← EPU | `11 101 101` `10 000 101` `   d(low)   ` `  d(high)   `<br/> `template 1` `template 2` `template 3` `template 4`
+| BX | (XXA + XXB) ← EPU | `11 101 101` `10 bx  101`<br/> `template 1` `template 2` `template 3` `template 4`
+
+#### Field Encodings
+
+**xx:** 101 for (IX + dd), 110 for (IY + dd), 111 for (HL + dd)<br/>
+**bx:** 001 for (HL + IX), 010 for (HL + IY), 011 for (IX + IY)
+
+All templates are 4-byte fields.
