@@ -6732,3 +6732,380 @@ _After instruction execution:_
 | Memory<br/>Address |Value |
 |-|-|
 | 5000 | 47
+
+
+## RR - Rotate Right
+
+**RR** dst
+
+dst = R, IR, SX
+
+### Operation
+
+tmp ← dst<br/>
+dst(7) ← C<br/>
+C ← dst(0)<br/>
+dst(n) ← tmp(n + 1) for n = 0 to 6
+
+![](Images/RR.png)
+
+The contents of the destination operand are concatenated with the Carry flag and together they are rotated right one bit position. Bit 0 of the destination operand is moved to the Carry flag and the Carry flag is moved to bit 7 of the destination.
+
+### Flags
+
+**S:** Set if-the most significant bit of the result is set; cleared otherwise
+
+**Z:** Set if the result is zero; cleared otherwise
+
+**H:** Cleared
+
+**P:** Set if the parity of the result is even; cleared otherwise
+
+**N:** Cleared
+
+**C:** Set if the bit rotated from bit 0 was a 1; cleared otherwise
+
+### Exceptions
+
+### Instruction Formats
+
+| Addressing<br/>Mode | Syntax | Instruction Format
+|-|-|-|
+| R  | RR R | `11 001 011` `00 011 r  `
+| IR | RR (HL) | `11 001 011` `00 011 110`
+| SX | RR (XY + d) | `11 *11 101` `11 001 011` `     d      ` `00 011 110`
+
+#### Field Encoding
+
+**\*:** 0 for IX, 1
+
+### Example
+
+RR B
+
+_Before instruction execution:_
+
+| Register | Value |
+|-|-|
+| F | szxhxpn0
+| B | 11011101
+
+_After instruction execution:_
+
+| Register | Value |
+|-|-|
+| F | 00x0x001
+| B | 01101110
+
+
+## RRA - Rotate Right (Accumulator)
+
+**RRA**
+
+### Operation
+
+tmp ← dst<br/>
+A(7) ← C<br/>
+C ← A(0)<br/>
+A(n) ← tmp(n + 1) for n = 0 to 6
+
+![](Images/RRA.png)
+
+The contents of the accumulator are concatenated with the Carry flag and together they are rotated right one bit position. Bit 0 of the accumulator is moved to the Carry flag and the Carry flag is moved to bit 7 of the accumulator.
+
+### Flags
+
+**S:** Unaffected
+
+**Z:** Unaffected
+
+**H:** Cleared
+
+**P:** Unaffected
+
+**N:** Cleared
+
+**C:** Set if the bit rotated from bit 0 was a 1; cleared otherwise
+
+### Exceptions
+
+None
+
+### Instruction Formats
+
+| Syntax | Instruction Format
+|-|-|
+| RRA | `00 011 111`
+
+### Example
+
+RRA
+
+_Before instruction execution:_
+
+| Register | Value |
+|-|-|
+| AF | 11100001 szxhxpn0
+
+_After instruction execution:_
+
+| Register | Value |
+|-|-|
+| AF | 01110000 | szx0xp01
+
+
+## RRC - Rotate Right Circular
+
+**RRC** dst
+
+dst = R, IR, SX
+
+### Operation
+
+tmp ← dst<br/>
+C ← dst(0)<br/>
+dst(7) ← tmp(0)<br/>
+dst(n) ← tmp(n + 1) for n = 0 to 6
+
+![](Images/RRC.png)
+
+The contents of the destination operand are rotated right one bit position. Bit 0 of the destination operand is moved to the bit 7 position and also replaces the Carry flag.
+
+### Flags
+
+**S:** Set if the most significant bit of the result is set; cleared otherwise
+
+**Z:** Set if the result is zero; cleared otherwise
+
+**H:** Cleared
+
+**P:** Set if the parity of the result is even; cleared otherwise
+
+**N:** Cleared
+
+**C:** Set if the bit rotated from bit 0 was a 1; cleared otherwise
+
+### Exceptions
+
+None
+
+### Instruction Formats
+
+| Addressing<br/>Mode | Syntax | Instruction Format
+|-|-|-|
+| R | RRC R | `11 001 011` `00 001 r  `
+| IR | RRC (HL) | `11 001 011` `00 001 110`
+| SX | RRC (XY + d) | `11 *11 101` `11 001 011` `     d      ` `00 001 110`
+
+#### Field Encoding
+
+**\*:** 0 for IX, 1
+
+### Example
+
+RRC A
+
+_Before instruction execution:_
+
+| Register | Value |
+|-|-|
+| AF | 00110001 szxhxpnc
+
+_After instruction execution:_
+
+| Register | Value |
+|-|-|
+| AF | 10011000 10x0x001
+
+
+## RRCA - Rotate Right Circular (Accumulator)
+
+**RRCA**
+
+### Operation
+
+tmp ← A<br/>
+C ← A(0)<br/>
+A(7) ← tmp(0)
+A(n) ← tmp(n + 1) for n = 0 to 6
+
+![](Images/RRCA.png)
+
+The contents of the accumulator are rotated right one bit position. Bit 0 of the accumulator is moved to 
+the bit 7 position and also replaces the Carry flag.
+
+### Flags
+
+**S:** Unaffected
+
+**Z:** Unaffected
+
+**H:** Cleared
+
+**P:** Unaffected
+
+**N:** Cleared
+
+**C:** Set If the bit rotated from bit 0 was a 1; cleared otherwise
+
+### Exceptions
+
+None
+
+### Instruction Formats
+
+| Syntax | Instruction Format
+|-|-|
+| RRCA | `00 001 111`
+
+### Example
+
+RRCA
+
+_Before instruction execution:_
+
+| Register | Value |
+|-|-|
+| AF | 00010001 szxhxpnc
+
+_After instruction execution:_
+
+| Register | Value |
+|-|-|
+| AF | 10001000 szx0xp01
+
+
+## RRD - Rotate Right Digit
+
+**RRD**
+
+### Operation
+
+tmp(0:3) ← A(0:3)<br/>
+A(0:3) ← dst(0:3)<br/>
+dst(0:3) ← dst(4:7)<br/>
+dst(4:7) ← tmp(0:3)
+
+![](Images/RRD.png)
+
+The low digit of the accumulator is logically concatenated to the destination byte whose memory address is in the HL register. The resulting three-digit quantity is rotated to the right by one BCD digit (four bits). The lower digit of the source is moved to the upper digit of the source; the upper digit of the source is moved to the lower digit of the accumulator, and the lower digit of the accumulator is moved to the lower digit of the source. The upper digit of the accumulator is unaffected. In multiple-digit BCD arithmetic, this instruction can be used to shift to the right a string of BCD digits, thus multiplying it by a power of ten. The accumulator serves to transfer digits between successive bytes of the string. This is analogous to the use of the Carry flag in multiple-precision shifting using the RR instruction.
+
+### Flags
+
+**S:** Set if the accumulator is negative; cleared otherwise
+
+**Z:** Set if the accumulator is zero after the operation; cleared otherwise
+
+**H:** Cleared
+
+**P:** Set if the parity of the accumulator is even after the operation; cleared otherwise
+
+**N:** Cleared
+
+**C:** Unaffected
+
+### Exceptions
+
+None
+
+### Instruction Formats
+
+| Syntax | Instruction Format
+|-|-|
+| RRD | `11 101 101` `01 100 111`
+
+### Example
+
+RRD
+
+_Before instruction execution:_
+
+| Register | Value |
+|-|-|
+| AF | 06 szxhxpnc
+| HL | 5000
+
+| Memory<br/>Address |Value |
+|-|-|
+| 5000 | 32
+
+_After instruction execution:_
+
+| Register | Value |
+|-|-|
+| AF | 02 00x0x00c
+| HL | 5000
+
+| Memory<br/>Address |Value |
+|-|-|
+| 5000 | 63
+
+
+## RST - Restart
+
+**RST** address
+
+### Operation
+
+SP ← SP - 2<br/>
+(SP) ← PC<br/>
+PC ← address
+
+The current Program Counter (PC) is pushed onto the stack and the PC is loaded with a constant address encoded in the instruction. Execution then begins at this address. The restart instruction allows for a call to one of eight fixed locations as shown in the table below. The table also indicates the encoding of the address used in the instruction encoding. (The address is in hexadecimal, the encoding in binary.)
+
+| Address | t encoding
+|-|-|
+00<sub>H</sub> | 000
+08<sub>H</sub> | 001
+10<sub>H</sub> | 010
+18<sub>H</sub> | 011
+20<sub>H</sub> | 100
+28<sub>H</sub> | 101
+30<sub>H</sub> | 110
+38<sub>H</sub> | 111
+
+### Flags
+
+No flags affected
+
+### Exceptions
+
+None
+
+### Instruction Formats
+
+| Syntax | Instruction Format
+|-|-|
+| RST address | `11  t  111`
+
+### Field encoding
+
+**t:** See table above
+
+### Example
+
+RST 18H
+
+_Before instruction execution:_
+
+| Register | Value |
+|-|-|
+| PC | 4620
+| SP | FFC4
+
+| Memory<br/>Address |Value |
+|-|-|
+| FFC3 | FF
+| FFC4 | FF
+
+_After instruction execution:_
+
+| Register | Value |
+|-|-|
+| PC | 0018
+| SP | FFC2
+
+| Memory<br/>Address |Value |
+|-|-|
+| FFC3 | 20
+| FFC4 | 46
