@@ -12,7 +12,7 @@ This repository contains a transcript of the _Z280™ MPU Microprocessor Unit Pr
 
 [4. Addressing Modes and Data Types](4-Addressing_Modes_and_Data_Types.md)
 
-[5. Instruction Set](5-Instruction_Set.md) (incomplete!)
+[5. Instruction Set](5-Instruction_Set.md)
 
 [6. Interrupts And Traps](6-Interrupts_And_Traps.md)
 
@@ -57,13 +57,12 @@ The transcript has been performed as follows:
 * All the text has been extracted from the OCR version. Missing styling have been added, and spotted OCR mistakes have been fixed.
   * Data tables have been converted to Markdown tables.
   * MPU pins and register bits that are negated (because they are active when their value is 0) and are represented with a line on top in the original book are represented underlined here (e.g. R/<ins>W</ins>, <ins>BUSREQ</ins>). A CSS style for overline exists, but unfortunately GitHub strips off all the custom CSS styles in MarkDown files before rendering them.
-* Figures that represent a 8 bit or 16 bit register of the MPU have been recreated, and bit position numbers have been added.
+* Figures that represent a 8 bit or 16 bit register of the MPU or bit rotations have been recreated, bit position numbers have been added.
 * Other figures have been captured directly from the original PDF, hopefully with a proper size and with enough quality for all the embedded texts to be recognizable.
 
 This transcript is incomplete, the following is still missing:
 
-* Most of the chapter 5 (Instruction Set).
-* The entire Appendix E (Instruction Timing).
+* Appendix E (Instruction Timing).
 * Cross-links between chapters and sections.
 
 
