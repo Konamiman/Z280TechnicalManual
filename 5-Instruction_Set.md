@@ -50,6 +50,242 @@
 
 [5.5 NOTATION AND BINARY ENCODING](#55-notation-and-binary-encoding)
 
+[ADC - Add with Carry (Byte)](#adc---add-with-carry-byte)
+
+[ADC - Add With Carry (Word)](#adc---add-with-carry-word)
+
+[ADD - Add Accumulator to Addressing Register](#add---add-accumulator-to-addressing-register)
+
+[ADD - Add (Byte)](#add---add-byte)
+
+[ADD - Add (Word)](#add---add-word)
+
+[ADDW - Add Word](#addw---add-word)
+
+[AND - And](#and---and)
+
+[BIT - Bit Test](#bit---bit-test)
+
+[CALL - Call](#call---call)
+
+[CCF - Complement Carry Flag](#ccf---complement-carry-flag)
+
+[CP - Compare (Byte)](#cp---compare-byte)
+
+[CPD - Compare and Decrement](#cpd---compare-and-decrement)
+
+[CPDR - Compare, Decrement and Repeat](#cpdr---compare-decrement-and-repeat)
+
+[CPI - Compare and Increment](#cpi---compare-and-increment)
+
+[CPIR - Compare, Increment and Repeat](#cpir---compare-increment-and-repeat)
+
+[CPL - Complement Accumulator](#cpl---complement-accumulator)
+
+[CPW - Compare (Word)](#cpw---compare-word)
+
+[DAA - Decimal Adjust Accumulator](#daa---decimal-adjust-accumulator)
+
+[DEC - Decrement (Byte)](#dec---decrement-byte)
+
+[DEC[W] - Decrement (Word)](#decw---decrement-word)
+
+[DI - Disable Interrupt](#di---disable-interrupt)
+
+[DIV - Divide (Byte)](#div---divide-byte)
+
+[DIVU - Divide Unsigned (Byte)](#divu---divide-unsigned-byte)
+
+[DIVUW - Divide Unsigned (Word)](#divuw---divide-unsigned-word)
+
+[DIVW - Divide (Word)](#divw---divide-word)
+
+[DJNZ - Decrement and Jump if Non-Zero](#djnz---decrement-and-jump-if-non-zero)
+
+[EI - Enable Interrupt](#ei---enable-interrupt)
+
+[EX - Exchange Accumulator/Flag with Alternate Bank](#ex---exchange-accumulatorflag-with-alternate-bank)
+
+[EX - Exchange Addressing Register with Top of Stack](#ex---exchange-addressing-register-with-top-of-stack)
+
+[EX - Exchange H and L](#ex---exchange-h-and-l)
+
+[EX - Exchange HL with Addressing Register](#ex---exchange-hl-with-addressing-register)
+
+[EX - Exchange with Accumulator](#ex---exchange-with-accumulator)
+
+[EXTS - Extend Sign (Byte)](#exts---extend-sign-byte)
+
+[EXTS - Extend Sign (Word)](#exts---extend-sign-word)
+
+[EXX - Exchange Byte/Word Registers with Alternate Bank](#exx---exchange-byteword-registers-with-alternate-bank)
+
+[HALT - Halt](#halt---halt)
+
+[IM - Interrupt Mode Select](#im---interrupt-mode-select)
+
+[IN - Input](#in---input)
+
+[IN - Input Accumulator](#in---input-accumulator)
+
+[INC - Increment (Byte)](#inc---increment-byte)
+
+[INC[W] - Increment (Word)](#incw---increment-word)
+
+[IND - Input and Decrement (Byte, Word)](#ind---input-and-decrement-byte-word)
+
+[INDR - Input, Decrement and Repeat (Byte, Word)](#indr---input-decrement-and-repeat-byte-word)
+
+[INI - Input and Increment (Byte, Word)](#ini---input-and-increment-byte-word)
+
+[INIR - Input, Increment and Repeat](#inir---input-increment-and-repeat)
+
+[IN[W] - Input HL](#inw---input-hl)
+
+[JAF - Jump On Auxiliary Accumulator/Flag](#jaf---jump-on-auxiliary-accumulatorflag)
+
+[JAR - Jump On Auxiliary Register File In Use](#jar---jump-on-auxiliary-register-file-in-use)
+
+[JP - Jump](#jp---jump)
+
+[JR - Jump Relative](#jr---jump-relative)
+
+[LD - Load Accumulator](#ld---load-accumulator)
+
+[LD - Load from I or R Register](#ld---load-from-i-or-r-register)
+
+[LD - Load Immediate (Byte)](#ld---load-immediate-byte)
+
+[LD - Load Register (Byte)](#ld---load-register-byte)
+
+[LD - Load to I or R Register](#ld---load-to-i-or-r-register)
+
+[LDA - Load Address](#lda---load-address)
+
+[LDCTL - Load Control](#ldctl---load-control)
+
+[LDD - Load and Decrement](#ldd---load-and-decrement)
+
+[LDDR - Load, Decrement and Repeat](#lddr---load-decrement-and-repeat)
+
+[LDI - Load and Increment](#ldi---load-and-increment)
+
+[LDIR - Load, Increment and Repeat](#ldir---load-increment-and-repeat)
+
+[LDUD - Load in User Data Space (Byte)](#ldud---load-in-user-data-space-byte)
+
+[LDUP - Load in User Program Space (Byte)](#ldup---load-in-user-program-space-byte)
+
+[LDW - Load Immediate Word](#ldw---load-immediate-word)
+
+[LD[W] - Load Addressing Register](#ldw---load-addressing-register)
+
+[LD[W] - Load Register Word](#ldw---load-register-word)
+
+[LD[W] - Load Stack Pointer](#ldw---load-stack-pointer)
+
+[MULT - Multiply (Byte)](#mult---multiply-byte)
+
+[MULTU - Multiply Unsigned (Byte)](#multu---multiply-unsigned-byte)
+
+[MULTUW - Multiply Unsigned (Word)](#multuw---multiply-unsigned-word)
+
+[MULTW - Multiply (Word)](#multw---multiply-word)
+
+[NEG - Negate Accumulator](#neg---negate-accumulator)
+
+[NEG - Negate HL](#neg---negate-hl)
+
+[NOP - No Operation](#nop---no-operation)
+
+[Operation](#operation)
+
+[OR](#or)
+
+[OTDR - Output, Decrement and Repeat (Byte, Word)](#otdr---output-decrement-and-repeat-byte-word)
+
+[OTIR - Output, Increment and Repeat (Byte, Word)](#otir---output-increment-and-repeat-byte-word)
+
+[OUT - Output](#out---output)
+
+[OUT - Output Accumulator](#out---output-accumulator)
+
+[OUTD - Output and Decrement (Byte, Word)](#outd---output-and-decrement-byte-word)
+
+[OUTI - Output and Increment (Byte, Word)](#outi---output-and-increment-byte-word)
+
+[OUT[W] - Output HL](#outw---output-hl)
+
+[PCACHE - Purge Cache](#pcache---purge-cache)
+
+[POP - Pop](#pop---pop)
+
+[PUSH - Push](#push---push)
+
+[RES - Reset Bit](#res---reset-bit)
+
+[RET - Return](#ret---return)
+
+[RETI - Return from Interrupt](#reti---return-from-interrupt)
+
+[RETIL - Return from Interrupt Long](#retil---return-from-interrupt-long)
+
+[RETN - Return from Nonmaskable Interrupt](#retn---return-from-nonmaskable-interrupt)
+
+[RL - Rotate Left](#rl---rotate-left)
+
+[RLA - Rotate Left Accumulator](#rla---rotate-left-accumulator)
+
+[RLC - Rotate Left Circular](#rlc---rotate-left-circular)
+
+[RLCA - Rotate Left Circular (Accumulator)](#rlca---rotate-left-circular-accumulator)
+
+[RLD - Rotate Left Digit](#rld---rotate-left-digit)
+
+[RR - Rotate Right](#rr---rotate-right)
+
+[RRA - Rotate Right (Accumulator)](#rra---rotate-right-accumulator)
+
+[RRC - Rotate Right Circular](#rrc---rotate-right-circular)
+
+[RRCA - Rotate Right Circular (Accumulator)](#rrca---rotate-right-circular-accumulator)
+
+[RRD - Rotate Right Digit](#rrd---rotate-right-digit)
+
+[RST - Restart](#rst---restart)
+
+[SBC - Subtract with Carry (Byte)](#sbc---subtract-with-carry-byte)
+
+[SBC - Subtract with Carry (Word)](#sbc---subtract-with-carry-word)
+
+[SC - System Call](#sc---system-call)
+
+[SCF - Set Carry Flag](#scf---set-carry-flag)
+
+[SET - Set Bit](#set---set-bit)
+
+[SLA - Shift Left Arithmetic](#sla---shift-left-arithmetic)
+
+[SRA - Shift Right Arithmetic](#sra---shift-right-arithmetic)
+
+[SUB - Subtract](#sub---subtract)
+
+[SUBW - Subtract (Word)](#subw---subtract-word)
+
+[TSET - Test and Set](#tset---test-and-set)
+
+[TSTI - Test Input](#tsti---test-input)
+
+[XOR - Exclusive OR](#xor---exclusive-or)
+
+[EXTENDED INSTRUCTION - EPU Internal Operation](#extended-instruction---epu-internal-operation)
+
+[EXTENDED INSTRUCTION - Load Accumulator from EPU](#extended-instruction---load-accumulator-from-epu)
+
+[EXTENDED INSTRUCTION - Load EPU from Memory](#extended-instruction---load-epu-from-memory)
+
+[EXTENDED INSTRUCTION - Load Memory from EPU](#extended-instruction---load-memory-from-epu)
+
 
 ## 5.1 INTRODUCTION
 
