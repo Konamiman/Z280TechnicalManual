@@ -7619,3 +7619,355 @@ _After instruction execution:_
 | F | 00x0x101
 | B | 01000111
 
+
+## SUB - Subtract
+
+**SUB** [A,]src
+
+src = R, RX, IM, IR, DA, X, SX, RA, SR, BX
+
+### Operation
+
+A ← A — src
+
+The source operand is subtracted from the accumulator and the difference is stored in the accumulator. The contents of the source are unaffected. Twos-complement subtraction is performed.
+
+### Flags
+
+**S:** Set if the result is negative; cleared otherwise
+
+**Z:** Set if the result, is zero; cleared otherwise
+
+**H:** Set if there is a borrow from bit 4 of the result; cleared otherwise
+
+**V:** Set if arithmetic overflow occurs, that is, if the operands are of the opposite signs and the result is the same sign as the source; cleared otherwise
+
+**N:** Set
+
+**C:** Set if there is a borrow from the most significant bit of the result; cleared otherwise
+
+### Exceptions
+
+None
+
+### Instruction Formats
+
+| Addressing<br/>Mode | Syntax | Instruction Format
+|-|-|-|
+| R  | SUB A,R | `10 010  r `
+| RX | SUB A,RX | `11 *11 101` `10 010 rx `
+| IM | SUB A,n | `11 010 110` `     n      `
+| IR | SUB A,(HL) | `10 010 110`
+| DA | SUB A,(addr) | `11 011 101` `10 010 111` ` addr(low)  ` ` addr(high) `
+| X  | SUB A,(XX + dd) | `11 111 101` `10 010 xx ` `   d(low)   ` `  d(high)   `
+| SX | SUB A,(XY + d) | `11 *11 101` `10 010 110` `     d      `
+| RA | SUB A,&lt;addr&gt; | `11 111 101` `10 010 000` ` disp(low)  ` ` disp(high) `
+| SR | SUB A,(SP + dd) | `11 011 101` `10 010 000` `   d(low)   ` `  d(high)   `
+| BX | SUB A,(XXA + XXB) | `11 011 101` `10 010 bx `
+
+#### Field Encodings
+
+**\*:** 0 for IX, 1 for IY<br/>
+**rx:** 100 for high byte, 101 for low byte<br/>
+**xx:** 001 for (IX + dd), 010 for (IY + dd), 011 for (HL + dd)<br/>
+**bx:** 001 for (HL + IX), 010 for (HL + IY), 011 for (IX + IY)
+
+### Example
+
+SUB A,(HL)
+
+_Before instruction execution:_
+
+| Register | Value |
+|-|-|
+| AF | 48 szxhxvnc
+| HL | 2454
+
+| Memory<br/>Address |Value |
+|-|-|
+| 2454 | 18
+
+_After instruction execution:_
+
+| Register | Value |
+|-|-|
+| AF | 30 00x0x010
+| HL | 2454
+
+| Memory<br/>Address |Value |
+|-|-|
+| 2454 | 18
+
+
+## SUBW - Subtract (Word)
+
+**SUBW** [HL],src
+
+src = R, IM, DA, X, RA
+
+### Operation
+
+HL ← HL — src
+
+The source operand is subtracted from the HL register and the difference is stored in the HL register. The contents of the source are unaffected. Twos-complement subtraction is performed.
+
+### Flags
+
+**S:** Set if the result is negative; cleared otherwise
+
+**Z:** Set if the result is zero; cleared otherwise
+
+**H:** Set if there is a borrow from bit 12 of the result; cleared otherwise
+
+**V:** Set if arithmetic overflow occurs, that is, if the operands are of the opposite signs and the result is the same sign as the source; cleared otherwise
+
+**N:** Set
+
+**C:** Set if there is a borrow from the most significant bit of the result; cleared otherwise.
+
+### Exceptions
+
+None
+
+### Instruction Formats
+
+| Addressing<br/>Mode | Syntax | Instruction Format
+|-|-|-|
+| R  | SUBW HL,RR | `11 101 101` `11 rr  110`
+|    | SUBW HL,XY | `11 *11 101` `11 101 101` `11 101 110`
+| IM | SUBW HL,nn | `11 111 101` `11 101 101` `11 111 110` `   n(low)   ` `  n(high)   `
+| DA | SUBW HL,(addr) | `11 011 101` `11 101 101` `11 011 110` ` addr(low)  ` ` addr(high) `
+| X  | SUBW HL,(XY + dd) | `11 111 101` `11 101 101` `11 xy  110` `   d(low)   ` `  d(high)   `
+| RA | SUBW HL,&lt;addr&gt; | `11 011 101` `11 101 101` `11 111 110` ` disp(low)  ` ` disp(high) `
+| IR | SUBW HL,(HL) | `11 011 101` `11 101 101` `11 001 110`
+
+#### Field Encodings
+
+**\*:** 0 for IX, 1 for IY<br/>
+**rr:** 001 for BC, 011 for DE, 101 for HL, 111 for SP<br/>
+**xy:** 001 for (IX + dd), 011 for (IY + dd)
+
+### Example
+
+SUBW HL,DE
+
+_Before instruction execution:_
+
+| Register | Value |
+|-|-|
+| F  | szxhxvnc
+| DE | 0010
+| HL | A123
+
+_After instruction execution:_
+
+| Register | Value |
+|-|-|
+| F  | 10x0x010
+| DE | 0010
+| HL | A113
+
+
+## TSET - Test and Set
+
+**TSET** dst
+
+dst = R, IR, SX
+
+### Operation
+
+S ← dst(7)<br/>
+dst ← FF<sub>H</sub>
+
+Bit 7 within the destination operand is tested, and the Sign flag is set to 1 if the specified bit is 1; otherwise the Sign flag is cleared to 0. The contents of the destination are then set to all 1s. For memory operands, the operand is always fetched from the external memory; on the Z-BUS interface, the status lines indicate a Test and Set operation during the memory read transaction.
+
+Between the data read and subsequent write transactions, bus request is not granted. The data is read from memory, even if it is also present in the cache.
+
+### Flags
+
+**S:** Set if bit 7 is 1; cleared otherwise
+
+**Z:** Unaffected
+
+**H:** Unaffected
+
+**P:** Unaffected
+
+**N:** Unaffected
+
+**C:** Unaffected
+
+### Exceptions
+
+None
+
+### Instruction Formats
+
+| Addressing<br/>Mode | Syntax | Instruction Format
+|-|-|-|
+| R  | TSET R | `11 001 011` `00 110  r `
+| IR | TSET (HL) | `11 011 011` `00 110 110`
+| SX | TSET (XY + d) | `11 *11 101` `11 001 011` `     d      ` `00 110 110`
+
+#### Field Encoding
+
+**\*:** 0 for IX, 1 for IY<br/>
+
+### Example
+
+TSET (HL)
+
+_Before instruction execution:_
+
+| Register | Value |
+|-|-|
+| F  | szxhxpnc
+| HL | 0382
+
+| Memory<br/>Address |Value |
+|-|-|
+| 0382 | 00010111
+
+_After instruction execution:_
+
+| Register | Value |
+| F  | 0zxhxpnc
+| HL | 0382
+
+| Memory<br/>Address |Value |
+|-|-|
+| 0382 | 11111111
+
+
+## TSTI - Test Input
+
+**TSTI** (C)
+
+### Operation
+
+F ← test (C)
+
+During the I/O transaction, the peripheral address from the C register is placed on the low byte of the address bus, the contents of the B register are placed on address lines A<sub>8</sub>-A<sub>15</sub>, and the contents of the I/O Page register are placed on address lines A<sub>16</sub>-A<sub>23</sub>. The byte of data from the selected peripheral is tested and the CPU flags set accordingly. No CPU register or memory location is modified.
+
+### Flags
+
+**S:** Set if the tested byte is negative; cleared otherwise
+
+**Z:** Set if the tested byte is zero; cleared otherwise
+
+**H:** Cleared
+
+**P:** Set if the parity of the tested byte is even; cleared otherwise
+
+**N:** Cleared
+
+**C:** Unaffected
+
+### Exceptions
+
+Privileged Instruction (if the Inhibit User I/O bit in the Trap Control register is set to 1)
+
+### Instruction Formats
+
+| Syntax | Instruction Format
+|-|-|
+| TSTI (C) | `11 101 101` `01 110 000`
+
+### Example
+
+TSTI (C)
+
+_Before instruction execution:_
+
+| Register | Value |
+|-|-|
+| F  | szxhxpnc
+| BC | 5046
+I/O page<br/>register | 12
+
+Byte 93<sub>H</sub> available at I/O port 125046<sub>H</sub>.
+
+_After instruction execution:_
+
+| Register | Value |
+|-|-|
+| F | 10x0x10c
+
+
+## XOR - Exclusive OR
+
+**XOR** [A,]src
+
+src = R, RX, IM, IR, DA, X, SX, RA, SR, BX
+
+###Operation
+
+A ← A XOR src
+
+A logical EXCLUSIVE OR operation is performed between the corresponding bits of the source operand and the accumulator and the result is stored in the accumulator. A 1 bit is stored wherever the corresponding bits in the two operands are different; otherwise a 0 bit is stored. The contents of the source are unaffected.
+
+### Flags
+
+**S:** Set if the most significant bit of the result is set; cleared otherwise
+
+**Z:** Set if all bits of the result are zero; cleared otherwise
+
+**H:** Cleared
+
+**P:** Set if the parity of the result is even; cleared otherwise
+
+**N:** Cleared
+
+**C:** Cleared
+
+### Exceptions
+
+None
+
+### Instruction Formats
+
+| Addressing<br/>Mode | Syntax | Instruction Format
+|-|-|-|
+| R  | XOR A,R | `10 101 r  `
+| RX | XOR A,RX | `11 *11 101` `10 101 rx `
+| IM | XOR A,n | `11 101 110` `     n      `
+| IR | XOR A,(HL) | `10 101 110`
+| DA | XOR A,(addr) | `11 011 101` `10 101 111` ` addr(low)  ` ` addr(high) `
+| X  | XOR A,(XX + dd) | `11 111 101` `10 101 xx ` `   d(low)   ` `  d(high)   `
+| SX | XOR A,(XY + d) | `11 *11 101` `10 101 110` `     d      `
+| RA | XOR A,&lt;addr&gt; | `11 111 101` `10 101 000` ` disp(low)  ` ` disp(high) `
+| SR | XOR A,(SP + dd) | `11 011 101` `10 101 000` `   d(low)   ` `  d(high)   `
+| BX | XOR A,(XXA + XXB) | `11 011 101` `10 101 bx `
+
+#### Field Encodings
+
+**\*:** 0 for IX, 1 for IY<br/>
+**rx:** 100 for high byte, 101 for low byte<br/>
+**xx:** 001 for (IX + dd), 010 for (IY + dd), 011 for (HL + dd)<br/>
+**bx:** 001 for (HL + IX), 010 for (HL + IY), 011 for (IX + IY)
+
+### Example
+
+XOR A,(HL)
+
+_Before instruction execution:_
+
+| Register | Value |
+|-|-|
+| AF | 48 szxhxpnc
+| HL | 2454
+
+| Memory<br/>Address |Value |
+|-|-|
+| 2454 | 18
+
+_After instruction execution:_
+
+| Register | Value |
+|-|-|
+| AF | 50 00x0x100
+| HL | 2454
+
+| Memory<br/>Address |Value |
+|-|-|
+| 2454 | 18
