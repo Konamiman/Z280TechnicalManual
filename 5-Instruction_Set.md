@@ -6291,7 +6291,7 @@ _After instruction execution:_
 
 ### Operation:
 
-PC ← (SP)<br/>
+PS ← (SP)<br/>
 SP ← SP + 4
 
 This instruction is used to return to a previously executing procedure at the end of a procedure entered by an interrupt while in interrupt mode 3 or a trap. The contents of the location addressed by the Stack Pointer (SP) are popped into the Program Counter (PC) and Master Status register (MSR).
@@ -7109,3 +7109,297 @@ _After instruction execution:_
 |-|-|
 | FFC3 | 20
 | FFC4 | 46
+
+
+## SBC - Subtract with Carry (Byte)
+
+**SBC** [A],src
+
+src = R, RX, IM, IR, DA, X, SX, RA, SR, BX
+
+### Operation
+
+A ← A — src — C
+
+The source operand together with the Carry flag is subtracted from the accumulator and the difference is stored in the accumulator. The contents of the source are not affected. Twos-complement subtraction is performed.
+
+### Flags
+
+**S:** Set if the result is negative; cleared otherwise
+
+**Z:** Set if the result is zero; cleared otherwise
+
+**H:** Set if there is a borrow from bit 4 of the result; cleared otherwise
+
+**V:** Set if arithmetic overflow occurs, that is, if the operands are of the opposite signs and the result is the same sign as the source; cleared otherwise
+
+**N:** Set
+
+**C:** Set if there is a borrow from the most significant bit of the result; cleared otherwise
+
+### Exceptions
+
+None
+
+### Instruction Formats
+
+| Addressing<br/>Mode | Syntax | Instruction Format
+|-|-|-|
+| R  | SBC A,R | `10 011  r  `
+| RX | SBC A,RX | `11 *11 101` `10 011 rx `
+| IM | SBC A,n | `11 011 110` `     n      `
+| IR | SBC A,(HL) | `10 011 110`
+| DA | SBC A,(addr) | `11 011 101` `10 011 111` ` addr(low)  ` ` addr(high) `
+| X  | SBC A,(XX + dd) | `11 111 101` `10 011 xx ` `   d(low)   ` `  d(high)   `
+| SX | SBC A,(XY + d) | `11 *11 101` `10 011 110` `     d      `
+| RA | SBC A,&lt;addr&gt; | `11 111 101` `10 011 000` ` disp(low)  ` ` disp(high) `
+| SR | SBC A,(SP + dd) | `11 011 101` `10 011 000` `   d(low)   ` `  d(high)   `
+| BX | SBC A,(XXA + XXB) | `11 011 101` `10 011 bx `
+
+#### Field Encodings
+
+**\*:** 0 for IX, 1 for IY<br/>
+**rx:** 100 for high byte, 101 for low byte<br/>
+**xx:** 001 for (IX + dd), 010 for (IY + dd), 011 for (HL + dd)<br/>
+**bx:** 001 for (HL + IX), 010 for (HL + IY), 011 for (IX + IY)
+
+### Example
+
+SBC A,(HL)
+
+_Before instruction execution:_
+
+| Register | Value |
+|-|-|
+| AF | 48 szxhxvn1
+| HL | 2454
+
+| Memory<br/>Address |Value |
+|-|-|
+| 2454 | 18
+
+_After instruction execution:_
+
+| Register | Value |
+|-|-|
+| AF | 2F 00x1x010
+| HL | 2454
+
+| Memory<br/>Address |Value |
+|-|-|
+| 2454 | 18
+
+
+## SBC - Subtract with Carry (Word)
+
+**SBC** dst,src
+
+dst = HL<br/>
+src = BC, DE, HL, SP
+
+or
+
+dst = IX<br/>
+src = BC, DE, IX, SP
+
+or
+
+dst = IY<br/>
+src = BC, DE, IY, SP
+
+### Operation:
+
+dst ← dst — src — C
+
+The source operand together with the Carry flag is subtracted from the destination and the result is stored in the destination. The contents'of the source are not affected. Twos-complement subtraction is performed.
+
+### Flags
+
+**S:** Set if the result is negative, cleared otherwise
+
+**Z:** Set if the result is zero; cleared otherwise
+
+**H:** Set if there is a borrow from bit 12 of the result; cleared otherwise
+
+**V:** Set if arithmetic overflow occurs, that is, the operands are of different signs and the result is of the same sign as the source; cleared otherwise
+
+**N:** Set
+
+**C:** Set if there is a borrow from the most significant bit of the result; cleared otherwise.
+
+### Exceptions
+
+None
+
+### Instruction Formats
+
+| Syntax | Instruction Format
+|-|-|
+| SBC HL,RR | `11 101 101` `01 rr  010`
+| SBC XY,RR | `11 *11 101` `11 101 101` `01 rr  010`
+
+#### Field Encodings
+
+**\*:** 0 for IX, 1 for IY<br/>
+**rr:** 000 for BC, 010 for DE, 100 for HL, 110 for SP<br/>
+
+### Example
+
+SBC HL,De
+
+_Before instruction execution:_
+
+| Register | Value |
+|-|-|
+| F | szxhxvn1
+| DE | 0011
+| HL 0100
+
+_After instruction execution:_
+
+| Register | Value |
+|-|-|
+| F | 00x0x010
+| DE | 0011
+| HL | 00EE
+
+
+## SC - System Call
+
+**SC** nn
+
+### Operation
+
+SP ← SP — 4<br/>
+(SP) ← PS<br/>
+SP ← SP — 2<br/>
+(SP) ← nn<br/>
+PS ← System Call Program Status
+
+This instruction is used for controlled access to operating system software in a manner similar to a trap or interrupt. The current program status is pushed onto the system stack followed by a 16-bit constant embedded in the instruction. The program status consists of the Master Status register (MSR) and the updated Program Counter (PC), which points to the first instruction byte following the SC instruction. Next the 16-bit constant in the System Call instruction is pushed onto the system stack. The system Stack Pointer is always used regardless of whether system or user mode is in effect. The new program status is loaded from the Interrupt/Trap Vector Table entry associated with the SC instruction. CPU control is passed to the procedure whose address is the PC value contained in the new program status.
+The following figure illustrates the format of the saved program status on the system stack:
+
+| | | |
+|-|-|-|
+| SP after → | n (low) | low address
+| | n (high) |
+| | MSR (low) |
+| | MSR (high) |
+| | PC (low) |
+| | PC (high) |
+| SP before → | | high address
+| | ← 1 byte → |
+
+### Flags
+
+No flags affected
+
+### Exceptions
+
+System Call Trap, System Stack Overflow Warning
+
+### Instruction Formats
+
+| Syntax | Instruction Format
+|-|-|
+| SC nn | `11 101 101` `01 110 001` `   n(low)   ` `  n(high)   `
+
+
+## SCF - Set Carry Flag
+
+**SCF**
+
+### Operation
+
+C ← 1
+
+The Carry flag is set to 1.
+
+### Flags
+
+**S:** Unaffected
+
+**H:** Unaffected
+
+**H:** Cleared
+
+**V:** Unaffected
+
+**N:** Cleared
+
+**C:** Set
+
+### Exceptions
+
+None
+
+### Instruction Formats
+
+| Syntax | Instruction Format
+|-|-|
+| SCF | `00 110 111`
+
+### Example
+
+SCF
+
+_Before instruction execution:_
+
+| Register | Value |
+|-|-|
+| F | szxhxvnc
+
+_After instruction execution:_
+
+| Register | Value |
+|-|-|
+| F | szx0xv01
+
+
+## SET - Set Bit
+
+**SET** b,dst
+
+dst = R, IR, SX
+
+### Operation
+
+dst(b) ← 1
+
+The specified bit b within the destination operand is set to 1. The other bits in the destination are unaffected. The bit to be set is specified by a 3-bit field in the instruction; this field contains the binary encoding for the bit number to be set. The bit number must be between 0 and 7.
+
+### Flags
+
+No flags affected
+
+### Exceptions
+
+None
+
+### Instruction Formats
+
+| Addressing<br/>Mode | Syntax | Instruction Format
+|-|-|-|
+| R  | SET b,R | `11 001 011` `11  b   r `
+| IR | SET b,(HL) | `11 001 011` `11  b  110`
+| SX | SET b,(XY + d) | `11 *11 101` `11 001 011` `     d      ` `11  b  110`
+
+#### Field Encoding
+
+**\*:** 0 for IX, 1 for IY<br/>
+
+### Example
+
+SET 1,A
+
+_Before instruction execution:_
+
+| Register | Value |
+|-|-|
+| A | 00010100
+
+_After instruction execution:_
+
+| Register | Value |
+|-|-|
+| A | 00010110
