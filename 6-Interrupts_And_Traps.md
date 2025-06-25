@@ -283,7 +283,7 @@ Breakpoint-on-Halt | Yes | Address of Halt instruction<br/>MSR value
 _Table 6-3. Trap Types_
 
 
-## 6.4 INTERRUPT AND TRAP HAIDLING
+## 6.4 INTERRUPT AND TRAP HANDLING
 
 The Z280 CPU response to an interrupt request or trap condition consists of up to five steps: acknowledging the external request (externally-generated interrupts only), saving current program status, loading new program status, executing the service routine, and returning to the interrupted program. Interrupts are accepted and processed between instructions, with the exception of the block move, search, and I/O instructions, which can be interrupted between any iteration. Traps are detected during instruction execution, with the exception of the Single-Step trap, as described previously. Thus, a trap condition is processed before handling any pending interrupts.
 
