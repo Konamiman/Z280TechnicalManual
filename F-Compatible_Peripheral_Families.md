@@ -6,7 +6,7 @@ The Z80 Bus configurations of the Z280 MPU have two compatible peripheral famili
 
 The Z-BUS versions of the Z280 MPU are supported by the Z8000/Z8500 peripheral family (Table F-2). These devices interface directly to the Z-BUS.
 
-Refer to the Zilog Components Data Book, for further information regarding these peripheral families.
+Refer to the Zilog Components Data Book for further information regarding these peripheral families.
 
 <br/>
 

@@ -50,7 +50,7 @@
 The Z280™ microprocessor unit (MPU) features an advanced 16-bit CPU that is object-code compatible with the Z80® CPU. The Z280 microprocessor unit includes memory management, peripherals, memory refresh logic, cache memory, wait state generators, and a clock oscillator on the same integrated circuit as the CPU. The on-chip peripheral devices include 4 DMA (Direct Memory Access) channels, 3 counter/timers, and a UART (Universal Asynchronous Receiver/Transmitter). A block diagram of the Z280 MPU is shown in Figure 1-1. This chapter presents some of the features of the Z280 MPU family, with detailed descriptions
 of the various aspects of the processor provided in succeeding chapters.
 
-The Z280 MPU has a multiplexed address/data bus for communication with external memory and peripheral devices. Two different bus structures are supported by the 2280: an 8-bit data bus that uses Z80 Bus control signals, and a 16-bit data bus that uses Z-BUS® bus control signals. Zilog's Z80 and Z8500 families of peripherals are easily interfaced to the Z80 Bus; Zilog's Z8000® family of peripherals are easily interfaced to the Z-BUS.
+The Z280 MPU has a multiplexed address/data bus for communication with external memory and peripheral devices. Two different bus structures are supported by the Z280: an 8-bit data bus that uses Z80 Bus control signals, and a 16-bit data bus that uses Z-BUS® bus control signals. Zilog's Z80 and Z8500 families of peripherals are easily interfaced to the Z80 Bus; Zilog's Z8000® family of peripherals are easily interfaced to the Z-BUS.
 
 <br/>
 
@@ -91,7 +91,10 @@ Many data types are supported by the Z280 CPU architecture. The basic data type 
 
 The operand addressing mode is the method by which a data operand's location is specified. The Z280 CPU supports nine addressing modes, including the five modes available on the Z80 CPU. The addressing modes of the Z280 CPU are:
 
-* Register e Immediate e Indirect Register e Direct Address
+* Register
+* Immediate
+* Indirect Register
+* Direct Address
 * Indexed (with a 16-bit displacement)
 * Short Index (with an 8-bit displacement)
 * Program Counter (PC) Relative
@@ -176,30 +179,30 @@ The features of the Z280 MPU architecture provide several significant benefits, 
 
 ### 1.3.1 High Throughput
 
-Very high throughput rates can be achieved with the Z280 MPU, due to the cache memory, instruction pipelining, and high clock rates achievsble with this processor. The CPU clock rate can be scaled down to provide the bus clock rate, allowing the designer to use slower, less-expensive memory and I/O devices. Use of the on-chip cache memory further increases throughput by minimizing the number of accesses to the slower, off-chip memory devices. The high code density achievsble with the Z280 CPU's expanded instruction set also contributes to program throughput, since fewer instructions are needed to accomplish a given task.
+Very high throughput rates can be achieved with the Z280 MPU, due to the cache memory, instruction pipelining, and high clock rates achievable with this processor. The CPU clock rate can be scaled down to provide the bus clock rate, allowing the designer to use slower, less-expensive memory and I/O devices. Use of the on-chip cache memory further increases throughput by minimizing the number of accesses to the slower, off-chip memory devices. The high code density achievable with the Z280 CPU's expanded instruction set also contributes to program throughput, since fewer instructions are needed to accomplish a given task.
 
 
 ### 1.3.2 Integration of System Functions
 
-Besides a powerful CPU, the Z280 MPU includes many on-chip devices that previously had to be implemented in logic external to the microprocessor chip. These devices include a clock oscillator, memory refresh logic, wait state generators, the MMU, cache memory, DMA channels, counter/timers, and a UART. Integration of all these functions onto a single chip results in a reduced parts count in a system design, accompanied by a resulting reduction in design and debug time, power requirements, and printed circuit board space. This increased level of integration also, contributes to system throughput, since the on-chip devices can be accessed quickly without the need of an external bus transaction.
+Besides a powerful CPU, the Z280 MPU includes many on-chip devices that previously had to be implemented in logic external to the microprocessor chip. These devices include a clock oscillator, memory refresh logic, wait state generators, the MMU, cache memory, DMA channels, counter/timers, and a UART. Integration of all these functions onto a single chip results in a reduced parts count in a system design, accompanied by a resulting reduction in design and debug time, power requirements, and printed circuit board space. This increased level of integration also contributes to system throughput, since the on-chip devices can be accessed quickly without the need of an external bus transaction.
 
 
 ### 1.3.3 Operating System Support
 
 Several of the Z280 MPU's architectural features facilitate the implementation of multitasking operating systems for Z280-based systems.
 
-The inclusion of user and system operating modes improves operating system organization. User-mode programs are automatically inhibited from performing operating-system type functions. System-mode memory can be separated from user-mode memory and separate stacks can be maintained for systemmode and user-mode operations. The System Call instruction and the trap mechanism provide a controlled means of accessing operating system functions during user-mode execution.
+The inclusion of user and system operating modes improves operating system organization. User-mode programs are automatically inhibited from performing operating-system type functions. System-mode memory can be separated from user-mode memory and separate stacks can be maintained for system-mode and user-mode operations. The System Call instruction and the trap mechanism provide a controlled means of accessing operating system functions during user-mode execution.
 
 The interrupt- and trap-handling mechanisms are well suited for operating system implementations. Several levels of interrupts are provided, allowing for separate control of various peripheral devices (both on and off the chip). A new interrupt mode is provided, wherein status information about the currently executing task is saved on the stack and new program status information for the service routine is automatically loaded from a special memory area. Traps result in the same type of program status saving. In both cases, status is always saved on the system stack, leaving the user stack undisturbed.
 
-Allocation of resources within the operating system can be accomplished using a special Test and Set inetruction. Other instructions, such as the Purge Cache instruction, are provided to aid in task switching and other operating system chores.
+Allocation of resources within the operating system can be accomplished using a special Test and Set instruction. Other instructions, such as the Purge Cache instruction, are provided to aid in task switching and other operating system chores.
 
 The on-chip MMU supports a multitasking environment by providing both a means of quickly allocating physical memory to tasks as they are executed on the system and protection mechanisms to enforce proper memory usage.
 
 
 ### 1.3.4 Code Density
 
-Code density affects both processor speed and memory utilization. Code compaction saves memory space and improves processor speed by reducing the number of instructions that must be fetched and decoded. The largest reduction in program size results from the powerful instruction set, where instructions such as Multiply and Divide help substantially reduce the nunber of instructions required to complete a task.
+Code density affects both processor speed and memory utilization. Code compaction saves memory space and improves processor speed by reducing the number of instructions that must be fetched and decoded. The largest reduction in program size results from the powerful instruction set, where instructions such as Multiply and Divide help substantially reduce the number of instructions required to complete a task.
 
 The efficiency of the instruction set is enhanced by the addition of new addressing modes. For example, all nine addressing modes are available for all the 8-bit load, arithmetic, and logical instructions.
 

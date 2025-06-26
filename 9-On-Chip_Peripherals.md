@@ -84,20 +84,20 @@ _Figure 9-1. Refresh Rate Register_
 
 **Refresh Enable (E) bit.** When this bit is set to 1, the refresh mechanism is enabled. When this bit is cleared to 0, the refresh mechanism is disabled and refresh transactions are not generated.
 
-**Refresh Rate field.** The contents of this 6-bit field determine the frequency of refresh transactions if the Refresh Enable bit is set to 1. A value of n (0 < n < 63) in this field specifies a refresh rate of once every 4n processor clock cycles; a value of 0 in this field indicates a refresh rate of every 236 processor clock cycles.
+**Refresh Rate field.** The contents of this 6-bit field determine the frequency of refresh transactions if the Refresh Enable bit is set to 1. A value of n (0 < n < 63) in this field specifies a refresh rate of once every 4n processor clock cycles; a value of 0 in this field indicates a refresh rate of every 256 processor clock cycles.
 
 The Refresh Rate register is accessed via byte I/O operations to I/O port address FFxxE8<sub>H</sub> (where x means "don't care"). Bit 6 of this register is not used. On reset, the Refresh Rate register is initialized to 88<sub>H</sub>, thereby enabling memory refresh at a rate of 32 processor clock cycles per refresh. This register can be read at any time to determine if refresh is enabled and the current refresh rate.
 
 A 10-bit refresh address is output on address lines A<sub>0</sub>-A<sub>9</sub> during a refresh transaction. This refresh address is incremented by one for Z80 bus (8-bit data bus) configuration and by two for Z-BUS (16-bit data bus) configuration of the Z280 MPU between refresh transactions. The refresh address is not accessible by the programmer and is not affected by a reset.
 
-During instruction execution, the actual refresh transactions are generated as soon as possible after the refresh period has elapsed. Generally, the refresh transaction is executed after the last clock cycle of the bus transaction in progress at the time that the refresh period elapsed. If the CPU receives an interrupt request during that same bus transaction, the refresh transaction is inserted before processing the interrupt. When the Z280 MPU does not have control of the bus due to a bus request, refresh transactions cannot be executed; while the MPU is in this state, internal circuitry records the number of refresh periods that have elapsed (that is, the number of "missed" refresh transactions). When the Z280 MPU regains control of the bus, the refresh mechanism automatically issues the missed refresh cycles. Similarly, if the refresh period elapses while the MPU is in a wait state (due to <ins>WAIT</ins> being asserted) during a bus transaction, the number of missed refresh transactions is recorded internally, and those refresh cycles are issued after <ins>WAIT</ins> is deactivated and the bus transaction is completed. The internal circuitry can record up to 236 such missed refresh operations.
+During instruction execution, the actual refresh transactions are generated as soon as possible after the refresh period has elapsed. Generally, the refresh transaction is executed after the last clock cycle of the bus transaction in progress at the time that the refresh period elapsed. If the CPU receives an interrupt request during that same bus transaction, the refresh transaction is inserted before processing the interrupt. When the Z280 MPU does not have control of the bus due to a bus request, refresh transactions cannot be executed; while the MPU is in this state, internal circuitry records the number of refresh periods that have elapsed (that is, the number of "missed" refresh transactions). When the Z280 MPU regains control of the bus, the refresh mechanism automatically issues the missed refresh cycles. Similarly, if the refresh period elapses while the MPU is in a wait state (due to <ins>WAIT</ins> being asserted) during a bus transaction, the number of missed refresh transactions is recorded internally, and those refresh cycles are issued after <ins>WAIT</ins> is deactivated and the bus transaction is completed. The internal circuitry can record up to 256 such missed refresh operations.
 
 Pseudo-static memories and some peripheral devices (such as the Z8000 family of peripherals) require a minimum transaction rate on the bus for correct operation. If the refresh mechanism is disabled by clearing the Refresh Enable bit in the Refresh Rate register, the rate field in this register is used to determine the minimum transaction rate on the bus. In this mode, if the refresh timer reaches 0 and no external bus transaction has occurred since the last time the refresh timer elapsed, then a refresh transaction will be generated. Thus, in a system that does not require memory refresh transactions, the Refresh Rate field in the Refresh Rate register must be initialized to an appropriate value even if memory refresh operations are disabled.
 
 
 ## 9.4 COUNTER/TIMERS
 
-The Z280 MPU's three on-chip 16-bit counter/timers can be configured to satisfy a broad range of counting and timing applications, including event counting, interval timing, watchdog timing, and clock generation. Each counter/timer is composed of a 16-bit downcounter, a 16-bit time constant register, and two 8-bit control and status registers (the Counter/Timer Configuration register and the Counter/Timer Command/Status register). The three independent devices are referred to as counter/timer 0 (C/T 0), counter/ timer 1 (C/T 1), and counter/timer 2 (C/T 2). Figure 9-2 is a block diagram of a Z280 MPU counter/timer.
+The Z280 MPU's three on-chip 16-bit counter/timers can be configured to satisfy a broad range of counting and timing applications, including event counting, interval timing, watchdog timing, and clock generation. Each counter/timer is composed of a 16-bit downcounter, a 16-bit time constant register, and two 8-bit control and status registers (the Counter/Timer Configuration register and the Counter/Timer Command/Status register). The three independent devices are referred to as counter/timer 0 (C/T 0), counter/timer 1 (C/T 1), and counter/timer 2 (C/T 2). Figure 9-2 is a block diagram of a Z280 MPU counter/timer.
 
 <br/>
 
@@ -132,7 +132,7 @@ In either mode, the maximun count frequency is the CPU clock divided by four.
 
 Gate and trigger inputs are used to control counter/timer activity in either counter mode or timer mode.
 
-Gate signals are used in applications where counting or timing is to occur only during certain specified intervals; the counter/timer will count or time only while the gating condition is met. For applications where an external pin is configured as a gate input, counting or timing operations are performed only while the gate input is high. A software gate bit (one bit of the Counter/Timer Command/Status register) is used as a filter for the gate input; while the software gate bit is cleared to 0, the gating condition is not met regardless of the state of the gating line. In other words, the gating condition is a logical AND of the hardware and software gates; both the gate input must be high and the software' gate bit must be set to 1 for the counter timer to be operating. If no external pins are configured as a gating signal, then the software gate bit must be set to 1 to satisfy the gating condition.
+Gate signals are used in applications where counting or timing is to occur only during certain specified intervals; the counter/timer will count or time only while the gating condition is met. For applications where an external pin is configured as a gate input, counting or timing operations are performed only while the gate input is high. A software gate bit (one bit of the Counter/Timer Command/Status register) is used as a filter for the gate input; while the software gate bit is cleared to 0, the gating condition is not met regardless of the state of the gating line. In other words, the gating condition is a logical AND of the hardware and software gates; both the gate input must be high and the software gate bit must be set to 1 for the counter timer to be operating. If no external pins are configured as a gating signal, then the software gate bit must be set to 1 to satisfy the gating condition.
 
 Figure 9-3 illustrates the gating facility in an application where the counter/timer is in counter mode with both the gate and the count signals coming from external pins. This example assumes that the software gate bit has been set to 1. The contents of the downcounter are decremented on a low-to-high transition of the count input only if the gate input is high.
 
@@ -230,11 +230,11 @@ EO | C/T | G | T | Counter/Timer I/O | Counter/Timer Input | Mode
 1 | 1 | 1 | 0 | Unused | Unused | Reserved
 1 | 1 | 1 | 1 | Unused | Unused | Reserved
 
-_Table 9-1. Encoding of the IPA Field in the Counterfllmer Configuration Register_
+_Table 9-1. Encoding of the IPA Field in the Counter/Timer Configuration Register_
 
 <br/>
 
-If a reserved encoding of the IPA field is specified fur any counter/timer, counter/timer operation is unpredictable.
+If a reserved encoding of the IPA field is specified for any counter/timer, counter/timer operation is unpredictable.
 
 The Counter/Timer Configuration registers are cleared to all zeros by a reset.
 
@@ -288,7 +288,7 @@ Count-Time | FExxE3 | FExxEB | FExxFB
 All addresses are in hexadecimal.<br/>
 "x" means "don't care".
 
-_Table 9-2. I/O Addresses off Counter/Timer Registers_
+_Table 9-2. I/O Addresses of Counter/Timer Registers_
 
 
 ### 9.4.5 Linking Counter/Timers
@@ -297,7 +297,7 @@ Under software control, two Z280 MPU counter/timers can be linked to form a 32-b
 
 Linking the two counter/timers together affects the functionality of the counter/timers' registers. If C/T 0 and C/T 1 are linked to form a 32-bit counter, C/T 1's Time Constant register holds the upper 16 bits and C/T 0's Time Constant register holds the lower 16 bits of the 32-bit count to be loaded into the downcounter when a counter/timer operation begins. Similarly, C/T 1's Count-Time register holds the upper 16 bits and C/T 0's Count-Time register holds the lower 16 bits of the current count.
 
-The effect of linking counter/timers on the Configuration and Command/Status registers is summarized in Table 9-3. The configuration of the 32-bit counter/timer is determined by the state of the C/S, RE, and IPA fields in the Configuration register of the more significant counter/timer (C/T 1). Any external connections specified in the IPA field of the C/T 1 Configuration register use the pins associated with C/T 1. The controls in the Configuration register for C/T 0 are ignored, with the exception of the CTC, IE, and EO bits. The CTC bit in C/T 0 is used to specify linking of the counter/timers. If the IE bit in the more significant counter/timer (C/T 1) is set to 1, an interrupt request is generated when the 32-bit counter reaches end-of-count, using the interrupt request signal from C/T 1; if the IE bit in the less significant counter/timer (C/T 0) is set to 1, an interrupt request is generated when the lower 16 bits of the 32-bit downcounter reach 0 (in other words, when C/T 0 reaches end-of-count), using the interrupt request signal from C/T 0. If the OE bit in C/T 0 is set, the C/T I/O signal associated with C/T 0 goes high whenever the lower half of the 32-bit down-counter holds a 0 (in other Words, when C/T 0's downcounter holds a 0).
+The effect of linking counter/timers on the Configuration and Command/Status registers is summarized in Table 9-3. The configuration of the 32-bit counter/timer is determined by the state of the C/S, RE, and IPA fields in the Configuration register of the more significant counter/timer (C/T 1). Any external connections specified in the IPA field of the C/T 1 Configuration register use the pins associated with C/T 1. The controls in the Configuration register for C/T 0 are ignored, with the exception of the CTC, IE, and EO bits. The CTC bit in C/T 0 is used to specify linking of the counter/timers. If the IE bit in the more significant counter/timer (C/T 1) is set to 1, an interrupt request is generated when the 32-bit counter reaches end-of-count, using the interrupt request signal from C/T 1; if the IE bit in the less significant counter/timer (C/T 0) is set to 1, an interrupt request is generated when the lower 16 bits of the 32-bit downcounter reach 0 (in other words, when C/T 0 reaches end-of-count), using the interrupt request signal from C/T 0. If the OE bit in C/T 0 is set, the C/T I/O signal associated with C/T 0 goes high whenever the lower half of the 32-bit down-counter holds a 0 (in other words, when C/T 0's downcounter holds a 0).
 
 Similarly, the Command/Status register in the more significant counter/timer (C/T 1) contains the control and status bits for the linked 32-bit counter/timer. However, the status bits in the less significant counter/timer (C/T 0) hold valid status for the lower-half of the 32-bit counter/timer (that is, the status of C/T 0 itself).
 
@@ -387,9 +387,9 @@ If the IE bit in the Configuration register is a 1, an interrupt request is gene
 
 The Z280 MPU has four on-chip Direct Memory Access (DMA) transfer controllers for high-bandwidth data transmissions within a Z280-based system. Each DMA channel is capable of controlling high speed memory-to-memory, memory-to-peripheral, peripheral-to-memory, or peripheral-to-peripheral data transfers.
 
-Ail four DMA channels, referred to as DMA0, DMA1, DMA2, and DMA3, are capable of controlling "flowthrough" type data transfers, wherein data is temporarily stored in the DMA device between reading from the source and writing to the destination. Two of the channels, DMA0 and DMA1, also support "flyby" mode data transfers, wherein the data is read from the source and written to the destination during a single bus transaction. Otherwise, the four DMA controllers are identical, although they have different priorities with respect to interrupt and bus requests.
+All four DMA channels, referred to as DMA0, DMA1, DMA2, and DMA3, are capable of controlling "flowthrough" type data transfers, wherein data is temporarily stored in the DMA device between reading from the source and writing to the destination. Two of the channels, DMA0 and DMA1, also support "flyby" mode data transfers, wherein the data is read from the source and written to the destination during a single bus transaction. Otherwise, the four DMA controllers are identical, although they have different priorities with respect to interrupt and bus requests.
 
-Two external signals provide the interface between the DMA channels and external memory or peripheral devices. The READY (<ins>RDY</ins>) input is used by an external device to request activity by a DMA channel. The DMA STRO8E (<ins>DMASTB</ins>) output is used to signal the I/O port when a flyby transaction is in progress; <ins>DMASTB</ins> is available only for DMA0 and DMA1.
+Two external signals provide the interface between the DMA channels and external memory or peripheral devices. The READY (<ins>RDY</ins>) input is used by an external device to request activity by a DMA channel. The DMA STROBE (<ins>DMASTB</ins>) output is used to signal the I/O port when a flyby transaction is in progress; <ins>DMASTB</ins> is available only for DMA0 and DMA1.
 
 Two 24-bit addresses are generated by the DMA for each flowthrough transaction, and one 24-bit address for each flyby transaction. These addresses can be physical memory addresses or I/O port addresses. The addresses are automatically generated for each transaction, and can be fixed, incrementing, or decrementing. Two readable registers, the Source Address register and Destination Address register, hold the current address of the source and destination ports.
 
@@ -439,7 +439,7 @@ Transfers of unaligned data on 16-bit buses can be accomplished via byte transfe
 
 An enable bit in the DMA Master Control register allows the Interrupt A input to be used as an end-of-process (<ins>EOP</ins>) input during DMA transactions. When enabled, transfers by DMA channels can be prematurely terminated by a low on the <ins>EOP</ins> (Interrupt A) line. Recognition of the <ins>EOP</ins> signal is not affected by the state of the Interrupt Request Enable bit for Interrupt A in the CPU's Master Status register.
 
-If the <ins>EOP</ins> signal goes active during the read portion of a flowthrough transaction, the DMA activity is aborted before the write portion of that transaction. If <ins>EOP</ins> becomes active during the write portion of a flowthrough transaction or during, a flyby transaction, that transfer is completed before stopping the DMA operation.
+If the <ins>EOP</ins> signal goes active during the read portion of a flowthrough transaction, the DMA activity is aborted before the write portion of that transaction. If <ins>EOP</ins> becomes active during the write portion of a flowthrough transaction or during a flyby transaction, that transfer is completed before stopping the DMA operation.
 
 When an active <ins>EOP</ins> signal terminates a DMA operation, the <ins>EOP</ins> Signaled (EPS) status bit in that channel's Transaction Descriptor register is automatically set to 1 and the Enable bit in that same register is cleared to 0. If that channel's Interrupt Enable bit is set to 1, an interrupt request to the CPU is generated.
 
@@ -461,7 +461,7 @@ All service requests from the on-chip DMA channels have priority over bus reques
 
 The Z280 MPU's on-chip DMA devices can be linked together to provide for DMA transfers to non-contiguous memory locations. In a linked configuration, one channel, called the master DMA, controls the actual data transfers to the memory and/or peripheral devices; the second channel, called the linked DMA, is used to load the master DMA's control registers from memory when the master DMA completes an operation. The master DMA signals the linked DMA when a transaction is completed via an internal "ready" input to the linked DMA. The linked DMA then initiates the transfers that load the master DMA's control registers from memory, allowing the master DMA to perform multiple data transfer operations without any CPU intervention.
 
-Control bits in the DMA Master Control register allow DMA3 to be linked to DMA1, with DMA1 the master DMA and DMA3 the linked DMA, and DMA2 to be linked to DMAO, with DMAO the master DMA and DMA2 the linked DMA.
+Control bits in the DMA Master Control register allow DMA3 to be linked to DMA1, with DMA1 the master DMA and DMA3 the linked DMA, and DMA2 to be linked to DMA0, with DMA0 the master DMA and DMA2 the linked DMA.
 
 When the linked DMA loads the master DMA's registers, the registers are written in the following order:
 
@@ -540,7 +540,7 @@ Encoding | Address Modification Operation
 110 | I/O address unmodified by transaction
 111 | Reserved
 
-_Table 9-4. Encoding off DAD and SAD Fields In DMA Transaction Descriptor Register_
+_Table 9-4. Encoding of DAD and SAD Fields In DMA Transaction Descriptor Register_
 
 <br/>
 
@@ -555,7 +555,7 @@ Encoding | DMA Operation
 00 | Flowthrough
 01 | Reserved
 10 | Flyby write (peripheral-to-memory)
-11 | Flyby read (hnemory-to-peripheral)
+11 | Flyby read (memory-to-peripheral)
 
 _Table 9-5. Encoding of Type Field in Transaction Descriptor Register_
 
@@ -611,7 +611,7 @@ A reset loads a 0100<sub>H</sub> into DMA0's Count register; the other channels'
 
 The 24-bit Source Address register and Destination Address register hold the port addresses used during DMA transfers. These are physical addresses that are not translated by the MMU. In flyby mode, only one of these registers is used to supply the address for the transaction, as determined by the Type field in the Transaction Descriptor register. The contents of these registers can be automatically incremented or decremented by each DMA transaction, as determined by the SAD and DAD field in the Transaction Descriptor register.
 
-The entire 24-bit Source Address or Destination Address register is read and written via two word accesses to the register. Twelve, bits of the address are accessed by each word I/O operation; the format used when accessing these registers is shown in Figure 9-11.
+The entire 24-bit Source Address or Destination Address register is read and written via two word accesses to the register. Twelve bits of the address are accessed by each word I/O operation; the format used when accessing these registers is shown in Figure 9-11.
 
 <br/>
 
@@ -681,7 +681,7 @@ When the linked DMA loads the master DMA's registers, the registers are written 
 
 After the six words have been written to the master DMA, the master DMA deasserts the ready signal to the linked DMA and begins the new transfer operation. For Z-BUS configurations of the Z280 MPU, the linked DMA uses six word transactions on the bus to program the master DMA; for Z80 Bus configurations, the linked DMA uses twelve byte transactions to program the master DMA, with the least significant byte of each word being transferred first.
 
-Both the master and linked DMAs can be programmed to generate an interrupt request to signal the end of DMA activity. If the IE bit of the master DMA is set, an interrupt request is generated when the master DMA reaches terminal count and the linked DMA's TC bit is set (that is, when the last block has been transferred), or if EOF is asserted. If the IE bit in the linked DMA is set, an interrupt request is generated when the linked DMA reaches terminal count (that is, when the last block transfer has been programmed into the master DMA), or if EOF is asserted.
+Both the master and linked DMAs can be programmed to generate an interrupt request to signal the end of DMA activity. If the IE bit of the master DMA is set, an interrupt request is generated when the master DMA reaches terminal count and the linked DMA's TC bit is set (that is, when the last block has been transferred), or if <ins>EOP</ins> is asserted. If the IE bit in the linked DMA is set, an interrupt request is generated when the linked DMA reaches terminal count (that is, when the last block transfer has been programmed into the master DMA), or if <ins>EOP</ins> is asserted.
 
 
 ### 9.5.9 DMA Programming: DMAs Linked to UART
@@ -696,7 +696,7 @@ When DMA1 is linked to the UART transmitter, the Source Address register is prog
 
 ## 9.6 UART
 
-The on-chip universal asynchronous receiver/ transmitter (UART) provides the Z280 MPU with serial I/O capability. The full-duplex UART transmits and receives serial data using any common asynchronous data communication protocol.
+The on-chip universal asynchronous receiver/transmitter (UART) provides the Z280 MPU with serial I/O capability. The full-duplex UART transmits and receives serial data using any common asynchronous data communication protocol.
 
 Figure 9-12 illustrates the general format for an asynchronous transmission using the Z280 MPU's UART. Characters can contain five, six, seven, or eight bits, plus an optional even or odd parity bit. The transmitter can supply one or two stop bits per character. Break outputs can be produced by the transmitter at any time under program control; the receiver can detect breaks as well as parity errors, framing errors, and overrun errors. Transmission and reception are performed independently.
 
@@ -784,11 +784,9 @@ _Table 9-9. CR Field of UART Configuration Register_
 
 **Clock Select (CS)**. The state of this bit specifies the clock input for the UART. When this bit is set to 1, counter/timer 1's output pulse supplies the UART clock. When this bit is cleared to 0, counter/timer 1's clock input pin provides the UART clock signal, thus allowing the use of an externally-generated clock. The content of the IPA field of C/T 1's Configuration register does not affect these UART clocking modes.
 
-**Transmitter Buffer Empty (BE).** This status bit is automatically set to 1 whenever the Transmit Data register becomes empty and cleared to 0 whenever a character is loaded into the Transmit Data register. The BE bit is controlled by the UART circuitry; it can be read via an I/O read but is unaffected by an I/O write to this register. A reset loads a 1 into this bit.
-
 **Parity (P).** When set to 1, an additional bit position (in addition to the number of bits per character specified in the BC field) is added to each transmitted character and expected in each received character; this additional bit is the parity bit. Parity bits in received characters are assembled as part of the character for character lengths of less than 8 bits.
 
-**Parity Even/bdd (E/O).** If parity is specified (P = 1), this bit determines whether an odd or even parity bit is added to transmitted characters and whether odd or even parity is checked for in received characters. E/O = 1 specifies even parity and E/0 = 0 specifies odd parity. If P = 0, then this bit is ignored.
+**Parity Even/bdd (E/O).** If parity is specified (P = 1), this bit determines whether an odd or even parity bit is added to transmitted characters and whether odd or even parity is checked for in received characters. E/O = 1 specifies even parity and E/O = 0 specifies odd parity. If P = 0, then this bit is ignored.
 
 **Bits per Character (B/C).** This 2-bit field determines the number of bits per character in both the transmitter and receiver, as specified in Table 9-10. If this field is changed while a character is being transmitted or received, the results are unpredictable.
 
@@ -818,6 +816,8 @@ The 8-bit Transmitter Control/Status register, shown in Figure 9-15, specifies t
 _Figure 9-15. Transmitter Control/Status Register_
 
 <br/>
+
+**Transmitter Buffer Empty (BE).** This status bit is automatically set to 1 whenever the Transmit Data register becomes empty and cleared to 0 whenever a character is loaded into the Transmit Data register. The BE bit is controlled by the UART circuitry; it can be read via an I/O read but is unaffected by an I/O write to this register. A reset loads a 1 into this bit.
 
 **Value (VAL).** This bit determines the value of the bits transmitted by the UART when the FRC bit is set to 1 and "dummy" characters are loaded into the Transmit Data register. When the VAL bit is set to 1, a mark character (all 1s) is transmitted; when the VAL bit is cleared to 0, a break character (all 0s) is transmitted.
 
@@ -896,7 +896,7 @@ Once the transmitter has been enabled, there are two ways to produce a break out
 
 The on-chip UART and DMA Channel 0 can be used to automatically initialize the Z280 MPU's memory with values received by the UART following a reset. This system bootstrapping capability permits ROMless system configurations, where memory is initialized using a serial link prior to the first Z280 MPU instruction fetch after the reset.
 
-As described in Section 3.2.1 and Chapter 11, bootstrap mode is selected by driving <ins>WAIT</ins> low and AD<sub>6</sub> high while <ins>RESET</ins> is asserted. The appropriate UART and DMA registers are automatically programmed as shown in Table 9-12 as a result of selecting bootstrap mode. The UART is initialized to receive data in 8-bit characters with odd parity, an external clock source, and a x16 clock rate. DMA Channel 0 is initialized with the link to the UART receiver and end-of-process capability enabled, and set up for flowthrough byte transfers in continuous mode. The destination address starts at memory location 0, with an autoincrement after each transfer, and a transfer count of 236 (100<sub>H</sub>).
+As described in Section 3.2.1 and Chapter 11, bootstrap mode is selected by driving <ins>WAIT</ins> low and AD<sub>6</sub> high while <ins>RESET</ins> is asserted. The appropriate UART and DMA registers are automatically programmed as shown in Table 9-12 as a result of selecting bootstrap mode. The UART is initialized to receive data in 8-bit characters with odd parity, an external clock source, and a x16 clock rate. DMA Channel 0 is initialized with the link to the UART receiver and end-of-process capability enabled, and set up for flowthrough byte transfers in continuous mode. The destination address starts at memory location 0, with an autoincrement after each transfer, and a transfer count of 256 (100<sub>H</sub>).
 
 <br/>
 

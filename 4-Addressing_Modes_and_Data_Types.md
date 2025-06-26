@@ -276,7 +276,7 @@ Address calculation:
 ```
 
 
-### 4.2.8 Stack Pbinter Relative (SR)
+### 4.2.8 Stack Pointer Relative (SR)
 
 For the Stack Pointer Relative addressing mode, the data processed is at the location whose address is the contents of the Stack Pointer offset by a 16-bit displacement in the instruction.
 

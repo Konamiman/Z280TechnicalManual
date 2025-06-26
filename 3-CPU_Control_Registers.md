@@ -86,7 +86,7 @@ _Table 3-2. LM Field of Bus Timing and Initialization Register_
 
 Bits 4 and 7 of the Bus Timing and Initialization register are reserved for special use by Zilog and should always be loaded with a zero when writing to this register. When this register is read, bits 4 and 7 may return a 1.
 
-The Bus Timing and Initialization register can be initialized with either of two methods during a reset operation. If the MPU's <ins>WAIT</ins> input is not asserted during reset, this register is automatically initialized to all zeros, thereby specifying a bus clock frequency of one-half the internal CPU clock, no automatic wait states during transactions to the lower 8M bytes of memory, and disabling of the multiprocessor and bootstrap modes. If the WAIT input is asserted during reset, the Bus Timing and Initialization register is set to the contents of the AD<sub>0</sub>-AD<sub>7</sub> bus lines, as read during the reset operation (see Chapter 12); this form of initialization is the only way to specify the bootstrap mode. Once the CS field has been loaded during reset, it cannot be modified via software; however, the LM and MP fields can be written using the LDCTL instruction.
+The Bus Timing and Initialization register can be initialized with either of two methods during a reset operation. If the MPU's <ins>WAIT</ins> input is not asserted during reset, this register is automatically initialized to all zeros, thereby specifying a bus clock frequency of one-half the internal CPU clock, no automatic wait states during transactions to the lower 8M bytes of memory, and disabling of the multiprocessor and bootstrap modes. If the <ins>WAIT</ins> input is asserted during reset, the Bus Timing and Initialization register is set to the contents of the AD<sub>0</sub>-AD<sub>7</sub> bus lines, as read during the reset operation (see Chapter 12); this form of initialization is the only way to specify the bootstrap mode. Once the CS field has been loaded during reset, it cannot be modified via software; however, the LM and MP fields can be written using the LDCTL instruction.
 
 ### 3.2.2 Bus Timing and Control Register
 
@@ -103,7 +103,7 @@ _Figure 3-2. Bus Timing and Control Register_
 
 <br/>
 
-| I/O Field |Number of Walt States I/O Field for I/O |
+| I/O Field |Number of Walt States<br/>for I/O |
 |-|-|
 | 00 | 0
 | 01 | 1
@@ -119,7 +119,7 @@ states to be inserted during memory transactions to the upper 8M bytes of physic
 
 <br/>
 
-| HM Field |Number of Wait States for Higher 8M Bytes of Memory |
+| HM Field |Number of Wait States for<br/> Upper 8M Bytes of Memory |
 |-|-|
 | 00 | 0
 | 01 | 1
@@ -134,7 +134,7 @@ _Table 3-4. HM Field of Bus Timing and Initialization Register_
 
 <br/>
 
-| DC Field |Number of Walt States for DC Field Interrupt Acknowledge |
+| DC Field |Number of Walt States for<br/>Interrupt Acknowledge |
 |-|-|
 | 00 | 0
 | 01 | 1
@@ -147,7 +147,7 @@ _Table 3-5. DC Field of Bus Timing and Control Register_
 
 The contents of the Bus Timing and Control register govern the number of automatic wait states to be inserted during various bus transactions. Additional wait states can be added to any bus transaction via control of the <ins>WAIT</ins> input.
 
-The Bus Timing and Control register is set to 30H by a reset. Bits 4 and 5 should always be written with 0. When this register is read, bits 4 and 5 may return a 1.
+The Bus Timing and Control register is set to 30<sub>H</sub> by a reset. Bits 4 and 5 should always be written with 0. When this register is read, bits 4 and 5 may return a 1.
 
 
 ### 3.2.3 Local Address Register
@@ -220,7 +220,7 @@ _Figure 3-5. Master Status Register_
 
 **Breakpoint-on-Halt Enable (BH) Bit.** While this bit is set to 1, the CPU generates a breakpoint trap whenever a Halt instruction is encountered; while cleared to 0, the Halt instruction is executed normally.
 
-**Single-Step Pending (SSP) Bit.** The CPU checks this bit prior to the start of an instruction execution and generates a Single-Step trap if this bit is set to 1. The Single-Stpp bit is automatically copied into this field at the completion of an instruction. This bit is automatically cleared when a Single-Step, Division Exception, Access Violation, Privileged Instruction, or Breakpoint-on-Halt trap is executed, so that the saved MSR has a 0 in this bit position. (For these traps, the PC address of the trapped instruction is saved for possible re-execution.)
+**Single-Step Pending (SSP) Bit.** The CPU checks this bit prior to the start of an instruction execution and generates a Single-Step trap if this bit is set to 1. The Single-Step bit is automatically copied into this field at the completion of an instruction. This bit is automatically cleared when a Single-Step, Division Exception, Access Violation, Privileged Instruction, or Breakpoint-on-Halt trap is executed, so that the saved MSR has a 0 in this bit position. (For these traps, the PC address of the trapped instruction is saved for possible re-execution.)
 
 **Single-Step (SS) Bit.** This bit is the enable for the single-step operating mode. While this bit is set to 1, the CPU is in a single-step mode wherein a Single-Step trap is generated for each instruction; if cleared to 0, single-step mode is disabled.
 
@@ -265,7 +265,7 @@ The contents of the Interrupt/Trap Vector Table Pointer are unaffected by a rese
 
 ### 3.3.4 I/O Page Register
 
-The 8-bit I/O Page register determines the upper eight bits of the 24-bit peripheral address output during execution of an I/O transaction (Figure 3-8). I/O pages FEH and FFH are reserved for on-chip peripheral addresses.
+The 8-bit I/O Page register determines the upper eight bits of the 24-bit peripheral address output during execution of an I/O transaction (Figure 3-8). I/O pages FE<sub>H</sub> and FF<sub>H</sub> are reserved for on-chip peripheral addresses.
 
 <br/>
 
@@ -290,7 +290,7 @@ _Figure 3-9. Trap Control Register_
 
 **Inhibit User I/O (I) Bit.** This bit determines whether or not I/O instructions are privileged instructions. While this bit is set to 1, all I/O instructions are treated as privileged instructions, and an attempt to execute an I/O instruction while in user mode results in a Privileged Instruction trap. While this bit is cleared to 0, I/O instructions can be successfully executed in user mode. I/O instructions can always be executed in system mode, regardless of the state of this bit.
 
-**EPU Enable (E) Bit.** This bit indicates whether or not an Extended Processor Unit (EPU) is available in the -system for execution of extended instructions. If this bit is cleared to 0, indicating that no EPUs are present, the CPU generates an Extended Instruction trap whenever an extended instruction is encountered. If this bit is set to 1, the CPU performs whatever data transfers are indicated by the extended instruction opcode, and assumes that the EPU is present to execute the instruction.
+**EPU Enable (E) Bit.** This bit indicates whether or not an Extended Processor Unit (EPU) is available in the system for execution of extended instructions. If this bit is cleared to 0, indicating that no EPUs are present, the CPU generates an Extended Instruction trap whenever an extended instruction is encountered. If this bit is set to 1, the CPU performs whatever data transfers are indicated by the extended instruction opcode, and assumes that the EPU is present to execute the instruction.
 
 **System Stack Overflow Warning (S) Bit.** This is the enable bit for the System Stack Overflow Warning trap. While it is set to 1, Stack Overflow Warning traps can occur during a stack access while in system mode, as determined by the contents of the Stack Limit register. While this bit is cleared to 0, Stack Overflow Warning traps are disabled. This bit is automatically cleared when a System Stack Overflow Warning trap is generated.
 

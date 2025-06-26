@@ -33,7 +33,7 @@ _Figure 8-1. Cache Organization_
 
 Lines in the cache are allocated using a Least-Recently Used (LRU) algorithm. If a read access is made to a physical memory address not currently stored in the cache (a cache "miss"), and the MMU does not assert cache inhibit, the line in the cache that has been least recently accessed is selected to hold the newly read data. All bytes in the selected line are marked invalid except for the bytes containing the newly accessed data. A cache miss on a data write does not cause a line to be allocated to the memory location accessed.
 
-On a cache miss during a memory read, one or two bytes (depending on the bus size) are fetched from main memory and written to the cache. The cache does not prefetch beyond the currently reguested byte or word, with one exception; if burst mode operations are specified in the Cache Control register, burst mode transactions are used when fetching instructions.
+On a cache miss during a memory read, one or two bytes (depending on the bus size) are fetched from main memory and written to the cache. The cache does not prefetch beyond the currently requested byte or word, with one exception; if burst mode operations are specified in the Cache Control register, burst mode transactions are used when fetching instructions.
 
 The cache can be configured to hold only instructions, only data, or both instructions and data, as determined by the contents of the Cache Control register. If the cache contains data, writes to data at locations in the cache also generate external bus transactions to update the appropriate memory locations; thus, external memory is always guaranteed to contain valid information.
 

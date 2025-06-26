@@ -102,7 +102,7 @@
 
 **physical address:** The 24-bit address required for accessing memory and peripherals, obtained by the CPU's address translation hardware.
 
-**pipeline:** A computer design technique in which an instruction is executed in a seguence of stages by different functional units. The functional units can be operating on several different instructions simultaneously, similiar to an automobile assembly line.
+**pipeline:** A computer design technique in which an instruction is executed in a sequence of stages by different functional units. The functional units can be operating on several different instructions simultaneously, similiar to an automobile assembly line.
 
 **prefetching:** Ability of the CPU to fetch an instruction or operand before the previous instructions have been completed.
 

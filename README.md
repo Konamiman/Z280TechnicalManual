@@ -18,7 +18,7 @@ This repository contains a transcript of the _Z280™ MPU Microprocessor Unit Pr
 
 [7. Memory Management Unit](7-Memory_Management_Unit.md)
 
-[8. On Chip Memory](8-On-Chip_Memory.md)
+[8. On-Chip Memory](8-On-Chip_Memory.md)
 
 [9. On-Chip Peripherals](9-On-Chip_Peripherals.md)
 

@@ -10,7 +10,7 @@
 
 [7.4 ADDRESS TRANSLATION](#74-address-translation)
 
-[7.4.1 Address Translation Without Program/bata Separation](#741-address-translation-without-programbata-separation)
+[7.4.1 Address Translation Without Program/data Separation](#741-address-translation-without-programbata-separation)
 
 [7.4.2 Address Translation With Program/data Separation](#742-address-translation-with-programdata-separation)
 
@@ -86,9 +86,9 @@ The least significant four bits of each page descriptor register are attribute a
 If address translation is enabled, logical addresses are translated to physical addresses in one of two ways, depending on the program/data separation mode, as specified in the MMU Master Control register. The format of the page descriptor registers is independent of which mode is in effect.
 
 
-### 7.4.1 Address Translation Without Program/bata Separation
+### 7.4.1 Address Translation Without Program/data Separation
 
-When program/data separation is not in effect, the 16-bit logical address from the CPU is divided into two fields, a 4-bit index field used to select one of the 16 page descriptor registers, and a 12-bit offset field that forms the lower 12 bits of the resulting physical address. The upper 12 bits of the physical address are provided by the page frame address field of the selected page descriptor register. The pages are 4K bytes long. This translation mechanism is illustrated in Figure 7-2. Page descriptor register 0 is the descriptor for logical addresses 0000<sub>H</sub> to OFFF<sub>H</sub>, page descriptor register 1 is the descriptor for logical addresses 1000<sub>H</sub> to 1FFF<sub>H</sub>, and so on. Thus, the index portion of the logical address selects the page descriptor register. The page frame address field of that page descriptor register then determines the actual starting address for that page in physical memory; the low-order 12 bits of the logical address specify the offset within that 4K byte page.
+When program/data separation is not in effect, the 16-bit logical address from the CPU is divided into two fields, a 4-bit index field used to select one of the 16 page descriptor registers, and a 12-bit offset field that forms the lower 12 bits of the resulting physical address. The upper 12 bits of the physical address are provided by the page frame address field of the selected page descriptor register. The pages are 4K bytes long. This translation mechanism is illustrated in Figure 7-2. Page descriptor register 0 is the descriptor for logical addresses 0000<sub>H</sub> to 0FFF<sub>H</sub>, page descriptor register 1 is the descriptor for logical addresses 1000<sub>H</sub> to 1FFF<sub>H</sub>, and so on. Thus, the index portion of the logical address selects the page descriptor register. The page frame address field of that page descriptor register then determines the actual starting address for that page in physical memory; the low-order 12 bits of the logical address specify the offset within that 4K byte page.
 
 <br/>
 
@@ -126,7 +126,7 @@ _Figure 7-4. MMU Master Control Register_
 
 **System Mode Translate Enable (STE).** When this bit is set to 1, logical memory addresses generated during system-mode operation are translated to physical addresses with attribute checking. When this bit is cleared to 0, the logical addresses are passed through the MMU to the address outputs with zeros in the most significant bits and no attribute checking or modified bit setting is performed.
 
-**System Node Program/Oata Separation Enable (SPD).** When this bit is set to 1, instruction fetches and data accesses using the PC Relative addressing mode use system-mode Page Descriptor registers 8 through 15, and data references using other addressing modes use system-mode Page Descriptor registers 0 through 7; the page size is 8K bytes. When this bit is cleared to 0, both instruction and data fetches use system-mode Page Descriptor registers 0 through 15 and the page size is 4K bytes.
+**System Mode Program/Data Separation Enable (SPD).** When this bit is set to 1, instruction fetches and data accesses using the PC Relative addressing mode use system-mode Page Descriptor registers 8 through 15, and data references using other addressing modes use system-mode Page Descriptor registers 0 through 7; the page size is 8K bytes. When this bit is cleared to 0, both instruction and data fetches use system-mode Page Descriptor registers 0 through 15 and the page size is 4K bytes.
 
 **Page Fault Identifier (PFI) Field.** This 5-bit status field latches an identification number that indicates which Page Descriptor register was being accessed when an access violation was detected. The encoding used is given in Table 7-1.
 
@@ -192,7 +192,7 @@ _Table 7-2. MMU Invalidation Port_
 
 <br/>
 
-The I/O port addresses for the MMU* registers are listed in Table 7-3.
+The I/O port addresses for the MMU registers are listed in Table 7-3.
 
 <br/>
 

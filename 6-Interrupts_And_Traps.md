@@ -108,7 +108,7 @@ Interrupt mode 2 is a vectored interrupt response mode for maskable interrupts, 
 
 An externally generated interrupt (maskable or nonmaskable) causes the User/System bit, the Single-Step bit, and the Interrupt Enable Request bits in the Master Status register to be cleared to 0, which puts the CPU in system mode with single-stepping disabled. The previous condition of the MSR is not saved. The current value in the Program Counter is pushed onto the system mode stack.
 
-For nonmaskable interrupts, the constant 0066<sub>H</sub> is then loaded into the Program Counter; thus, 0066<sub>H</sub> is the starting address of the nonmaskable interrupt service routine. For maskable interrupts, the programmer must maintain a table in memory of the 16-bit starting addresses for every maskable interrupt service routine. This table can be located anywhere in the system mode data memory address space, starting on a 256-byte memory boundary. When a maskable interrupt is accepted, a 16-bit pointer into this table is generated in order to select the starting address of the appropriate service routine from the table entries. The peripheral generating the interrupt places an 8-bit vector on the data bus in response to the interrupt acknowledge. This vector becomes the lower eight bits of the pointer into the table. The upper eight bits of the pointer are the contents of the I register. This pointer is treated as an address in the system data memory space that can be translated to a physical address by the MMU. The actual logical address of the service routine is found by referencing the word located at the address formed by concatenating the I register's contents with the vector. Figure 6-1 illustrates the sequence of events for processing mode 2 maskable interrupts. A reset clears the 1 register to all zeros.
+For nonmaskable interrupts, the constant 0066<sub>H</sub> is then loaded into the Program Counter; thus, 0066<sub>H</sub> is the starting address of the nonmaskable interrupt service routine. For maskable interrupts, the programmer must maintain a table in memory of the 16-bit starting addresses for every maskable interrupt service routine. This table can be located anywhere in the system mode data memory address space, starting on a 256-byte memory boundary. When a maskable interrupt is accepted, a 16-bit pointer into this table is generated in order to select the starting address of the appropriate service routine from the table entries. The peripheral generating the interrupt places an 8-bit vector on the data bus in response to the interrupt acknowledge. This vector becomes the lower eight bits of the pointer into the table. The upper eight bits of the pointer are the contents of the I register. This pointer is treated as an address in the system data memory space that can be translated to a physical address by the MMU. The actual logical address of the service routine is found by referencing the word located at the address formed by concatenating the I register's contents with the vector. Figure 6-1 illustrates the sequence of events for processing mode 2 maskable interrupts. A reset clears the I register to all zeros.
 
 <br/>
 
@@ -181,7 +181,7 @@ The Privileged Instruction trap protects the operating system environment by pre
 
 ### 6.3.3 System Call Trap
 
-The System Call trap occurs whenever a System Call instruction is executed. The following information is saved on, the system stack when processing a System Call trap: the address of the next instruction, the MSR, and the 16-bit immediate operand encoded in the System Call instruction (in that order).
+The System Call trap occurs whenever a System Call instruction is executed. The following information is saved on the system stack when processing a System Call trap: the address of the next instruction, the MSR, and the 16-bit immediate operand encoded in the System Call instruction (in that order).
 
 The System Call trap provides a means by which a user mode program can request an operating system function, thereby allowing for an orderly transition between the user and system modes.
 
@@ -202,7 +202,7 @@ The System Stack Overflow Warning trap notifies the operating system of potentia
 
 ### 6.3.6 Division Exception Trap
 
-The Division Exception trap occurs while executing a Divide instruction if the divisor is zero (divide by zero case) or the quotient cannot be represented in the destination precision (overflow case); the CPU flags are set to distinguish between these two situations (see the descriptions for the Divide instructions in Chapter 5). The following information is saved on the system stack when processing a Division Exception trap: the address of th8 Divide instruction and the MSR (in that order).
+The Division Exception trap occurs while executing a Divide instruction if the divisor is zero (divide by zero case) or the quotient cannot be represented in the destination precision (overflow case); the CPU flags are set to distinguish between these two situations (see the descriptions for the Divide instructions in Chapter 5). The following information is saved on the system stack when processing a Division Exception trap: the address of the Divide instruction and the MSR (in that order).
 
 
 ### 6.3.7 Single-Step Trap
@@ -211,8 +211,8 @@ Two control bits in the Master Status register are used to control Single-Step t
 
 <br/>
 
-![Figure 6-2. Instrucfion Execution Sequence](Images/Figure6.2.png)<br/>
-_Figure 6-2. Instrucfion Execution Sequence_
+![Figure 6-2. Instruction Execution Sequence](Images/Figure6.2.png)<br/>
+_Figure 6-2. Instruction Execution Sequence_
 
 <br/>
 
@@ -262,8 +262,9 @@ Instructions that cause a trap but will be re-executed (ie: privileged, divide, 
 
 ### 6.3.8 Breakpoint-on-Halt Trap
 
-The Breakpoint-on-Halt trap occurs if a Halt instruction is encountered while the Breakpoint- on-Halt Enable bit in the MSR is set to 1. The following information is saved on the system stack when processing a Breakpoint-on-Halt trap: the address of the Halt instruction and the MSR (in that order).
-The Breakpoint-on-Halt trap provided a breakpoint facility that is useful in debugging environments in which breakpoints on instruction boundaries are desired.
+The Breakpoint-on-Halt trap occurs if a Halt instruction is encountered while the Breakpoint-on-Halt Enable bit in the MSR is set to 1. The following information is saved on the system stack when processing a Breakpoint-on-Halt trap: the address of the Halt instruction and the MSR (in that order).
+
+The Breakpoint-on-Halt trap provides a breakpoint facility that is useful in debugging environments in which breakpoints on instruction boundaries are desired.
 
 The trap types and the status saved during the processing of each trap are summarized in Table 6-3.
 
@@ -353,7 +354,7 @@ The value loaded into the Program Counter during exception processing is a logic
 
 In interrupt mode 0, the interrupting device provides the Restart or Call instruction that begins the service routine; this instruction saves the Program Counter value of the interrupted routine and provides the address of the service routine. In the other interrupt modes and for traps, the starting address of the service routine is determined automatically during interrupt processing, as described in the preceding section. This program is now executed.
 
-For externally generated interrupts in interrupt modes 0, 1, and 2, all maskable interrupts, are automatically disabled; therefore the service routine is protected from additional interrupts until the MSR is altered via a Load Control, Enable Interrupt, Return from Nonmaskable Interrupt, or Return from Interrupt Long instruction. Interrupts in mode 3 and all traps cause a new MSR to be loaded from the Interrupt/Trap Vector Table; the value of this MSR determines which interrupts are enabled during the service routine. Service routines that enable interrupts before exiting permit interrupts to be handled in a nested fashion.
+For externally generated interrupts in interrupt modes 0, 1, and 2, all maskable interrupts are automatically disabled; therefore the service routine is protected from additional interrupts until the MSR is altered via a Load Control, Enable Interrupt, Return from Nonmaskable Interrupt, or Return from Interrupt Long instruction. Interrupts in mode 3 and all traps cause a new MSR to be loaded from the Interrupt/Trap Vector Table; the value of this MSR determines which interrupts are enabled during the service routine. Service routines that enable interrupts before exiting permit interrupts to be handled in a nested fashion.
 
 
 ### 6.4.5 Returning from a Service Routine
@@ -361,7 +362,7 @@ For externally generated interrupts in interrupt modes 0, 1, and 2, all maskable
 Three different instructions are available for returning from an interrupt or trap service routine: Return from Nonmaskable Interrupt, Return from Interrupt, and Return from Interrupt Long. All three are privileged instructions, since they must retrieve values from the system stack.
 The Return from Nonmaskable Interrupt (RETN) instruction is used to return from nonmaskable interrupts in interrupt modes 0, 1, and 2. This instruction pops the word on the top of the stack into the Program Counter, restoring the Program Counter value present before the interrupt, and loads the Interrupt Request Enable bits in the MSR with the contents of the Interrupt Shadow register.
 
-The Return from Interrupt (RETI) instruction is used to return from externally generated maskable interrupts in interrupt modes 0, 1, and 2. This instruction pops the word on the top of the stack into the Program Counter, which restores the Program Counter value present before the interrupt. The RETI instruction also causes a special bus transaction that fetches this instruction from external memory (regardless of whether it is contained io the on-chip cache), with the appropriate bus control and status signals to indicate that an instruction fetch is occurring; this is used to reset the interrupt logic of the Z80 family peripherals.
+The Return from Interrupt (RETI) instruction is used to return from externally generated maskable interrupts in interrupt modes 0, 1, and 2. This instruction pops the word on the top of the stack into the Program Counter, which restores the Program Counter value present before the interrupt. The RETI instruction also causes a special bus transaction that fetches this instruction from external memory (regardless of whether it is contained in the on-chip cache), with the appropriate bus control and status signals to indicate that an instruction fetch is occurring; this is used to reset the interrupt logic of the Z80 family peripherals.
 
 The Return from Interrupt Long (RETIL) instruction is used to return from interrupts in interrupt mode 3 and all traps, since it causes both the MSR and PC values to be popped from the stack. If this instruction is used to return from an interrupt processed with another interrupt mode (e.g., if RETIL is used to return from a mode 2, instead of a mode 3, interrupt), an MSR value must be pushed onto the stack in the service routine prior to execution of the RETIL. For interrupts in interrupt mode 3 and all traps, the service routine must pop the reason code or other trap-dependent information off the stack before executing RETIL. Unlike RETI, RETIL causes no special bus activity and, therefore, cannot be used to automatically reset Z80 family peripherals.
 
