@@ -32,7 +32,7 @@
 
 [6.3.8 Breakpoint-on-Halt Trap](#638-breakpoint-on-halt-trap)
 
-[6.4 INTERRUPT AND TRAP HAIDLING](#64-interrupt-and-trap-haidling)
+[6.4 INTERRUPT AND TRAP HANDLING](#64-interrupt-and-trap-handling)
 
 [6.4.1 Interrupt Acknowledge](#641-interrupt-acknowledge)
 
