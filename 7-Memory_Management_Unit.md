@@ -78,7 +78,7 @@ The least significant four bits of each page descriptor register are attribute a
 
 **Write-Protect Bit (WP).** When set to 1, write operations to addresses in the page generate an Access Violation trap and the write is inhibited. When this bit is cleared to 0, all valid accesses to the page are allowed.
 
-**Valid Bit (V).** This bit is set to T to indicate that the page descriptor register contains valid information about the page. When cleared to 0, all accesses to addresses in the page are inhibited and generate Access Violation traps.
+**Valid Bit (V).** This bit is set to 1 to indicate that the page descriptor register contains valid information about the page. When cleared to 0, all accesses to addresses in the page are inhibited and generate Access Violation traps.
 
 
 ## 7.4 ADDRESS TRANSLATION
