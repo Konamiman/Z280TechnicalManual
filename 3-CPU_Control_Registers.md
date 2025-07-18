@@ -103,7 +103,7 @@ _Figure 3-2. Bus Timing and Control Register_
 
 <br/>
 
-| I/O Field |Number of Walt States<br/>for I/O |
+| I/O Field |Number of Wait States<br/>for I/O |
 |-|-|
 | 00 | 0
 | 01 | 1
