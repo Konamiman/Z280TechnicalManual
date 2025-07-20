@@ -5387,7 +5387,7 @@ None
 
 ### Example
 
-MULT A,H
+MULTU A,H
 
 _Before instruction execution:_
 
@@ -5653,7 +5653,7 @@ _After instruction execution:_
 
 ## NOP - No Operation
 
-NOP
+**NOP**
 
 ## Operation
 
@@ -7539,6 +7539,45 @@ System Call Trap, System Stack Overflow Warning
 | Syntax | Instruction Format
 |-|-|
 | SC nn | `11 101 101` `01 110 001` `   n(low)   ` `  n(high)   `
+
+### Example
+
+SC 0155H
+
+_Before instruction execution:_
+
+| Register | Value |
+|-|-|
+PC  | 4620
+SP  | FFC9
+MSR | 407F
+Interrupt/Trap<br/>Vector Table<br/> Pointer | 3652
+
+| Physical<br/>memory<br/>address |Value |
+|-|-|
+365250 | 23
+365251 | 00
+365252 | 88
+365253 | 90
+
+_After instruction execution:_
+
+| Register | Value |
+|-|-|
+PC  | 9088
+SP  | FFC3
+MSR | 0023
+
+| Data<br/>memory<br/>address |Value |
+|-|-|
+FFC3 | 55
+FFC4 | 01
+FFC5 | 7F
+FFC6 | 40
+FFC7 | 20
+FFC8 | 46
+
+**Note:** The physical memory addresses are 24-bit addresses emitted by the MMU. The data memory addresses are the 16-bit addresses from the CPU.
 
 
 ## SCF - Set Carry Flag
