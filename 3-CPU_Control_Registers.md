@@ -226,7 +226,7 @@ _Figure 3-5. Master Status Register_
 
 **Interrupt Request Enable (E<sub>n</sub>) Bit.** There are seven interrupt enable bits in the MSR, one for each type of maskable interrupt source. The Z280 MPU's interrupt sources, including both the external interrupt requests and the on-chip peripherals, are grouped into seven levels of interrupt requests. While bit E<sub>n</sub> is set to 1, interrupt requests from sources at level n are accepted by the CPU; while E<sub>n</sub> is cleared to 0, interrupt requests from sources at level n are not accepted.
 
-The Master Status register is loaded with all zeros by a reset. Bits 7, 10, 11, 13, and 13 of the MSR always should be written with zeros.
+The Master Status register is loaded with all zeros by a reset. Bits 7, 10, 11, 13, and 15 of the MSR always should be written with zeros.
 
 
 ### 3.3.2 Interrupt Status Register
