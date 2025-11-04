@@ -1,4 +1,4 @@
-# Appendix F. Compatible Peripheral Families
+# [Appendix F](F-Compatible_Peripheral_Families.md). Compatible Peripheral Families
 
 The Z280 MPU supports two different types of bus interface: the Z80-Bus and the Z-BUS. Families of peripheral devices are available for both types of component interconnect buses.
 

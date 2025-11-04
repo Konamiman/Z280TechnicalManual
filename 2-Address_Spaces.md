@@ -63,7 +63,7 @@ The Z280 CPU status and control registers govern the operation of the CPU. They 
 
 Control register addresses are specified by the contents of the C register. No translation is performed in mapping this 8-bit logical address into the control register file location.
 
-The Z280 CPU control registers are the Bus Timing and Initialization register, the Bus Timing and Control register, the Master Status register, the Interrupt/Trap Vector Table Pointer, the I/O Page register, the System Stack Limit register, the Trap Control register, the Interrupt Status register, the Cache Control register, and the Local Address register (Figure 2-2). The CPU control registers are described in detail in Chapter 3.
+The Z280 CPU control registers are the Bus Timing and Initialization register, the Bus Timing and Control register, the Master Status register, the Interrupt/Trap Vector Table Pointer, the I/O Page register, the System Stack Limit register, the Trap Control register, the Interrupt Status register, the Cache Control register, and the Local Address register (Figure 2-2). The CPU control registers are described in detail in [Chapter 3](3-CPU_Control_Registers.md).
 
 <br/>
 

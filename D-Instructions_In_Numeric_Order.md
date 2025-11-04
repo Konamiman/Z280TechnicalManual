@@ -1,4 +1,4 @@
-# Appendix D. Instructions in Numeric Order
+# [Appendix D](D-Instructions_In_Numeric_Order.md). Instructions in Numeric Order
 
 Instructions marked with * are inherited from the Z80 instruction set.
 

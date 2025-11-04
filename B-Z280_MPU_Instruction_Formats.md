@@ -1,4 +1,4 @@
-# Appendix B. Z280 MPU Instruction Formats
+# [Appendix B](B-Z280_MPU_Instruction_Formats.md). Z280 MPU Instruction Formats
 
 Four formats are used to generate the machine-language bit encodings for the Z280 MPU instructions. Three formats are used for instructions that are executed solely by the Z280 CPU. (These same three formats are used for Z80 CPU instruction encoding.) A fourth format is dedicated to instructions that involve Extended Processing Units (EPUs).
 

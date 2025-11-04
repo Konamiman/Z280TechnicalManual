@@ -1,4 +1,4 @@
-# Appendix A. Z80/Z280 Compatibility
+# [Appendix A](A-Z80_Z280_Compatibility.md). Z80/Z280 Compatibility
 
 The Z280 MPU architecture is an upward-compatible extension of the Z80 CPU architecture. This compatibility extends to the instruction set, register architecture, interrupt structure, and bus structure of the Z280 MPU and Z80 CPU.
 

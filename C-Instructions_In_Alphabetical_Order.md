@@ -1,4 +1,4 @@
-# Appendix C. Instructions in Alphabetical Order
+# [Appendix C](C-Instructions_In_Alphabetical_Order.md). Instructions in Alphabetical Order
 
 Instructions marked with * are inherited from the Z80 instruction set.
 

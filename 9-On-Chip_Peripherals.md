@@ -59,12 +59,12 @@
 
 The Z280 MPU features a number of peripheral devices on-chip in addition to the CPU, MMU, and cache memory. These peripheral devices include a clock oscillator, dynamic RAM refresh controller, four direct memory access (DMA) controllers, three counter/timers, and a universal asynchronous receiver/transmitter (UART).
 
-The DMA channels, counter/timers, and UART are user-programmable devices that can be configured to operate in several different modes. These devices are accessed using I/O instructions; however, no external I/O bus transactions are generated when the on-chip peripherals are accessed by the CPU. These devices can generate interrupt requests to the Z280 MPU, as described below and in Chapter 6. Interrupts from these on-chip peripherals are always processed using interrupt mode 3, regardless of which interrupt mode is used for externally generated interrupts.
+The DMA channels, counter/timers, and UART are user-programmable devices that can be configured to operate in several different modes. These devices are accessed using I/O instructions; however, no external I/O bus transactions are generated when the on-chip peripherals are accessed by the CPU. These devices can generate interrupt requests to the Z280 MPU, as described below and in [Chapter 6](6-Interrupts_And_Traps.md). Interrupts from these on-chip peripherals are always processed using interrupt mode 3, regardless of which interrupt mode is used for externally generated interrupts.
 
 
 ## 9.2 CLOCK OSCILLATOR
 
-The Z280 MPU has an on-chip clock oscillator/generator that can be connected directly to a crystal or any other suitable clock source. The frequency of the processor clock is one-half of the frequency of the external clock source or crystal. The processor clock can be further divided by a factor of 1, 2, or 4 to provide the bus timing clock, as specified by the contents of the Bus Timing and Initialization register (see Chapter 3). The bus timing clock is output by the MPU for use by the rest of the system.
+The Z280 MPU has an on-chip clock oscillator/generator that can be connected directly to a crystal or any other suitable clock source. The frequency of the processor clock is one-half of the frequency of the external clock source or crystal. The processor clock can be further divided by a factor of 1, 2, or 4 to provide the bus timing clock, as specified by the contents of the Bus Timing and Initialization register (see [Chapter 3](3-CPU_Control_Registers.md)). The bus timing clock is output by the MPU for use by the rest of the system.
 
 The on-chip clock oscillator, a high-gain amplifier, is enabled by either connecting a crystal across the Clock/Crystal Input (XTAL1) and Crystal Output (XTALO) pins or connecting a clock input to the Clock/Crystal Input pin. The crystal must be a parallel resonant fundamental type.
 
@@ -172,7 +172,7 @@ During operation, the counter/timer counts down from a preset time constant valu
 
 Another set of operating modes determines counter/timer activity upon reaching the terminal count. Whether in counter or timer mode, a counter/timer can be configured for single-cycle mode or continuous mode. In single-cycle mode, the counter/timer halts operation upon reaching terminal count; a new trigger is required to reload the time constant and initiate another countdown sequence. In continuous mode, the counter/timer is automatically reloaded with the time constant upon reaching terminal count; the downcounter is reloaded on the next count input after reaching terminal count. For example, a counter/timer in continuous mode with a 3 in its Time Constant register will be reloaded on every fourth count input.
 
-An interrupt enable bit in the Counter/Timer Configuration register determines if an interrupt request is generated at the terminal count. This request will be processed by the CPU if the appropriate Interrupt Request Enable bit in the CPU's Master Status register is set to 1 (see Chapter 6).
+An interrupt enable bit in the Counter/Timer Configuration register determines if an interrupt request is generated at the terminal count. This request will be processed by the CPU if the appropriate Interrupt Request Enable bit in the CPU's Master Status register is set to 1 (see [Chapter 6](6-Interrupts_And_Traps.md)).
 
 The CTIO pin can be configured as a counter/timer output signal. Reaching the terminal count condition causes a low-to-high transition on the CTIO pin; this signal remains high as long as the downcounter holds a value of zero (that is, until a non-zero time constant is loaded into the downcounter due to a trigger condition).
 
@@ -181,7 +181,7 @@ The CTIO pin can be configured as a counter/timer output signal. Reaching the te
 
 Each counter/timer has two 8-bit command and status registers and two 16-bit count registers. The 8-bit Counter/Timer Configuration and Counter/Timer Command/Status registers determine the counter/timer's operating modes and provide status information about the current operation.
 
-If C/T 0 and C/T 1 are linked to form a 32-bit counter/timer, the functionality of these registers is affected, as described in section 9.4.5. The 16-bit Time Constant register holds the initialization value for the counter/timer, and the 16-bit Count-Time register contains the value of the current count in progress.
+If C/T 0 and C/T 1 are linked to form a 32-bit counter/timer, the functionality of these registers is affected, as described in [section 9.4.5](9-On-Chip_Peripherals.md#945-linking-countertimers). The 16-bit Time Constant register holds the initialization value for the counter/timer, and the 16-bit Count-Time register contains the value of the current count in progress.
 
 
 #### 9.4.4.1 Counter/Timer Configuration Register
@@ -205,7 +205,7 @@ The five fields in this register are described below.
 
 **Interrupt Enable (IE)**. While this bit is set to 1, the counter/timer generates an interrupt request to the Z280 CPU upon reaching terminal count. While this bit is cleared to 0, no interrupt requests can be generated by the counter/timer.
 
-**Counter/Timer Cascade (CTC).** For C/T 0, this is the enable bit for linking to C/T 1 in order to form a 32-bit counter/timer (see section 9.4.5). The state of this bit has no effect in C/T 1 and C/T 2.
+**Counter/Timer Cascade (CTC).** For C/T 0, this is the enable bit for linking to C/T 1 in order to form a 32-bit counter/timer (see [section 9.4.5](9-On-Chip_Peripherals.md#945-linking-countertimers)). The state of this bit has no effect in C/T 1 and C/T 2.
 
 **Input Pin Assignments (IPA)**. The contents of this 4-bit field determine the operating mode of the counter/timer (counter or timer mode) and the functionality of the external pins associated with that counter/timer. The four bits in this field are associated with enabling the generation of an output pulse (EO), selecting the counter or timer mode (C/T), enabling the gating facility (G), and enabling the triggering facility (T). Table 9-1 shows the encoding of this field.
 
@@ -702,7 +702,7 @@ Figure 9-12 illustrates the general format for an asynchronous transmission usin
 
 The UART uses the same clock frequency for both the transmitter and the receiver. The UART's clock input can be generated externally or internally. For externally generated clocks, Counter/Timer 1's input line is used as the source of the UART's clock in addition to being an input to the counter/timer. The maximum external clock frequency is the CPU clock divided by 4. Alternately, the UART's clock can be provided by the output pulse from Counter/Timer 1, allowing the internal processor clock to be used for bit rate generation. The UART's clock input is further scaled by a factor of 1, 16, 32, or 64 for clocking the transmitter and receiver.
 
-The UART can be used in an interrupt-driven or polled environment. If enabled, separate transmit and receive interrupt requests are generated by the UART. Transmit interrupts occur when the transmitter's data buffer is emptied, and receive interrupts occur when an entire character is received or an error is detected. In polled environments, status bits in UART registers can be read to determine if the transmit buffer is empty or receive buffer is full. As described in section 9.5.9, DMA channel 0 can be linked to the receiver and DMA channel 1 to the transmitter to provide for DMA-controlled transfers between the UART and memory.
+The UART can be used in an interrupt-driven or polled environment. If enabled, separate transmit and receive interrupt requests are generated by the UART. Transmit interrupts occur when the transmitter's data buffer is emptied, and receive interrupts occur when an entire character is received or an error is detected. In polled environments, status bits in UART registers can be read to determine if the transmit buffer is empty or receive buffer is full. As described in [section 9.5.9](9-On-Chip_Peripherals.md#959-dma-programming-dmas-linked-to-uart), DMA channel 0 can be linked to the receiver and DMA channel 1 to the transmitter to provide for DMA-controlled transfers between the UART and memory.
 
 The UART uses two external pins, Transmit (Tx) and Receive (Rx). Data that is to be transmitted is placed serially on the Transmit pin and data that is to be received is read from the Receive pin.
 
@@ -803,7 +803,7 @@ _Table 9-10. BC Field of UART Control Register_
 
 <br/>
 
-A reset clears the UART Configuration register to all zeros, unless bootstrap mode is selected (see section 9.7).
+A reset clears the UART Configuration register to all zeros, unless bootstrap mode is selected (see [section 9.7](9-On-Chip_Peripherals.md#97-uart-bootstrapping-option)).
 
 
 #### 9.6.3.2 Transmitter Control/Status Register
@@ -859,7 +859,7 @@ _Figure 9-16. Receiver Control/Status Register_
 
 **Receiver Enable (EN).** When set to 1, receiver operation is enabled. This bit should be set after programming the UART Configuration register.
 
-The Receiver Control/Status register is cleared to all zeros by a reset, unless bootstrap mode is selected (see section 9.7). Bit 5 of this register is not used.
+The Receiver Control/Status register is cleared to all zeros by a reset, unless bootstrap mode is selected (see [section 9.7](9-On-Chip_Peripherals.md#97-uart-bootstrapping-option)). Bit 5 of this register is not used.
 
 All UART registers are in I/O page FE and are accessed via byte I/O instructions. Table 9-11 lists the I/O port addresses for the UART registers.
 
@@ -896,7 +896,7 @@ Once the transmitter has been enabled, there are two ways to produce a break out
 
 The on-chip UART and DMA Channel 0 can be used to automatically initialize the Z280 MPU's memory with values received by the UART following a reset. This system bootstrapping capability permits ROMless system configurations, where memory is initialized using a serial link prior to the first Z280 MPU instruction fetch after the reset.
 
-As described in Section 3.2.1 and Chapter 11, bootstrap mode is selected by driving <ins>WAIT</ins> low and AD<sub>6</sub> high while <ins>RESET</ins> is asserted. The appropriate UART and DMA registers are automatically programmed as shown in Table 9-12 as a result of selecting bootstrap mode. The UART is initialized to receive data in 8-bit characters with odd parity, an external clock source, and a x16 clock rate. DMA Channel 0 is initialized with the link to the UART receiver and end-of-process capability enabled, and set up for flowthrough byte transfers in continuous mode. The destination address starts at memory location 0, with an autoincrement after each transfer, and a transfer count of 256 (100<sub>H</sub>).
+As described in [Section 3.2.1](3-CPU_Control_Registers.md#321-bus-timing-and-initialization-register) and [Chapter 11](11-Reset.md), bootstrap mode is selected by driving <ins>WAIT</ins> low and AD<sub>6</sub> high while <ins>RESET</ins> is asserted. The appropriate UART and DMA registers are automatically programmed as shown in Table 9-12 as a result of selecting bootstrap mode. The UART is initialized to receive data in 8-bit characters with odd parity, an external clock source, and a x16 clock rate. DMA Channel 0 is initialized with the link to the UART receiver and end-of-process capability enabled, and set up for flowthrough byte transfers in continuous mode. The destination address starts at memory location 0, with an autoincrement after each transfer, and a transfer count of 256 (100<sub>H</sub>).
 
 <br/>
 
