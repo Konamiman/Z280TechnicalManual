@@ -10,9 +10,9 @@
 
 [7.4 ADDRESS TRANSLATION](#74-address-translation)
 
-[7.4.1 Address Translation Without Program/data Separation](#741-address-translation-without-programdata-separation)
+[7.4.1 Address Translation Without Program/Data Separation](#741-address-translation-without-programdata-separation)
 
-[7.4.2 Address Translation With Program/data Separation](#742-address-translation-with-programdata-separation)
+[7.4.2 Address Translation With Program/Data Separation](#742-address-translation-with-programdata-separation)
 
 [7.5 MMU CONTROL REGISTERS](#75-mmu-control-registers)
 
@@ -96,7 +96,7 @@ When program/data separation is not in effect, the 16-bit logical address from t
 _Figure 7-2. Address Translation without Program/Data Separation_
 
 
-### 7.4.2 Address Translation With Program/data Separation
+### 7.4.2 Address Translation With Program/Data Separation
 
 When program/data separation is in effect, the 16-bit logical address from the CPU is divided into a 3-bit index and a 13-bit offset. A Program/Data address control signal from the CPU becomes the most significant bit of the 4-bit index that selects the appropriate page descriptor register; the three most significant bits of the logical address form the least significant bits of this index. The upper 11 bits of the page frame address field in the selected page descriptor register provide the upper 11 bits of the resulting physical address. The least significant 13 bits of the logical address form the low order 13 bits of the physical address, as illustrated in Figure
 7-3. Page descriptor register 0 is the descriptor for logical addresses 0000<sub>H</sub>-1FFF<sub>H</sub> in the data addres space, Page descriptor register 1 is the descriptor for logical addresses 2000<sub>H</sub>-3FFF<sub>H</sub> in the data address space, and so on through page descriptor register 7; page descriptor register 8 is the descriptor for logical addresses 0000<sub>H</sub>-1FFF<sub>H</sub> in the program address space, page descriptor register 9 is the descriptor for logical addresses 2000<sub>H</sub>-3FFF<sub>H</sub> in the program address space, and so on. Thus, each page is 8K bytes long, where the starting address of the page in physical memory is determined by the page frame address field in the selected page descriptor register, and the 13 least significant bits of the logical address specify the offset within that 8K byte page. In this mode, the least significant bit of the page frame address field in each page descriptor register is not used; this bit is modified by translation, and values read from it are unpredictable.
