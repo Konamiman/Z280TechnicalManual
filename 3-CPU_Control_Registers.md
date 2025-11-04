@@ -134,7 +134,7 @@ _Table 3-4. HM Field of Bus Timing and Initialization Register_
 
 <br/>
 
-| DC Field |Number of Walt States for<br/>Interrupt Acknowledge |
+| DC Field |Number of Wait States for<br/>Interrupt Acknowledge |
 |-|-|
 | 00 | 0
 | 01 | 1

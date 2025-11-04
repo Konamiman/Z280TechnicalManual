@@ -20,7 +20,7 @@
 
 [4.2.7 Program Counter (PC) Relative Address (RA)](#427-program-counter-pc-relative-address-ra)
 
-[4.2.8 Stack Pbinter Relative (SR)](#428-stack-pbinter-relative-sr)
+[4.2.8 Stack Pointer Relative (SR)](#428-stack-pointer-relative-sr)
 
 [4.2.9 Base Index (BX)](#429-base-index-bx)
 
@@ -93,7 +93,7 @@ The Indirect Register mode can save space and reduce execution time when consecu
 **Example of IR mode:**
 
 ```
-LD A,(HL)     ;load the accunulator with the data
+LD A,(HL)     ;load the accumulator with the data
               ;addressed by the contents of HL
 ```
 
@@ -186,7 +186,7 @@ Operands specified by SX mode are always in the data memory address space.
 ```
 LD A,(IX - 1)     ;load into the accumulator
                   ;the contents of the memory location
-                  ;whose address is one less thatn
+                  ;whose address is one less than
                   ;the contents of IX
 ```
 
@@ -224,7 +224,7 @@ The Program Counter Relative Addressing mode is used by certain program control 
 **Example of RA mode:**
 
 ```
-LD A,<LABEL>     ;load the accunulator with the
+LD A,<LABEL>     ;load the accumulator with the
                  ;contents of the memory location
                  ;whose address is LABEL
 ```
@@ -329,7 +329,7 @@ This mode allows access to memory locations whose physical addresses are compute
 **Example of BX mode:**
 
 ```
-LD A,(HL + IX)     ;load into the accunulator the
+LD A,(HL + IX)     ;load into the accumulator the
                    ;contents of the memory location
                    ;whose address is the sum of the
                    ;contents of the HL and IX

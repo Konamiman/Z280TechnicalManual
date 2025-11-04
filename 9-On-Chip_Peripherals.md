@@ -10,7 +10,7 @@
 
 [9.4 COUNTER/TIMERS](#94-countertimers)
 
-[9.4.1 Counter/Timer Operating Nodes](#941-countertimer-operating-nodes)
+[9.4.1 Counter/Timer Operating Modes](#941-countertimer-operating-modes)
 
 [9.4.2 Gates and Triggers](#942-gates-and-triggers)
 
@@ -117,7 +117,7 @@ Gate and trigger inputs to the downcounter can be used to control counter/timer 
 The counter/timer's "terminal count" condition is when the downcounter holds a count of 0. This terminal count condition can be used to generate an interrupt request to the CPU. Counter/timers can generate a counter/timer output signal when the terminal count is reached. Upon reaching terminal count, a counter/timer can be programmed either to discontinue counting (single-cycle mode) or to reload the initial time constant value and continue counting (continuous mode).
 
 
-### 9.4.1 Counter/Timer Operating Nodes
+### 9.4.1 Counter/Timer Operating Modes
 
 The counter/timers have two basic operating modes, distinguished by the clocking signal to the downcounter: counter mode and timer mode. The current mode for counter/timer operation is determined by the contents of the Counter/Timer Configuration register.
 
@@ -239,7 +239,7 @@ If a reserved encoding of the IPA field is specified for any counter/timer, coun
 The Counter/Timer Configuration registers are cleared to all zeros by a reset.
 
 
-#### 9.4.4.2 Couiter/Timer Command/Status Register
+#### 9.4.4.2 Counter/Timer Command/Status Register
 
 The Counter/Timer Command/Status register provides for software control of counter/timer operation and reflects the current status of the counter/timer. Three control bits and three status bits are included in the Command/Status register. The format for this register is illustrated in Figure 9-7.
 
@@ -362,11 +362,11 @@ _Table 9-3. Configuration and Command/Status Registers for Linked Counter/Timers
 
 ### 9.4.6 Counter/Timer Sequence of Events
 
-Before starting a counting or timing seguence, the counter/timer must be configured for the particular application by loading its Configuration register. Next, the starting value for the downcounter is specified by loading the Time Constant register; initial values ranging from 0 to 65535 can be specified for the downcounter. Lastly, the enable (EN) bit in the Command/Status register is set to 1 to enable counter/timer operation.
+Before starting a counting or timing sequence, the counter/timer must be configured for the particular application by loading its Configuration register. Next, the starting value for the downcounter is specified by loading the Time Constant register; initial values ranging from 0 to 65535 can be specified for the downcounter. Lastly, the enable (EN) bit in the Command/Status register is set to 1 to enable counter/timer operation.
 
 While the EN bit is cleared to 0, the counter/timer cannot be triggered, interrupt requests from the counter/timer cannot be generated, and the downcounter holds the value in the Time Constant register. However, clearing the EN bit does not clear any pending interrupt requests—it only prevents new interrupt requests from being generated.
 
-Once the EN bit is set to 1, the countdown seguence begins when the counter/timer is triggered, causing the contents of the Time Constant register to be loaded into the down counter. The downcounter is loaded on the rising edge of the external trigger input (if an external trigger was specified in the Configuration register) or by writing a 1 into the TG bit of the Command/Status register. The EN and TG bits can both be set to 1 during the same write operation to the Command/Status register to both enable and trigger a counter/timer (assuming that the TG bit was a zero previously, so that a low-to-high transition on the trigger is detected). The trigger condition is a logical OR of the external trigger input (if specified) and the TG bit.
+Once the EN bit is set to 1, the countdown sequence begins when the counter/timer is triggered, causing the contents of the Time Constant register to be loaded into the down counter. The downcounter is loaded on the rising edge of the external trigger input (if an external trigger was specified in the Configuration register) or by writing a 1 into the TG bit of the Command/Status register. The EN and TG bits can both be set to 1 during the same write operation to the Command/Status register to both enable and trigger a counter/timer (assuming that the TG bit was a zero previously, so that a low-to-high transition on the trigger is detected). The trigger condition is a logical OR of the external trigger input (if specified) and the TG bit.
 
 Once triggered, the rate at which the downcounter counts is determined by the mode of the counter/timer. In the timer mode, the downcounter is clocked internally by a signal that is one-fourth the frequency of the CPU clock (one-eighth the frequency of the external clock source). In the counter mode, the downcounter is clocked by a rising edge on the count input signal (this edge is internally synchronized with the scaled CPU clock).
 
@@ -406,7 +406,7 @@ The Z280 MPU's on-chip DMA channels are capable of two basic types of operations
 
 All four on-chip DMA channels support flowthrough mode data transactions. In flowthrough mode, each DMA-controlled data transfer involves two bus operations: a read cycle to obtain the data from the source and a write cycle to transfer the data to the destination. The data is temporarily stored in the DMA device between the read and write operations. Flowthrough mode transactions use the same address, data, and control signals as CPU-initiated transactions and, therefore, require no additional external logic in a Z280-based system. Memory-to-memory, memory-to-peripheral, peripheral-to-memory, or peripheral-to-peripheral transfers are possible using flowthrough mode.
 
-Flyby mode data transactions are supported only by DMA0 and DMA1. In a flyby mode transaction, the data is read from the source and written to the destination in a single bus operation. There are two types of flyby transactions: memory-to-peripheral and peripheral-to-memory. For a memory-to-peripheral transaction, the DMA channel generates a memory read bus cycle and notifies the I/O devifce that a flyby transaction is in progress by activating the <ins>DMASTB</ins> output. The data must be written to the I/O device during the memory read operation. For a peripheral-to-memory flyby transaction, the DMA channel generates a memory write bus cycle while activating the <ins>DMASTB</ins> output; the data must be read from the I/O device during the memory write transaction. In other words, during flyby mode transactions, the DMA channel generates the bus signals needed to control the memory access, and <ins>DMASTB</ins> is used to notify the peripheral device when to read data from the bus (for memory-to-peripheral transfers) or when to put data onto the bus (for peripheral-to-memory transfers.) Thus, flyby mode transactions require additional external logic to activate the appropriate peripheral device when <ins>DMASTB</ins> is active. However, flyby mode transactions are faster than flowthrough mode transactions, since only one bus cycle is needed to complete a data transfer.
+Flyby mode data transactions are supported only by DMA0 and DMA1. In a flyby mode transaction, the data is read from the source and written to the destination in a single bus operation. There are two types of flyby transactions: memory-to-peripheral and peripheral-to-memory. For a memory-to-peripheral transaction, the DMA channel generates a memory read bus cycle and notifies the I/O device that a flyby transaction is in progress by activating the <ins>DMASTB</ins> output. The data must be written to the I/O device during the memory read operation. For a peripheral-to-memory flyby transaction, the DMA channel generates a memory write bus cycle while activating the <ins>DMASTB</ins> output; the data must be read from the I/O device during the memory write transaction. In other words, during flyby mode transactions, the DMA channel generates the bus signals needed to control the memory access, and <ins>DMASTB</ins> is used to notify the peripheral device when to read data from the bus (for memory-to-peripheral transfers) or when to put data onto the bus (for peripheral-to-memory transfers.) Thus, flyby mode transactions require additional external logic to activate the appropriate peripheral device when <ins>DMASTB</ins> is active. However, flyby mode transactions are faster than flowthrough mode transactions, since only one bus cycle is needed to complete a data transfer.
 
 
 ### 9.5.2 DMA Transfer Modes
@@ -474,7 +474,7 @@ When the linked DMA loads the master DMA's registers, the registers are written 
 
 After the six words have been written to the master DMA, the master DMA deasserts the ready signal to the linked DMA and begins the new transfer operation. For Z-BUS configurations of the Z280 MPU, the linked DMA uses six word transactions on the bus to program the master DMA; for Z80 Bus configurations, the linked DMA uses twelve byte transactions to program the master DMA, with the least significant byte of each word being transferred first.
 
-Control bits in the DMA Master Control register also allow DMA0 to be programmably linked to the on-chip UART's receiver and DMA1 to be linked to the UART's transmitter. If so linked, an internal "ready" signal to DMA0 is automatically generated when the UART's receive buffer is full. Similarly, an internal "ready" signal to DMA1 is automatically generated when the UARt's transmit buffer is empty. The external <ins>RDY</ins> inputs are ignored while in this configuration.
+Control bits in the DMA Master Control register also allow DMA0 to be programmably linked to the on-chip UART's receiver and DMA1 to be linked to the UART's transmitter. If so linked, an internal "ready" signal to DMA0 is automatically generated when the UART's receive buffer is full. Similarly, an internal "ready" signal to DMA1 is automatically generated when the UART's transmit buffer is empty. The external <ins>RDY</ins> inputs are ignored while in this configuration.
 
 
 ### 9.5.6 DMA Registers
@@ -786,7 +786,7 @@ _Table 9-9. CR Field of UART Configuration Register_
 
 **Parity (P).** When set to 1, an additional bit position (in addition to the number of bits per character specified in the BC field) is added to each transmitted character and expected in each received character; this additional bit is the parity bit. Parity bits in received characters are assembled as part of the character for character lengths of less than 8 bits.
 
-**Parity Even/bdd (E/O).** If parity is specified (P = 1), this bit determines whether an odd or even parity bit is added to transmitted characters and whether odd or even parity is checked for in received characters. E/O = 1 specifies even parity and E/O = 0 specifies odd parity. If P = 0, then this bit is ignored.
+**Parity Even/Odd (E/O).** If parity is specified (P = 1), this bit determines whether an odd or even parity bit is added to transmitted characters and whether odd or even parity is checked for in received characters. E/O = 1 specifies even parity and E/O = 0 specifies odd parity. If P = 0, then this bit is ignored.
 
 **Bits per Character (B/C).** This 2-bit field determines the number of bits per character in both the transmitter and receiver, as specified in Table 9-10. If this field is changed while a character is being transmitted or received, the results are unpredictable.
 
