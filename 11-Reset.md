@@ -36,7 +36,7 @@ _Table 11-1. Effect of a Reset on Z280 MPU and MMU Registers_
 
 <br/>
 
-The effect of a reset on the on-chip peripherals' programmable registers is shown in Table 11-2. The on-chip counter/timers are always disabled by a reset. The on-chip DMA channels and UART are also disabled by a reset, unless bootstrap mode is selected (see Section 9.7). The counter/timers' Time Constant and Count-Time registers are unaffected by a reset. The DMA channels' Destination Address, Source Address, and Count registers also are unaffected by a reset, except for DMA Channel 0's Destination Address and Count registers.
+The effect of a reset on the on-chip peripherals' programmable registers is shown in Table 11-2. The on-chip counter/timers are always disabled by a reset. The on-chip DMA channels and UART are also disabled by a reset, unless bootstrap mode is selected (see [Section 9.7](9-On-Chip_Peripherals.md#97-uart-bootstrapping-option)). The counter/timers' Time Constant and Count-Time registers are unaffected by a reset. The DMA channels' Destination Address, Source Address, and Count registers also are unaffected by a reset, except for DMA Channel 0's Destination Address and Count registers.
 
 <br/>
 
