@@ -211,11 +211,11 @@ The Division Exception trap occurs while executing a Divide instruction if the d
 ### 6.3.7 Single-Step Trap
 
 Two control bits in the Master Status register are used to control Single-Step traps: the Single-Step bit (bit 8) and the Single-Step Pending bit (bit 9). The Single-Step trap occurs when the Single-Step Pending bit in the MSR is set to 1. To enter single-step mode, wherein a Single-Step trap is executed after each instruction, the Single-Step bit in the MSR is set to 1. At the beginning of instruction execution, the state of the Single-Step Pending bit is checked; if it is set, a Single-Step trap ip executed. Then, the state of the Single-Step bit is copied into the Single-Step Pending bit and the instruction is executed. If the instruction generates another trap (such as a Privileged Instruction trap), that trap handling routine is executed before the Single-Step Pending bit is again checked and the Single-Step trap is processed. This execution sequence is illustrated in [Figure 6-2](#figure-6-2-instruction-execution-sequence). Note that once the Single-Step bit gets set, a Single-Step trap does not occur until after the next instruction, because the Single-Step Pending bit is checked before being loaded with the state of the Single-Step bit. Single-Step traps are then executed after each instruction until the Single-Step bit in the MSR is cleared to 0.
+<a id="figure-6-2-instruction-execution-sequence"></a>
 
 <br/>
 
 ![Figure 6-2. Instruction Execution Sequence](Images/Figure6.2.png)<br/>
-<a id="figure-6-2-instruction-execution-sequence"></a>
 _Figure 6-2. Instruction Execution Sequence_
 
 <br/>
@@ -326,11 +326,11 @@ Interrupt requests from the on-chip peripherals never generate an acknowledge cy
 
 During exception processing, the status of the interrupted program is saved on the system stack. In interrupt mode 0, the Program Counter is automatically saved when processing nonmaskable interrupts; the instruction returned by the peripheral device will determine what status information is
 saved when processing maskable interrupts. For interrupts in interrupt mode 1 or 2, the Program Counter is automatically saved. For interrupts in interrupt mode 3, the Program Counter and MSR of the interrupted task are saved, followed by the "reason code" ([Figure 6-3](#figure-6-3-format-of-saved-status-on-system-stack-due-to-a-mode-3-interrupt)). For external interrupt requests, the reason code is the value read from the data bus during the interrupt acknowledge cycle; the upper byte of the reason code is all zeros for 8-bit data bus (Z80 Bus) configurations of the Z280 MPU. For interrupts from the on-chip peripherals, the reason code is the offset address in the Interrupt/Trap Vector Table that corresponds to the MSR value entry for that interrupt type.
+<a id="figure-6-3-format-of-saved-status-on-system-stack-due-to-a-mode-3-interrupt"></a>
 
 <br/>
 
 ![Figure 6-3. Format of Saved Status on System Stack Due to a Mode 3 Interrupt](Images/Figure6.3.png)<br/>
-<a id="figure-6-3-format-of-saved-status-on-system-stack-due-to-a-mode-3-interrupt"></a>
 _Figure 6-3. Format of Saved Status on System Stack Due to a Mode 3 Interrupt_
 
 <br/>

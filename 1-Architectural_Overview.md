@@ -51,11 +51,11 @@ The Z280™ microprocessor unit (MPU) features an advanced 16-bit CPU that is ob
 of the various aspects of the processor provided in succeeding chapters.
 
 The Z280 MPU has a multiplexed address/data bus for communication with external memory and peripheral devices. Two different bus structures are supported by the Z280: an 8-bit data bus that uses Z80 Bus control signals, and a 16-bit data bus that uses Z-BUS® bus control signals. Zilog's Z80 and Z8500 families of peripherals are easily interfaced to the Z80 Bus; Zilog's Z8000® family of peripherals are easily interfaced to the Z-BUS.
+<a id="figure-1-1-block-diagram"></a>
 
 <br/>
 
 ![Figure 1-1. Block Diagram](Images/Figure1.1.png)<br/>
-<a id="figure-1-1-block-diagram"></a>
 _Figure 1-1. Block Diagram_
 
 

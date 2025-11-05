@@ -34,11 +34,11 @@ The CPU register file is divided into five groups of registers (an apostrophe in
 * Index registers (IX, IY)
 * Stack Pointers (SSP, USP)
 * Program Counter, Interrupt register, and Refresh register (PC, I, R)
+<a id="figure-2-1-register-file-organization"></a>
 
 <br/>
 
 ![Figure 2-1. Register File Organization](Images/Figure2.1.png)<br/>
-<a id="figure-2-1-register-file-organization"></a>
 _Figure 2-1. Register File Organization_
 
 <br/>
@@ -65,11 +65,11 @@ The Z280 CPU status and control registers govern the operation of the CPU. They 
 Control register addresses are specified by the contents of the C register. No translation is performed in mapping this 8-bit logical address into the control register file location.
 
 The Z280 CPU control registers are the Bus Timing and Initialization register, the Bus Timing and Control register, the Master Status register, the Interrupt/Trap Vector Table Pointer, the I/O Page register, the System Stack Limit register, the Trap Control register, the Interrupt Status register, the Cache Control register, and the Local Address register ([Figure 2-2](#figure-2-2-cpu-control-registers)). The CPU control registers are described in detail in [Chapter 3](3-CPU_Control_Registers.md).
+<a id="figure-2-2-cpu-control-registers"></a>
 
 <br/>
 
 ![Figure 2-2. CPU Control Registers](Images/Figure2.2.png)<br/>
-<a id="figure-2-2-cpu-control-registers"></a>
 _Figure 2-2. CPU Control Registers_
 
 
@@ -80,11 +80,11 @@ Two memory address spaces, one for system and one for user mode operation, are s
 Each address space can be viewed as a string of 64K bytes numbered consecutively in ascending order. The 8-bit byte is the basic addressable element in the Z280 MPU memory address spaces. However, there are other addressable data elements: bits, 2-byte words, byte strings, and multiple-byte EPU operands.
 
 The size of the data element being addressed depends on the instruction being executed. A bit can be addressed by specifying a byte and a bit within that byte. Bits are numbered from right to left, with the least significant bit being bit 0, as illustrated in [Figure 2-3](#figure-2-3-numbering-of-bits-within-a-byte).
+<a id="figure-2-3-numbering-of-bits-within-a-byte"></a>
 
 <br/>
 
 ![Figure 2-3. Numbering of Bits within a Byte](Images/Figure2.3.png)<br/>
-<a id="figure-2-3-numbering-of-bits-within-a-byte"></a>
 _Figure 2-3. Numbering of Bits within a Byte_
 
 <br/>

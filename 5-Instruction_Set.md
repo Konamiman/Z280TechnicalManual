@@ -308,11 +308,11 @@ Thie chapter describes the instruction set of the Z280 CPUs. First, flags and co
 ## 5.2 PROCESSOR FLAGS
 
 The Flag register contains six bits of status information, that are set or cleared by CPU operations ([Figure 5-1](#figure-5-1-flag-register)). Four of these bits are testable (C, P/V, Z, and S) for use with conditional jump, call, or return instructions. Two flags are not testable (H, N) and are used for binary-coded decimal (BCD) arithmetic.
+<a id="figure-5-1-flag-register"></a>
 
 <br/>
 
 ![Figure 5-1. Flag Register](Images/Figure5.1.png)<br/>
-<a id="figure-5-1-flag-register"></a>
 _Figure 5-1. Flag Register_
 
 <br/>
@@ -402,6 +402,7 @@ The Carry, Zero, Sign, and Parity/Overflow flags are used to control the operati
 <br/>
 
 **Condition Codes for Jump Relative Instruction:**
+<a id="table-5-1-condition-codes"></a>
 
 | Mnemonic | Meaning | Flag Setting | Binary Code
 |-|-|-|-
@@ -410,7 +411,6 @@ The Carry, Zero, Sign, and Parity/Overflow flags are used to control the operati
 |NC | No Carry | C = 0 | 110
 |C  | Carry    | C = 1 | 111
 
-<a id="table-5-1-condition-codes"></a>
 _Table 5-1. Condition Codes_
 
 
@@ -528,6 +528,7 @@ This group of instructions ([Table 5-4](#table-5-4-block-transfer-and-search-gro
 
 Various Z280 MPU registers are dedicated to specific functions for these instructions: the BC register for a counter, the DE and HL registers for memory pointers, and the accumulator for holding the byte value being sought. The repetitive forms of these instructions are
 interruptible; this is essential since the repetition count can be as high as 65,536. The instruction can be interrupted after any iteration, in which case the address of the instruction itself, rather than the next one, is saved on the system stack; the contents of the operand pointer registers, as well as the repetition counter, are such that the instruction can simply be reissued after returning from the interrupt without any visible difference in the instruction execution.
+<a id="table-5-4-block-transfer-and-search-group"></a>
 
 <br/>
 
@@ -542,7 +543,6 @@ interruptible; this is essential since the repetition count can be as high as 65
 | Load and Increment | LDI
 | Load, Increment and Repeat | LDIR
 
-<a id="table-5-4-block-transfer-and-search-group"></a>
 _Table 5-4. Block Transfer and Search Group_
 
 

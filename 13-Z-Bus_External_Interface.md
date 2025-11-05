@@ -248,39 +248,39 @@ Data accesses may be byte or word accesses. Data words aligned at even-address m
 #### 13.5.1.2 Memory Transaction Timing
 
 Memory transaction timing is illustrated in Figures 13-2 and 13-3. During the first bus cycle, <ins>AS</ins> is asserted to indicate the beginning of a transaction; Output Enable (<ins>OE</ins>) is also asserted at this time. All address and status information is guaranteed valid on the rising edge of <ins>AS</ins>. The ST<sub>0</sub>-ST<sub>3</sub> status lines indicate that a memory transaction is occurring. For a read operation ([Figure 13-2](#figure-13-2-memory-read-timing)), <ins>DS</ins> is activated during the first half of the second bus cycle, after the bus master has 3-3tated the AD lines; <ins>OE</ins> is deasserted at the beginning of the second cycle and Input Enable (<ins>IE</ins>) is asserted during the second half of the second cycle. The bus master samples the information returned from memory on the Address/Data bus on the falling edge of the clock during the third bus cycle; after the data is sampled, <ins>DS</ins> and <ins>IE</ins> are deasserted. For a write operation ([Figure 13-3](#figure-13-3-memory-write-timing)), <ins>DS</ins> is asserted during the second half of the second cycle, after the bus master has placed the data to be written on the AD lines, and <ins>OE</ins> stays active throughout the transaction.
+<a id="figure-13-2-memory-read-timing"></a>
 
 <br/>
 
 ![Figure 13-2. Memory Read Timing](Images/Figure13.2.png)<br/>
-<a id="figure-13-2-memory-read-timing"></a>
 _Figure 13-2. Memory Read Timing_
+<a id="figure-13-3-memory-write-timing"></a>
 
 <br/>
 
 ![Figure 13-3. Memory Write Timing](Images/Figure13.3.png)<br/>
-<a id="figure-13-3-memory-write-timing"></a>
 _Figure 13-3. Memory Write Timing_
 
 <br/>
 
 The <ins>WAIT</ins> input is also sampled on the falling edge of the clock during the third clock cycle; if <ins>WAIT</ins> is low, another bus clock cycle is added before sampling the data. Wait states can also be added through programming of the Bus Timing and Initialization register and Bus Timing and Control register. For example, Figures 13-4, 13-5, and 13-6 illustrate memory transactions with one wait state.
+<a id="figure-13-4-memory-read-timing-with-external-wait-cycle"></a>
 
 <br/>
 
 ![Figure 13-4. Memory Read Timing with External Wait Cycle](Images/Figure13.4.png)<br/>
-<a id="figure-13-4-memory-read-timing-with-external-wait-cycle"></a>
 _Figure 13-4. Memory Read Timing with External Wait Cycle_
+<a id="figure-13-5-memory-write-timing-with-external-wait-cycle"></a>
 
 <br/>
 
 ![Figure 13-5. Memory Write Timing with External Wait Cycle](Images/Figure13.5.png)<br/>
-<a id="figure-13-5-memory-write-timing-with-external-wait-cycle"></a>
 _Figure 13-5. Memory Write Timing with External Wait Cycle_
+<a id="figure-13-6-memory-read-timing-with-internal-wait-cycle"></a>
 
 <br/>
 
 ![Figure 13-6. Memory Read Timing with Internal Wait Cycle](Images/Figure13.6.png)<br/>
-<a id="figure-13-6-memory-read-timing-with-internal-wait-cycle"></a>
 _Figure 13-6. Memory Read Timing with Internal Wait Cycle_
 
 
@@ -293,11 +293,11 @@ Burst memory transactions are used only during instruction fetches to "prefetch"
 The timing of a burst transaction is illustrated in [Figure 13-7](#figure-13-7-burst-memory-read-timing). During burst transactions, four Data Strobes are generated with a single Address Strobe. Timing for the first data transfer is identical to that for a single memory read, including the insertion of automatic wait states.
 
 This first transfer is immediately followed by three more transfers in the next three bus clock cycles. The <ins>WAIT</ins> input is sampled during each transfer and any resulting wait states, thereby allowing wait states to be added before any of the transfers. However, automatic wait states are added only before the first transfer.
+<a id="figure-13-7-burst-memory-read-timing"></a>
 
 <br/>
 
 ![Figure 13-7. Burst Memory Read Timing](Images/Figure13.7.png)<br/>
-<a id="figure-13-7-burst-memory-read-timing"></a>
 _Figure 13-7. Burst Memory Read Timing_
 
 
@@ -340,17 +340,17 @@ I/O Transactions move data to or from peripherals and are generated during the e
 Figures 13-10 and 13-11 illustrate I/O transaction timing. I/O transactions are four clock cycles long at a minimum, and, like memory transactions, may be lengthened by the addition of wait cycles. I/O transaction timing is similar to memory transaction timing with one automatic wait state. The "0010" status code on the ST<sub>3</sub>-ST<sub>0</sub> lines indicates that an I/O transaction is taking place, and the R/<ins>W</ins> line indicates the direction of the data transfer. The I/O address is found on AD<sub>0</sub>-AD<sub>15</sub> and A<sub>16</sub>-A<sub>23</sub> when <ins>AS</ins> rises. For read operations, <ins>DS</ins> and <ins>IE</ins> are asserted during the second clock cycle, and input data from the peripheral is sampled by the bus master during the fourth cycle (unless additional wait states are inserted in the transaction). Note that <ins>DS</ins> falls near the middle of T2 for I/O read transactions (as opposed to the beginning of T2 for memory reads); this provides peripheral control logic with additional time for address decoding. For write operations, <ins>DS</ins> is asserted during the second cycle with <ins>OE</ins> remaining asserted; output data to the peripheral is placed on the bus at this time.
 
 For byte I/O operations (B/<ins>W</ins> = high), the byte of data is always transferred on the AD<sub>0</sub>-AD<sub>7</sub> bus lines, regardless of the address of the peripheral device. For word I/O operations, the most significant byte of data is transferred on AD<sub>0</sub>-AD<sub>7</sub> and the least significant ,byte on AD<sub>8</sub>-AD<sub>15</sub> as with word memory transactions.
+<a id="figure-13-10-io-read-timing"></a>
 
 <br/>
 
 ![Figure 13-10. I/O Read Timing](Images/Figure13.10.png)<br/>
-<a id="figure-13-10-io-read-timing"></a>
 _Figure 13-10. I/O Read Timing_
+<a id="figure-13-11-io-write-timing"></a>
 
 <br/>
 
 ![Figure 13-11. I/O Write Timing](Images/Figure13.11.png)<br/>
-<a id="figure-13-11-io-write-timing"></a>
 _Figure 13-11. I/O Write Timing_
 
 
@@ -363,11 +363,11 @@ Interrupt Acknowledge transactions are five cycles long at a mimimum, with two a
 The ST<sub>3</sub>-ST<sub>0</sub> status lines indicate the type of interrupt being acknowledged. No address is generated, so the contents of the address bus are undefined when <ins>AS</ins> is asserted. The R/<ins>W</ins> line indicates read (high), and the B/<ins>W</ins> line indicates word (low). The identifier is sampled by the CPU on the <ins>AD</ins> lines at the falling clock edge before DS is raised high.
 
 There are two places where the <ins>WAIT</ins> line is sampled and, thus, where wait states can be inserted by external circuitry. The first, during T2, serves to delay the falling edge of <ins>DS</ins> to allow the daisy chain a longer time to settle; the second, during T3, serves to delay the point at which the identifier is read. Software-generated wait states can also be added at either time via programming of the DC and I/O fields in the Bus Timing and Control register. As always, software-generated wait states are inserted into the transaction before the external <ins>WAIT</ins> signal is sampled.
+<a id="figure-13-12-interrupt-acknowledge-timing"></a>
 
 <br/>
 
 ![Figure 13-12. Interrupt Acknowledge Timing](Images/Figure13.12.png)<br/>
-<a id="figure-13-12-interrupt-acknowledge-timing"></a>
 _Figure 13-12. Interrupt Acknowledge Timing_
 
 
@@ -387,17 +387,17 @@ In a multiple EPU system, the EPU that is to participate in the execution of an 
 #### 13.5.5.2 Memory-EPU Transactions
 
 If an extended instruction involves a read or write to memory, then the transfers of data between memory and the EPU are the next non-refresh transactions performed by the CPU following the fetch of the template. The timing of memory-EPU data transfers is shown in Figures 13-13 and 13-14. The EPU must supply the data during write operations (R/<ins>W</ins> = low) or capture the data during read operations (R/<ins>W</ins> = high), just as if it were part of the CPU. In both cases, the CPU 3-states its AD lines while data is being transferred (<ins>DS</ins> = low). EPU reads from memory are three cycles long unless extended by wait states. EPU writes to memory are six cycles long unless extended by wait states.
+<a id="figure-13-13-memory-to-epu-timing"></a>
 
 <br/>
 
 ![Figure 13-13. Memory to EPU Timing](Images/Figure13.13.png)<br/>
-<a id="figure-13-13-memory-to-epu-timing"></a>
 _Figure 13-13. Memory to EPU Timing_
+<a id="figure-13-14-epu-write-to-memory"></a>
 
 <br/>
 
 ![Figure 13-14. EPU Write to Memory](Images/Figure13.14.png)<br/>
-<a id="figure-13-14-epu-write-to-memory"></a>
 _Figure 13-14. EPU Write to Memory_
 
 
@@ -406,22 +406,22 @@ _Figure 13-14. EPU Write to Memory_
 If an extended instruction involves a transfer from the EPU to the Z280 CPU, the next non-refresh transaction following the fetch of the template is the EPU-to-CPU data transfer ([Figure 13-15](#figure-13-15-epu-to-cpu-timing)).
 EPU-to-CPU transactions have the same form as I/O read transactions and thus are four clock
 cycles long, unless extended by wait states. Although <ins>AS</ins> is asserted, no address is generated and the contents of the address bus are undefined. The "1110" status code on the ST<sub>3</sub>-ST<sub>0</sub> lines indicate an EPU-to-CPU transaction.
+<a id="figure-13-15-epu-to-cpu-timing"></a>
 
 <br/>
 
 ![Figure 13-15. EPU to CPU Timing](Images/Figure13.15.png)<br/>
-<a id="figure-13-15-epu-to-cpu-timing"></a>
 _Figure 13-15. EPU to CPU Timing_
 
 
 #### 13.5.5.4 <ins>PAUSE</ins> Timing
 
 The <ins>PAUSE</ins> signal is used to synchronize CPU-EPU activity in the case of overlapping extended instructions. The CPU samples the <ins>PAUSE</ins> signal within one bus clock period of the completion of the fetch of an extended instruction's template ([Figure 13-16](#figure-13-16-pause-timing)). If <ins>PAUSE</ins> is active when sampled, the CPU enters an idle state wherein all CPU activity is suspended. While in this idle state, the CPU samples the <ins>PAUSE</ins> input each processor clock cycle until <ins>PAUSE</ins> is deasserted. The CPU then resumes operation at the point at which it was suspended, either by executing the data transactions associated with the extended instruction (in the case of an extended instruction specifying an EPU-memory or CPU-EPU data transfer) or by starting the fetch of the next instruction (in the case of an extended instruction specifying an internal EPU operation).
+<a id="figure-13-16-pause-timing"></a>
 
 <br/>
 
 ![Figure 13-16. PAUSE Timing](Images/Figure13.16.png)<br/>
-<a id="figure-13-16-pause-timing"></a>
 _Figure 13-16. PAUSE Timing_
 
 
@@ -430,17 +430,17 @@ _Figure 13-16. PAUSE Timing_
 On-chip DMA channels 0 and 1 can transfer data between memory and peripheral devices using flyby type transfers; external DMA controllers in Z280 MPU systems (such as the Z8016 DTC) may also have this capability. The timing of flyby transactions is similar to memory transaction timing, with the exception that the DMA Strobe (<ins>DMASTB</ins>) signal is activated; the <ins>DMASTB</ins> signal is used to select the participating I/O device that must capture or supply the data during the memory access.
 
 Flyby transactions controlled by the on-chip DMA channels always include one automatic wait state (Figures 13-17 and 13-18). As with all memory transactions, other hardware- and software-generated wait states can be added to the transaction. The external <ins>WAIT</ins> signal is sampled at two different times: during the automatic wait state and during T3.
+<a id="figure-13-17-on-chip-dma-channel-flyby-memory-read-transaction"></a>
 
 <br/>
 
 ![Figure 13-17. On-Chip DMA Channel Flyby Memory Read Transaction](Images/Figure13.17.png)<br/>
-<a id="figure-13-17-on-chip-dma-channel-flyby-memory-read-transaction"></a>
 _Figure 13-17. On-Chip DMA Channel Flyby Memory Read Transaction_
+<a id="figure-13-18-on-chip-dma-channel-flyby-memory-write-transaction"></a>
 
 <br/>
 
 ![Figure 13-18. On-Chip DMA Channel Flyby Memory Write Transaction](Images/Figure13.18.png)<br/>
-<a id="figure-13-18-on-chip-dma-channel-flyby-memory-write-transaction"></a>
 _Figure 13-18. On-Chip DMA Channel Flyby Memory Write Transaction_
 
 <br/>
@@ -473,9 +473,9 @@ an active BUSACK, as described in [section 10.2](10-Multiprocessor_Configuration
 If the multiprocessor mode is specified in the Bus Timing and Initialization register, then the contents of the Local Address register determine the range of memory addresses dedicated to the shared global bus. Before accessing an address on the global bus, the Z280 MPU must issue a Global Bus Request (<ins>GREQ</ins>) and receive an active Global Bus Acknowledge (<ins>GACK</ins>) signal, as described in [Section 10.3](10-Multiprocessor_Configurations.md#103-tightly-coupled-multiple-processors).
 
 [Figure 13-19](#figure-13-19-multiprocessor-mode-timing) illustrates the timing of the global bus request/acknowledge sequence. When the Z280 MPU needs to access a location on the global bus, <ins>GREQ</ins> is asserted in order to request use of the global bus. <ins>GACK</ins> is then sampled on each successive rising edge of the clock; when <ins>GACK</ins> becomes active (and if <ins>BUSREQ</ins> is not asserted), the memory transaction proceeds as described in [section 13.5.1](#1351-memory-transactions). <ins>GREQ</ins> is deasserted in the bus cycle immediately following the end of the memory transaction (except when executing the Test and Set instruction, where both the memory read and write operations are executed before deasserting <ins>GREQ</ins>).
+<a id="figure-13-19-multiprocessor-mode-timing"></a>
 
 <br/>
 
 ![Figure 13-19. Multiprocessor Mode Timing](Images/Figure13.18.png)<br/>
-<a id="figure-13-19-multiprocessor-mode-timing"></a>
 _Figure 13-19. Multiprocessor Mode Timing_

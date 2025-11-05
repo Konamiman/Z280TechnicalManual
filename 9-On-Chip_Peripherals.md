@@ -74,11 +74,11 @@ The on-chip clock oscillator, a high-gain amplifier, is enabled by either connec
 An on-chip memory refresh controller in the Z280 MPU is available for generating memory refresh operations in systems utilizing dynamic RAMs. Operation of this mechanism is controlled by the Refresh Rate register, which is located in the Z280 MPU'S I/O address space. If enabled, memory refreshes are performed at a rate specified by the contents of this register.
 
 The format of the 8-bit Refresh Rate register is shown in [Figure 9-1](#figure-9-1-refresh-rate-register). This register enables the refresh mechanism and determines the frequency of refresh transactions. The fields in this register are described below
+<a id="figure-9-1-refresh-rate-register"></a>
 
 <br/>
 
 ![Figure 9-1. Refresh Rate Register](Images/Figure9.1.png)<br/>
-<a id="figure-9-1-refresh-rate-register"></a>
 _Figure 9-1. Refresh Rate Register_
 
 <br/>
@@ -99,11 +99,11 @@ Pseudo-static memories and some peripheral devices (such as the Z8000 family of 
 ## 9.4 COUNTER/TIMERS
 
 The Z280 MPU's three on-chip 16-bit counter/timers can be configured to satisfy a broad range of counting and timing applications, including event counting, interval timing, watchdog timing, and clock generation. Each counter/timer is composed of a 16-bit downcounter, a 16-bit time constant register, and two 8-bit control and status registers (the Counter/Timer Configuration register and the Counter/Timer Command/Status register). The three independent devices are referred to as counter/timer 0 (C/T 0), counter/timer 1 (C/T 1), and counter/timer 2 (C/T 2). [Figure 9-2](#figure-9-2-countertimer-block-diagram) is a block diagram of a Z280 MPU counter/timer.
+<a id="figure-9-2-countertimer-block-diagram"></a>
 
 <br/>
 
 ![Figure 9-2. Counter/Timer Block Diagram](Images/Figure9.2.png)<br/>
-<a id="figure-9-2-countertimer-block-diagram"></a>
 _Figure 9-2. Counter/Timer Block Diagram_
 
 <br/>
@@ -137,11 +137,11 @@ Gate and trigger inputs are used to control counter/timer activity in either cou
 Gate signals are used in applications where counting or timing is to occur only during certain specified intervals; the counter/timer will count or time only while the gating condition is met. For applications where an external pin is configured as a gate input, counting or timing operations are performed only while the gate input is high. A software gate bit (one bit of the Counter/Timer Command/Status register) is used as a filter for the gate input; while the software gate bit is cleared to 0, the gating condition is not met regardless of the state of the gating line. In other words, the gating condition is a logical AND of the hardware and software gates; both the gate input must be high and the software gate bit must be set to 1 for the counter timer to be operating. If no external pins are configured as a gating signal, then the software gate bit must be set to 1 to satisfy the gating condition.
 
 [Figure 9-3](#figure-9-3-counter-operation-with-gate-only) illustrates the gating facility in an application where the counter/timer is in counter mode with both the gate and the count signals coming from external pins. This example assumes that the software gate bit has been set to 1. The contents of the downcounter are decremented on a low-to-high transition of the count input only if the gate input is high.
+<a id="figure-9-3-counter-operation-with-gate-only"></a>
 
 <br/>
 
 ![Figure 9-3. Counter Operation with Gate Only](Images/Figure9.3.png)<br/>
-<a id="figure-9-3-counter-operation-with-gate-only"></a>
 _Figure 9-3. Counter Operation with Gate Only_
 
 <br/>
@@ -149,11 +149,11 @@ _Figure 9-3. Counter Operation with Gate Only_
 If trigger mode is selected, a countdown sequence for a counter/timer begins only after a triggering condition occurs; a counting or timing operation can begin only after a low-to-high transition is detected on the trigger. If an external input is used as a trigger, that line is monitored by the counter/timer. Alternatively, a software trigger bit (one bit in the Counter/Timer Command/Status register) can be set to 1 from a previously cleared value to activate the counter/timer. The trigger condition is a logical OR of the hardware and software triggers; that is, either a hardware or software trigger will activate an enabled counter/timer.
 
 [Figure 9-4](#figure-9-4-counter-operation-with-trigger-only) illustrates trigger operation in an application where the counter/timer is in the counter mode with both the trigger and count inputs provided by external pins. This example assumes that the software trigger bit does not make a low to high transition. The contents of the downcounter are decremented on a low-to-high transition of the count input only after a low-to-high transition on the trigger input has been detected.
+<a id="figure-9-4-counter-operation-with-trigger-only"></a>
 
 <br/>
 
 ![Figure 9-4. Counter Operation with Trigger Only](Images/Figure9.4.png)<br/>
-<a id="figure-9-4-counter-operation-with-trigger-only"></a>
 _Figure 9-4. Counter Operation with Trigger Only_
 
 <br/>
@@ -161,11 +161,11 @@ _Figure 9-4. Counter Operation with Trigger Only_
 Either a retriggerable or nonretriggerable operation can be specified. In the retriggerable mode, the occurrence of a trigger condition causes the counter/timer to reload its initial time constant value regardless of the current contents of the downcounter. This mode is used in applications such as watchdog timers. In the nonretriggerable mode, after the first trigger condition starts counter/timer activity, subsequent trigger conditions are ignored. Nonretriggerable mode is used in applications such as delay counters that measure a fixed delay from a given event.
 
 Gate and trigger operations can be combined in a single counter/timer. Separate gate and trigger inputs (either hardware or software) can be specified, or one external input can be used as both a gate and a trigger. In the latter case, a low-to-high transition on the input acts as a trigger that starts counter/timer activity, and then counting or timing continues only as long as the input signal remains high. Again, either retriggerable or nonretriggerable modes are available. [Figure 9-5](#figure-9-5-counter-operation-with-gate-and-trigger) illustrates counter/timer operation in an application where counter mode is selected, one input is a count input, and the other input is used as both the trigger and gate.
+<a id="figure-9-5-counter-operation-with-gate-and-trigger"></a>
 
 <br/>
 
 ![Figure 9-5. Counter Operation with Gate and Trigger](Images/Figure9.5.png)<br/>
-<a id="figure-9-5-counter-operation-with-gate-and-trigger"></a>
 _Figure 9-5. Counter Operation with Gate and Trigger_
 
 <br/>
@@ -249,11 +249,11 @@ The Counter/Timer Configuration registers are cleared to all zeros by a reset.
 #### 9.4.4.2 Counter/Timer Command/Status Register
 
 The Counter/Timer Command/Status register provides for software control of counter/timer operation and reflects the current status of the counter/timer. Three control bits and three status bits are included in the Command/Status register. The format for this register is illustrated in [Figure 9-7](#figure-9-7-countertimer-commandstatus-register).
+<a id="figure-9-7-countertimer-commandstatus-register"></a>
 
 <br/>
 
 ![Figure 9-7. Counter/Timer Command/Status Register](Images/Figure9.7.png)<br/>
-<a id="figure-9-7-countertimer-commandstatus-register"></a>
 _Figure 9-7. Counter/Timer Command/Status Register_
 
 <br/>
@@ -428,11 +428,11 @@ In the single transaction mode, the DMA controller transfers only one byte or wo
 In the burst mode, once the DMA channel gains control of the bus, it continues to transfer data until the <ins>RDY</ins> input goes inactive. When the <ins>RDY</ins> line becomes inactive, the DMA releases the system bus; bus control then returns back to the CPU or to the next lower-priority DMA channel with a bus request pending.
 
 In the continuous mode, the DMA channel retains control of the system bus until the entire block of data has been transferred. If the <ins>RDY</ins> line goes inactive before the entire data block is transferred, the DMA simply waits until <ins>RDY</ins> becomes active again, without releasing the bus. This mode is the fastest mode since it has the least response-time overhead when the <ins>RDY</ins> line momentarily goes inactive and returns active again. However, this mode does not allow any CPU activity for the duration of the transfer. [Figure 9-8](#figure-9-8-modes-of-operation) summarizes the DMA transfer modes.
+<a id="figure-9-8-modes-of-operation"></a>
 
 <br/>
 
 ![Figure 9-8. Modes of Operation](Images/Figure9.8.png)<br/>
-<a id="figure-9-8-modes-of-operation"></a>
 _Figure 9-8. Modes of Operation_
 
 <br/>
@@ -496,11 +496,11 @@ DMA registers consist of a DMA Master Control register that specifies the genera
 #### 9.5.6.1 DMA Master Control Register
 
 The 16-bit DMA Master Control register is illustrated in [Figure 9-9](#figure-9-9-dma-master-control-register).
+<a id="figure-9-9-dma-master-control-register"></a>
 
 <br/>
 
 ![Figure 9-9. DMA Master Control Register](Images/Figure9.9.png)<br/>
-<a id="figure-9-9-dma-master-control-register"></a>
 _Figure 9-9. DMA Master Control Register_
 
 <br/>
@@ -628,11 +628,11 @@ A reset loads a 0100<sub>H</sub> into DMA0's Count register; the other channels'
 The 24-bit Source Address register and Destination Address register hold the port addresses used during DMA transfers. These are physical addresses that are not translated by the MMU. In flyby mode, only one of these registers is used to supply the address for the transaction, as determined by the Type field in the Transaction Descriptor register. The contents of these registers can be automatically incremented or decremented by each DMA transaction, as determined by the SAD and DAD field in the Transaction Descriptor register.
 
 The entire 24-bit Source Address or Destination Address register is read and written via two word accesses to the register. Twelve bits of the address are accessed by each word I/O operation; the format used when accessing these registers is shown in [Figure 9-11](#figure-9-11-source-and-destination-address-registers-format).
+<a id="figure-9-11-source-and-destination-address-registers-format"></a>
 
 <br/>
 
 ![Figure 9-11. Source and Destination Address Registers Format](Images/Figure9.11.png)<br/>
-<a id="figure-9-11-source-and-destination-address-registers-format"></a>
 _Figure 9-11. Source and Destination Address Registers Format_
 
 <br/>
@@ -723,11 +723,11 @@ The UART uses the same clock frequency for both the transmitter and the receiver
 The UART can be used in an interrupt-driven or polled environment. If enabled, separate transmit and receive interrupt requests are generated by the UART. Transmit interrupts occur when the transmitter's data buffer is emptied, and receive interrupts occur when an entire character is received or an error is detected. In polled environments, status bits in UART registers can be read to determine if the transmit buffer is empty or receive buffer is full. As described in [section 9.5.9](#959-dma-programming-dmas-linked-to-uart), DMA channel 0 can be linked to the receiver and DMA channel 1 to the transmitter to provide for DMA-controlled transfers between the UART and memory.
 
 The UART uses two external pins, Transmit (Tx) and Receive (Rx). Data that is to be transmitted is placed serially on the Transmit pin and data that is to be received is read from the Receive pin.
+<a id="figure-9-12-general-format-for-an-asynchronous-transmission"></a>
 
 <br/>
 
 ![Figure 9-12. General Format for an Asynchronous Transmission](Images/Figure9.12.png)<br/>
-<a id="figure-9-12-general-format-for-an-asynchronous-transmission"></a>
 _Figure 9-12. General Format for an Asynchronous Transmission_
 
 <br/>
@@ -749,11 +749,11 @@ The Tx output line is held high (marking) when the transmitter has no data to se
 Receive operations are performed only when the Receiver Enable bit in the Receiver Control/Status register is set to 1. A low (spacing) condition on the Receive input line indicates a start bit; if the low persists for at least one-half of a bit time, the start bit is assumed to be valid and the data input is sampled at mid-bit times until the entire character is assembled. Thus, reception is protected from transients on the input line by checking for a valid start bit one-half bit time after detecting a high-to-low transition on the Receive input; if the low does not persist (as with a transient), the character assembly process is not started. If the bit time is one clock period (the x1 clock mode), bit synchronization must be accomplished externally; received data is sampled on the rising edge of the clock.
 
 Received characters are read from the Receive Data register. If parity is enabled, the parity bit is assembled as part of the character for character lengths other than eight bits. If the resulting character is still less than eight bits, 1's are appended in the unused high-order bit positions. For example, [Figure 9-13](#figure-9-13-byte-assembled-by-receiver-for-5-bit-character-with-parity) illustrates how the character is assembled in the Receive Data register when receiving 5-bit characters with parity.
+<a id="figure-9-13-byte-assembled-by-receiver-for-5-bit-character-with-parity"></a>
 
 <br/>
 
 ![Figure 9-13. Byte Assembled by Receiver for 5-bit Character with Parity](Images/Figure9.13.png)<br/>
-<a id="figure-9-13-byte-assembled-by-receiver-for-5-bit-character-with-parity"></a>
 _Figure 9-13. Byte Assembled by Receiver for 5-bit Character with Parity_
 
 <br/>
@@ -775,11 +775,11 @@ UART operation is controlled by three 8-bit registers: the UART Configuration re
 #### 9.6.3.1 UART Configuration Register
 
 The 8-bit UART Configuration register ([Figure 9-14](#figure-9-14-uart-configuration-register)) contains control information for both the receiver and transmitter.
+<a id="figure-9-14-uart-configuration-register"></a>
 
 <br/>
 
 ![Figure 9-14. UART Configuration Register](Images/Figure9.14.png)<br/>
-<a id="figure-9-14-uart-configuration-register"></a>
 _Figure 9-14. UART Configuration Register_
 
 <br/>
@@ -832,11 +832,11 @@ A reset clears the UART Configuration register to all zeros, unless bootstrap mo
 #### 9.6.3.2 Transmitter Control/Status Register
 
 The 8-bit Transmitter Control/Status register, shown in [Figure 9-15](#figure-9-15-transmitter-controlstatus-register), specifies the operation of the UART transmitter, as described below.
+<a id="figure-9-15-transmitter-controlstatus-register"></a>
 
 <br/>
 
 ![Figure 9-15. Transmitter Control/Status Register](Images/Figure9.15.png)<br/>
-<a id="figure-9-15-transmitter-controlstatus-register"></a>
 _Figure 9-15. Transmitter Control/Status Register_
 
 <br/>
@@ -861,11 +861,11 @@ A reset sets the Transmitter Control/Status register to a 01<sub>H</sub>. Bit 5 
 #### 9.6.3.3 Receiver Control/Status Register
 
 The 8-bit Receiver Control/Status register, shown in [Figure 9-16](#figure-9-16-receiver-controlstatus-register), specifies the operation of the UART receiver, as described below.
+<a id="figure-9-16-receiver-controlstatus-register"></a>
 
 <br/>
 
 ![Figure 9-16. Receiver Control/Status Register](Images/Figure9.16.png)<br/>
-<a id="figure-9-16-receiver-controlstatus-register"></a>
 _Figure 9-16. Receiver Control/Status Register_
 
 <br/>

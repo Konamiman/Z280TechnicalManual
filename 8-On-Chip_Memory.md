@@ -125,7 +125,7 @@ Operation | Hit/Miss | Cache<br/>Instruction | Cache Data | Cache Activity :<br/
 Read | Hit | Don't care | Don't care | No change | No change | No | Cache
 | | Miss | Don't care | Don't care | No change | No change | Yes | Memory
 Write | Hit | Don't care | Don't care | Updated | No change | No | —
+<a id="table-8-3-dmacpu-accesses-to-on-chip-memory-as-fixed-memory-location"></a>
 | | Miss | Don't care | Don't care | No change | No change | Yes | —
 
-<a id="table-8-3-dmacpu-accesses-to-on-chip-memory-as-fixed-memory-location"></a>
 _Table 8-3. DMA/CPU Accesses to On-Chip Memory as Fixed Memory Location_
