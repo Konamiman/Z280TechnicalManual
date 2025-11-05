@@ -87,7 +87,7 @@ A | A local bus request occurs.
 B | The global bus arbiter grants control of the global bus when no global bus request is pending. This is an error. The CPU remains in State 0.
 C | The CPU requests the global bus in response to the internally generated signal NEED_GBUS.
 D | The local bus master relinquishes the bus.
-E | The global bus arbiter grants the global bus to the CPU while no local bus request is pehding.
+E | The global bus arbiter grants the global bus to the CPU while no local bus request is pending.
 F | The global bus arbiter grants the global bus to the CPU while a local bus request is pending. The local bus request has preempted the CPU.
 G | The global bus arbiter reclaims the global bus before the CPU relinquishes the global bus. This is an error. The CPU Is response to this error is undefined.
 H | The CPU relinquishes control of the global bus when it no longer needs the global bus or in response to a local bus request.

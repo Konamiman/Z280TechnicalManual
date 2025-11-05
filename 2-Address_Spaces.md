@@ -75,7 +75,7 @@ _Figure 2-2. CPU Control Registers_
 
 Two memory address spaces, one for system and one for user mode operation, are supported by the Z280 MPU. They are selected by the User/System mode control bit in the Master Status register, which governs the selection of page descriptor registers in the MMU during address translation.
 
-Each address space can be viewed as a string of 64K bytes nunbered consecutively in ascending order. The 8-bit byte is the basic addressable element in the Z280 MPU memory address spaces. However, there are other addressable data elements: bits, 2-byte words, byte strings, and multiple-byte EPU operands.
+Each address space can be viewed as a string of 64K bytes numbered consecutively in ascending order. The 8-bit byte is the basic addressable element in the Z280 MPU memory address spaces. However, there are other addressable data elements: bits, 2-byte words, byte strings, and multiple-byte EPU operands.
 
 The size of the data element being addressed depends on the instruction being executed. A bit can be addressed by specifying a byte and a bit within that byte. Bits are numbered from right to left, with the least significant bit being bit 0, as illustrated in Figure 2-3.
 

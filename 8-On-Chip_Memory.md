@@ -24,7 +24,7 @@ Z280 MPU cache organization is illustrated in Figure 8-1. The cache is arranged 
 
 ![Figure 8-1. Cache Organization](Images/Figure8.1.png)<br/>
 Tag n = the 20 Address bits associated with line n<br/>
-Valid bits = 16 bits that indicate which bytes in tha cache contain valid data<br/>
+Valid bits = 16 bits that indicate which bytes in the cache contain valid data<br/>
 Cache data = 16 bytes
 
 _Figure 8-1. Cache Organization_

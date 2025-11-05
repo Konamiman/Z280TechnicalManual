@@ -24,7 +24,7 @@
 
 **base address:** The address used, along with an index and/or displacement value, to calculate the effective address of an operand. The base address is located in a register, the Program Counter, or the instruction.
 
-**Base Index (BX) addressing node:** In this mode, the contents of the base register and index register are added to obtain the effective address.
+**Base Index (BX) addressing mode:** In this mode, the contents of the base register and index register are added to obtain the effective address.
 
 **burst transaction:** The transfer of several consecutive items of data in one memory transaction.
 
@@ -118,9 +118,9 @@
 
 **refresh:** To restore information that fades away if left alone. For example, dynamic memories must be refreshed periodically in order to retain their contents.
 
-**Register (R) addressing node:** In this mode, the operand is in a general-purpose register.
+**Register (R) addressing mode:** In this mode, the operand is in a general-purpose register.
 
-**Relative Address (RA) addressing node:** In this mode, the displacement in the instruction is added to the contents of the Program Counter to obtain the effective address.
+**Relative Address (RA) addressing mode:** In this mode, the displacement in the instruction is added to the contents of the Program Counter to obtain the effective address.
 
 **relocation:** The process of mapping a logical address to a different physical address, so that multiple processes can use the same logical address for distinct physical memory locations.
 
@@ -136,7 +136,7 @@
 
 **service routine:** Program code that is executed in response to an interrupt or trap.
 
-**Short Index addressing mode:** In this mode, the contents of the IX or IY register are added to an 8-bit displacement corftained in the instruction to obtain the effective address of the operand.
+**Short Index addressing mode:** In this mode, the contents of the IX or IY register are added to an 8-bit displacement contained in the instruction to obtain the effective address of the operand.
 
 **slave processor:** A processor, such as a Direct Memory Access transfer controller, that performs dedicated functions asynchronously to the CPU.
 
@@ -172,7 +172,7 @@
 
 **vectored interrupt:** A interrupt that uses the low-order byte of the identifier word as a vector to an interrupt service routine; can be disabled.
 
-**virtual memory:** A memory management technique in which the system's logical memory address space is not necessarily the same as, and can be much larger than, the available physical memofcy.
+**virtual memory:** A memory management technique in which the system's logical memory address space is not necessarily the same as, and can be much larger than, the available physical memory.
 
 **wait state:** A clock period that is added to a memory or I/O transaction due to an active WAIT signal. Wait states are used to prolong memory and I/O transactions to devices with long access times.
 
