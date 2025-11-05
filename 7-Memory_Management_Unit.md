@@ -138,6 +138,7 @@ The MMU Master Control register is programmed via a word output instruction to I
 
 The Page Descriptor registers in the MMU are accessed using the Page Descriptor Register Pointer (PDR Pointer). The 8-bit PDR Pointer contains the address of one of the Page Descriptor registers; the encoding is given in [Table 7-1](#table-7-1-page-descriptor-register-addresses). The permissible contents of the PDR Pointer are 00<sub>H</sub> through 1F<sub>H</sub>. The PDR Pointer is accessed via byte I/O instructions to port address FFxxF1<sub>H</sub>.
 
+<a id="table-7-1-page-descriptor-register-addresses"></a>
 <br/>
 
 PDR Pointer or<br/>PFI Field | Selected Page Descriptor Register
@@ -157,9 +158,6 @@ PDR Pointer or<br/>PFI Field | Selected Page Descriptor Register
 1E | System Page Descriptor 14
 1F | System Page Descriptor 15
 
-<a id="table-7-1-page-descriptor-register-addresses"></a>
-<br/>
-
 _Table 7-1. Page Descriptor Register Addresses_
 
 
@@ -177,13 +175,14 @@ Moves of one word of data to or from a Page Descriptor register are accomplished
 
 Block moves of data into and out of Page Descriptor registers are accomplished by word accesses to I/O port address FFxxF4<sub>H</sub>. The Page Descriptor register accessed is the one addressed by the PDR Pointer. Any word I/O instruction can be used. After the access, the contents of the PDR Pointer are automatically incremented by one; thus, a single block I/O instruction can be used to access several successive Page Descriptor registers. For example, if the PDR Pointer is initialized to 00, the execution of an INIRW instruction to I/O port FFxxF4<sub>H</sub> causes data from successive Page Descriptor registers starting with user Page Descriptor register 0 to be loaded into memory.
 
-For accesses to the Page Descriptor registers using the Descriptor Select port or the Block Move port, the permissible contents of the PDR Pointer are the addresses for the Page Descriptors given in [Table 7-1](#table-7-1-page-descriptor-register-addresses)1: 00<sub>H</sub> to 1F<sub>H</sub>. Execution of an I/O instruction to ports FFxxF4<sub>H</sub> or FFxxF5<sub>H</sub> when the contents of the PDR Pointer are outside of this permitted range will have unpredictable results.
+For accesses to the Page Descriptor registers using the Descriptor Select port or the Block Move port, the permissible contents of the PDR Pointer are the addresses for the Page Descriptors given in [Table 7-1](#table-7-1-page-descriptor-register-addresses): 00<sub>H</sub> to 1F<sub>H</sub>. Execution of an I/O instruction to ports FFxxF4<sub>H</sub> or FFxxF5<sub>H</sub> when the contents of the PDR Pointer are outside of this permitted range will have unpredictable results.
 
 
 ### 7.6.3 Invalidation Port
 
 The Valid bits in the Page Descriptor registers can be cleared to 0 via byte writes to I/O port address FFxxF2<sub>H</sub>, thereby invalidating the contents of the Page Descriptor registers. Individual Valid bits can subsequently be set by writing to individual Page Descriptor registers using the Descriptor Select port or the Block Move port. The Page Descriptor registers invalidated by a write to port FFxxF2<sub>H</sub> depend on the data written to that port, as delineated in [Table 7-2](#table-7-2-mmu-invalidation-port). When writing to the invalidation port only the least significant four bits are sampled; the upper four bits are not used. Reading port FFxxF2<sub>H</sub> returns unpredictable data.
 
+<a id="table-7-2-mmu-invalidation-port"></a>
 <br/>
 
 Data Written to<br/>Port FFxxF2<br/>(Hexadecimal) | Page Descriptor Registers<br/>Invalidated
@@ -195,15 +194,13 @@ Data Written to<br/>Port FFxxF2<br/>(Hexadecimal) | Page Descriptor Registers<br
 08 | User Page Descriptor Registers 8-15
 0C | User Page Descriptor Registers 0-15
 
-<a id="table-7-2-mmu-invalidation-port"></a>
-<br/>
-
 _Table 7-2. MMU Invalidation Port_
 
 <br/>
 
 The I/O port addresses for the MMU registers are listed in [Table 7-3](#table-7-3-io-port-addresses-for-mmu-control-registers).
 
+<a id="table-7-3-io-port-addresses-for-mmu-control-registers"></a>
 <br/>
 
 Port<br/>Address | Register
@@ -213,9 +210,6 @@ FFxxF1<sub>H</sub> | Page Descriptor Register Pointer
 FFxxF5<sub>H</sub> | Descriptor Select Port
 FFxxF4<sub>H</sub> | Block Move Port
 FFxxF2<sub>H</sub> | Invalidation Port
-
-<a id="table-7-3-io-port-addresses-for-mmu-control-registers"></a>
-<br/>
 
 _Table 7-3. I/O Port Addresses for MMU Control Registers_
 

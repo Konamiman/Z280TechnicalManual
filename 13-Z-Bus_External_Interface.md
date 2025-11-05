@@ -43,8 +43,8 @@ The condition of the OPT pin determines the configuration of the bus interface f
 
 The Z-BUS on the Z280 MPU includes a 24-bit address bus, 16-bit data bus, and associated status and control signals. The data bus is multiplexed with the low-order 16 bits of the address bus. The Z-BUS configuration of the Z280 MPU supports the use of Extended Processing Units and burst-mode memories. [Figure 13-1](#figure-13-1-z-bus-configuration-input-opt-tied-to-5v-or-not-connected) shows the pin functions and pin assignments for the Z-BUS configuration of the Z280 MPU. The Z-BUS described here is compatible with Zilog's Z8000 family of peripheral devices. Other Z-BUS compatible components include the Z8000 family of CPUs. Refer to Zilog's Component Data Book for a complete description of the Z-BUS Component Interconnect convention.
 
+<a id="figure-13-1-z-bus-configuration-input-opt-tied-to-5v-or-not-connected"></a>
 <br/>
-
 ![Figure 13-1a. Pin Functions](Images/Figure13.1a.png)<br/>
 \* Multiplexed with CTIN<sub>0</sub><br/>
 \** Multiplexed with CTIO<sub>0</sub>
@@ -57,7 +57,6 @@ _Figure 13-1a. Pin Functions_
 _Figure 13-1b. Pin Assignments_
 <br/>
 
-<a id="figure-13-1-z-bus-configuration-input-opt-tied-to-5v-or-not-connected"></a>
 _Figure 13-1. Z-BUS Configuration (input OPT tied to + 5V or not connected)_
 
 
@@ -182,8 +181,8 @@ At any given time, one device (either the CPU or a bus requester) has control of
 
 On the rising edge <ins>AS</ins>, the bus status signals (ST<sub>0</sub>-ST<sub>3</sub>, R/<ins>W</ins>, and B/<ins>W</ins>) are valid. The ST<sub>0</sub>-ST<sub>3</sub> status lines indicate the type of transaction being performed ([Table 13-1](#table-13-1-st-status-line-decode)). Typically, these signals are decoded and used to enable the appropriate buffers, drivers, and chip select logic necessary for proper completion of the data transfer.
 
+<a id="table-13-1-st-status-line-decode"></a>
 <br/>
-
 Status Lines<br/>3..0 | Type of Transaction
 |-|-|
 0000 | Reserved
@@ -203,7 +202,6 @@ Status Lines<br/>3..0 | Type of Transaction
 1110 | Data transfer between EPU and CPU
 1111 | Test and Set (data transfers)
 
-<a id="table-13-1-st-status-line-decode"></a>
 _Table 13-1. ST Status Line Decode_
 
 <br/>

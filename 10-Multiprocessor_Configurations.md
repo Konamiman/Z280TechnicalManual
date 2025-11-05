@@ -76,8 +76,8 @@ When in control of its local bus, a Z280 CPU can initiate transactions with devi
 
 A state diagram of the bus request protocol is shown in [Figure 10-3](#figure-10-3-state-diagram-for-cpu-bus-request-protocol).
 
+<a id="figure-10-3-state-diagram-for-cpu-bus-request-protocol"></a>
 <br/>
-
 ![Figure 10-3. State Diagram for CPU Bus Request Protocol](Images/Figure10.3.png)<br/>
 
 NOTES: Interface signals are High (H), Low (L), High or Low (2ST), or 3-stated (3ST).<br>
@@ -223,8 +223,8 @@ In the case of an EPU-to-CPU transfer instruction, the next non-refresh transact
 
 In the case of EPU-to-memory or memory-to-EPU transfer instructions, the next one to sixteen non-refresh transactions following the fetch of the template (and after an active PAUSE signal is deasserted) will be the appropriate data transfer cycles. Up to 16 bytes of data may be transferred as the result of a single extended instruction; the number of data transfers to be performed is encoded in the instruction template. The 1010 status code on the ST<sub>3</sub>-ST<sub>0</sub> status lines identifies bus cycles that transfer data between an EPU and memory. The EPU must supply the data for write operations or capture the data for read operations during each transaction, just as if it were part of the CPU. The number and type of transactions generated also depends on whether the starting memory address of the data block to be moved is an even-valued address, as defined in [Table 10-2](#table-10-2-sequence-of-transactions-for-data-transfers-between-an-epu-and-memory). The case where only one byte is transferred is degenerate and shown separately in [Table 10-2](#table-10-2-sequence-of-transactions-for-data-transfers-between-an-epu-and-memory) for clarity. These transfers are always performed on the Z280 MPU's external bus, regardless of the current state of the on-chip cache memory.
 
+<a id="table-10-2-sequence-of-transactions-for-data-transfers-between-an-epu-and-memory"></a>
 <br/>
-
 Starting Memory<br/>Address | Number of<br/>Bytes (n) | Byte/Word Status of<br/>Transfers | Type of<br/>Addresses | Total Number of<br/> Transactions
 |-|-|-|-|-|
 Even | Even | word, word....word | All even | n/2
@@ -234,5 +234,4 @@ Odd | Even | byte, word,...,word, byte | First odd,<br/>others even | (n+2)/2
 Odd | Odd | byte, word....word, word | First odd,<br/>others even | (n+1)/2
 Odd | One | byte | Odd | 1
 
-<a id="table-10-2-sequence-of-transactions-for-data-transfers-between-an-epu-and-memory"></a>
 _Table 10-2. Sequence of Transactions for Data Transfers between an EPU and Memory_

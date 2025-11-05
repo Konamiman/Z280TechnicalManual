@@ -20,15 +20,12 @@ If the M/<ins>C</ins> bit in the Cache Control register is cleared to 0, then th
 
 Z280 MPU cache organization is illustrated in [Figure 8-1](#figure-8-1-cache-organization). The cache is arranged as 16 lines of 16 bytes each. Each line of the cache can hold a copy of sixteen consecutive bytes of memory in physical memory locations whose 20 most significant address bits are identical. Thus, for example, one line of the cache could hold the data from physical memory locations 153820<sub>H</sub> to 15382F<sub>H</sub>. The 20 bits of physical address associated with one line of 16 bytes in the cache is called the tag address for that line. Each line of the cache also has 16 valid bits associated with it; each byte in the line is associated with one valid bit. The valid bit is used to indicate if the corresponding byte in the cache holds a valid copy of the memory contents at the associated physical memory location.
 
+<a id="figure-8-1-cache-organization"></a>
 <br/>
-
 ![Figure 8-1. Cache Organization](Images/Figure8.1.png)<br/>
 Tag n = the 20 Address bits associated with line n<br/>
 Valid bits = 16 bits that indicate which bytes in the cache contain valid data<br/>
 Cache data = 16 bytes
-
-<a id="figure-8-1-cache-organization"></a>
-<br/>
 
 _Figure 8-1. Cache Organization_
 
@@ -66,6 +63,7 @@ Memory-to-EPU | Don't care | Don't care | Don't care | No change | No change | Y
 EPU Template | Don't care | Don't care | Don't care | No change | No change | Yes | Memory
 RETI Opcode | Don't care | Don't care | Don't care | No change | No change | Yes |Memory
 
+<a id="table-8-1-cpu-accesses-to-on-chip-memory-as-cache"></a>
 <br/>
 
 _MMU Cache Inhibit → Noncacheable Transaction:_
@@ -75,9 +73,6 @@ Operation | Hit/Miss | Cache<br/>Instruction | Cache Data | Cache Activity :<br/
 Don't care | Don't care | Don't care | Don't care | Updated* | No change | Yes | Memory
 
 \* Updated if a cache line contains the accessed location, otherwise unaffected.
-
-<a id="table-8-1-cpu-accesses-to-on-chip-memory-as-cache"></a>
-<br/>
 
 _Table 8-1. CPU Accesses to On-Chip Memory as Cache_
 
@@ -122,6 +117,7 @@ Before entering this mode, the user must initialize the tag addresses for all 16
 
 Note that each line of the on-chip memory must be assigned a unique tag address before entering this mode so that no unpredictable addresses are mapped into the on-chip memory. If instructions are to be fetched from the on-chip memory while in this mode, Return from Interrupt (RETI) instructions and the templates within extended instructions should never be resident in the on-chip memory; in each case, the operation of devices external to the MPU depends on these instructions being fetched with external bus transactions, as mentioned in [section 8.2](#82-cache-memory-mode). Data to be transferred to or from an EPU cannot be resident in on-chip memory either, since this data must be transferred to the EPU over the external bus.
 
+<a id="table-8-3-dmacpu-accesses-to-on-chip-memory-as-fixed-memory-location"></a>
 <br/>
 
 Operation | Hit/Miss | Cache<br/>Instruction | Cache Data | Cache Activity :<br/>Contents | Cache Activity :<br/>LRU | Bus<br/>Transaction | Cache/Memory<br/>Supplies<br/>Information
@@ -130,8 +126,5 @@ Read | Hit | Don't care | Don't care | No change | No change | No | Cache
 | | Miss | Don't care | Don't care | No change | No change | Yes | Memory
 Write | Hit | Don't care | Don't care | Updated | No change | No | —
 | | Miss | Don't care | Don't care | No change | No change | Yes | —
-
-<a id="table-8-3-dmacpu-accesses-to-on-chip-memory-as-fixed-memory-location"></a>
-<br/>
 
 _Table 8-3. DMA/CPU Accesses to On-Chip Memory as Fixed Memory Location_

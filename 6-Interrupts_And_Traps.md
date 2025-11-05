@@ -71,7 +71,6 @@ Interrupts are always accepted between instructions. The block move, block searc
 
 <a id="table-6-1-grouping-of-maskable-interrupt-requests"></a>
 <br/>
-
 | Members of<br/>Interrupt Group | Enable bit In MSR |
 |-|-|
 Maskable Interrupt A line | 0
@@ -113,7 +112,6 @@ For nonmaskable interrupts, the constant 0066<sub>H</sub> is then loaded into th
 
 <a id="figure-6-1-mode-2-interrupt-processing"></a>
 <br/>
-
 ![Figure 6-1. Mode 2 Interrupt Processing](Images/Figure6.1.png)<br/>
 
 **NOTES:**
@@ -142,6 +140,7 @@ Interrupt mode 3 is always used for processing interrupts from the Z280 MPU's on
 
 [Table 6-2](#table-6-2-interrupt-modes) summarizes interrupt processing for all four modes.
 
+<a id="table-6-2-interrupt-modes"></a>
 <br/>
 
 Interrupt<br/>Mode | Interrupt<br/>Type | Saved Status<br/>Information | Effect on MSR | Effect on PC
@@ -157,7 +156,6 @@ Interrupt<br/>Mode | Interrupt<br/>Type | Saved Status<br/>Information | Effect 
 
 *: Depends on Instruction returned by interrupting device during acknowledge cycle.
 
-<a id="table-6-2-interrupt-modes"></a>
 _Table 6-2. Interrupt Modes_
 
 
@@ -214,7 +212,6 @@ Two control bits in the Master Status register are used to control Single-Step t
 
 <a id="figure-6-2-instruction-execution-sequence"></a>
 <br/>
-
 ![Figure 6-2. Instruction Execution Sequence](Images/Figure6.2.png)<br/>
 _Figure 6-2. Instruction Execution Sequence_
 
@@ -272,6 +269,7 @@ The Breakpoint-on-Halt trap provides a breakpoint facility that is useful in deb
 
 The trap types and the status saved during the processing of each trap are summarized in [Table 6-3](#table-6-3-trap-types).
 
+<a id="table-6-3-trap-types"></a>
 <br/>
 
 Trap Type | Can be Disabled | Status Saved
@@ -284,9 +282,6 @@ System Stack Overflow | Yes | Address of next instruction<br/>MSR value
 Division Exception | No | Address of instruction causing trap<br/>MSR value
 Single-Step | Yes | Address of next instruction<br/>MSR value
 Breakpoint-on-Halt | Yes | Address of Halt instruction<br/>MSR value
-
-<a id="table-6-3-trap-types"></a>
-<br/>
 
 _Table 6-3. Trap Types_
 
@@ -301,6 +296,7 @@ The Z280 CPU response to an interrupt request or trap condition consists of up t
 An interrupt acknowledge bus transaction is required only for externally-generated interrupts. The main effect of the interrupt acknowledge is to establish communication between the requestor and the Z280 CPU.
 For Z80 Bus configurations of the Z280 MPU, the type of interrupt being acknowledged is indicated on bus lines AD<sub>1</sub> and AD<sub>2</sub> while the Address Strobe is being asserted during the interrupt acknowledge cycle, as per [Table 6-4](#table-6-4-interrupt-acknowledge-encoding-for-z80-bus-configuration).
 
+<a id="table-6-4-interrupt-acknowledge-encoding-for-z80-bus-configuration"></a>
 <br/>
 
 AD<sub>2</sub> | AD<sub>1</sub> | Interrupt Being Acknowledged
@@ -309,9 +305,6 @@ AD<sub>2</sub> | AD<sub>1</sub> | Interrupt Being Acknowledged
 0 | 1 | Nonmaskable Interrupt
 1 | 0 | Interrupt B
 1 | 1 | Interrupt C
-
-<a id="table-6-4-interrupt-acknowledge-encoding-for-z80-bus-configuration"></a>
-<br/>
 
 _Table 6-4. Interrupt Acknowledge Encoding for Z80 Bus Configuration_
 
@@ -333,7 +326,6 @@ saved when processing maskable interrupts. For interrupts in interrupt mode 1 or
 
 <a id="figure-6-3-format-of-saved-status-on-system-stack-due-to-a-mode-3-interrupt"></a>
 <br/>
-
 ![Figure 6-3. Format of Saved Status on System Stack Due to a Mode 3 Interrupt](Images/Figure6.3.png)<br/>
 _Figure 6-3. Format of Saved Status on System Stack Due to a Mode 3 Interrupt_
 
@@ -397,6 +389,7 @@ For vectored interrupts, the interrupt vector returned during the acknowledge cy
 
 The Interrupt/Trap Vector Table Pointer register must be initialized to hold the most significant 12 bits of the starting physical address of the Interrupt/Trap Vector Table. The Interrupt/Trap Vector Table must start on a 4K byte boundary in physical memory (that is, a memory address whose 12 least significant bits are all zeros).
 
+<a id="table-6-5-interrupttrap-vector-table-format"></a>
 <br/>
 
 Address In Table<br/>(Hexadecimal) | Contents
@@ -431,9 +424,6 @@ Address In Table<br/>(Hexadecimal) | Contents
 70-16E | 128 Program Counter values for NMI and interrupt line A vectors (MSR values from position 04 and 08 in this table, respectively)
 170-26E | 128 Program Counter values for interrupt line B (MSR value from position 0C in this table)
 270-36E | 128 Program counter values for interrupt line C (MSR value from position 10 in this table)
-
-<a id="table-6-5-interrupttrap-vector-table-format"></a>
-<br/>
 
 _Table 6-5. Interrupt/Trap Vector Table Format_
 

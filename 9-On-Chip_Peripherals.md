@@ -193,12 +193,12 @@ If C/T 0 and C/T 1 are linked to form a 32-bit counter/timer, the functionality 
 
 The Counter/Timer Configuration register, shown in [Figure 9-6](#figure-9-6-countertimer-configuration-register), specifies the counter/timer's mode of operation.
 
+<a id="figure-9-6-countertimer-configuration-register"></a>
 <br/>
 
 ![Figure 9-6. Counter/Timer Configuration Register](Images/Figure9.6.png)<br/>
 \* CTC Is present on counter/timer 0 only.
 
-<a id="figure-9-6-countertimer-configuration-register"></a>
 _Figure 9-6. Counter/Timer Configuration Register_
 
 <br/>
@@ -215,6 +215,7 @@ The five fields in this register are described below.
 
 **Input Pin Assignments (IPA)**. The contents of this 4-bit field determine the operating mode of the counter/timer (counter or timer mode) and the functionality of the external pins associated with that counter/timer. The four bits in this field are associated with enabling the generation of an output pulse (EO), selecting the counter or timer mode (C/T), enabling the gating facility (G), and enabling the triggering facility (T). [Table 9-1](#table-9-1-encoding-of-the-ipa-field-in-the-countertimer-configuration-register) shows the encoding of this field.
 
+<a id="table-9-1-encoding-of-the-ipa-field-in-the-countertimer-configuration-register"></a>
 <br/>
 
 EO | C/T | G | T | Counter/Timer I/O | Counter/Timer Input | Mode
@@ -236,7 +237,6 @@ EO | C/T | G | T | Counter/Timer I/O | Counter/Timer Input | Mode
 1 | 1 | 1 | 0 | Unused | Unused | Reserved
 1 | 1 | 1 | 1 | Unused | Unused | Reserved
 
-<a id="table-9-1-encoding-of-the-ipa-field-in-the-countertimer-configuration-register"></a>
 _Table 9-1. Encoding of the IPA Field in the Counter/Timer Configuration Register_
 
 <br/>
@@ -284,6 +284,7 @@ Both the Time Constant and Count-Time registers hold unpredictable values after 
 
 [Table 9-2](#table-9-2-io-addresses-of-countertimer-registers) lists the I/O port addresses associated with each of the counter/timers' registers. The Counter/Timer Configuration register and Counter/Timer Command/Status register are accessed with byte I/O instructions and, with the exception of the read-only CIP bit, can be read or written. The Time Constant and Count-Time registers are accessed with word I/O instructions. The Time Constant register can be read or written; the Count-Time register is read-only.
 
+<a id="table-9-2-io-addresses-of-countertimer-registers"></a>
 <br/>
 
 Register | C/T 0 | C/T 1 | C/T 2
@@ -296,7 +297,6 @@ Count-Time | FExxE3 | FExxEB | FExxFB
 All addresses are in hexadecimal.<br/>
 "x" means "don't care".
 
-<a id="table-9-2-io-addresses-of-countertimer-registers"></a>
 _Table 9-2. I/O Addresses of Counter/Timer Registers_
 
 
@@ -353,6 +353,7 @@ CIP | Active | Count-in-Progress status bit for 32-bit counter/timer.
 CC | Active | End-of-Count Has Been Reached status bit for 32-bit counter/timer.
 COR | Active | Count Overrun status bit for 32-bit counter/timer.
 
+<a id="table-9-3-configuration-and-commandstatus-registers-for-linked-countertimers"></a>
 <br/>
 
 _C/T 0 Command/Status Register:_
@@ -366,7 +367,6 @@ CIP | Active | Count-in-Progress status bit for lower half of 32-bit counter/tim
 CC | Active | End-of-Count Has Been Reached status bit for lower half of 32-bit counter/timer.
 COR | Active | Count Overrun status bit for lower half of 32-bit counter/timer.
 
-<a id="table-9-3-configuration-and-commandstatus-registers-for-linked-countertimers"></a>
 _Table 9-3. Configuration and Command/Status Registers for Linked Counter/Timers_
 
 
@@ -526,8 +526,9 @@ The DMA Master Control register is cleared to all zeros by a reset, unless boots
 
 #### 9.5.6.2 DMA Transaction Descriptor Register
 
-Each DMA channel has its own 16-bit Transaction Descriptor register. The Transaction Descriptor register ([Figure 9-1](#figure-9-1-refresh-rate-register)0) describes the type of DMA transfer to be performed and contains control and status information.
+Each DMA channel has its own 16-bit Transaction Descriptor register. The Transaction Descriptor register ([Figure 9-10](#figure-9-10-transaction-descriptor-register)) describes the type of DMA transfer to be performed and contains control and status information.
 
+<a id="figure-9-10-transaction-descriptor-register"></a>
 <br/>
 
 ![Figure 9.10. Transaction Descriptor Register](Images/Figure9.10.png)<br/>
@@ -539,6 +540,7 @@ _Figure 9.10. Transaction Descriptor Register_
 
 **Destination Address Descriptor (DAD).** This 3-bit control field determines the type of location (memory or I/O) to be accessed as the destination port during DMA transfers, and whether the destination address is to be incremented, decremented, or left unchanged between transfers, as shown in [Table 9-4](#table-9-4-encoding-of-dad-and-sad-fields-in-dma-transaction-descriptor-register). When memory addresses are auto-incremented or auto-decremented, the incrementing or decrementing value is determined by the size of the data transfer, as specified in the ST field. I/O port addresses are always auto-incremented and auto-decremented by 1.
 
+<a id="table-9-4-encoding-of-dad-and-sad-fields-in-dma-transaction-descriptor-register"></a>
 <br/>
 
 Encoding | Address Modification Operation
@@ -552,7 +554,6 @@ Encoding | Address Modification Operation
 110 | I/O address unmodified by transaction
 111 | Reserved
 
-<a id="table-9-4-encoding-of-dad-and-sad-fields-in-dma-transaction-descriptor-register"></a>
 _Table 9-4. Encoding of DAD and SAD Fields In DMA Transaction Descriptor Register_
 
 <br/>
@@ -561,6 +562,7 @@ _Table 9-4. Encoding of DAD and SAD Fields In DMA Transaction Descriptor Registe
 
 **Transaction Type (Type).** This 2-bit control field specifies the type of DMA operation to be performed, as shown in [Table 9-5](#table-9-5-encoding-of-type-field-in-transaction-descriptor-register).
 
+<a id="table-9-5-encoding-of-type-field-in-transaction-descriptor-register"></a>
 <br/>
 
 Encoding | DMA Operation
@@ -570,13 +572,13 @@ Encoding | DMA Operation
 10 | Flyby write (peripheral-to-memory)
 11 | Flyby read (memory-to-peripheral)
 
-<a id="table-9-5-encoding-of-type-field-in-transaction-descriptor-register"></a>
 _Table 9-5. Encoding of Type Field in Transaction Descriptor Register_
 
 <br/>
 
 **Bus Request Protocol (BRP).** This 2-bit control field determines the transfer mode for the DMA operation, as shown in [Table 9-6](#table-9-6-encoding-of-brp-field-in-transaction-descriptor-register).
 
+<a id="table-9-6-encoding-of-brp-field-in-transaction-descriptor-register"></a>
 <br/>
 
 Encoding | DMA Transfer Mode
@@ -586,13 +588,13 @@ Encoding | DMA Transfer Mode
 10 | Continuous
 11 | Reserved
 
-<a id="table-9-6-encoding-of-brp-field-in-transaction-descriptor-register"></a>
 _Table 9-6. Encoding of BRP Field In Transaction Descriptor Register_
 
 <br/>
 
 **Size of Transfer (ST).** This 2-bit control field specifies the size of the entity to be transferred during each DMA-controlled transaction, as shown in [Table 9-7](#table-9-7-encoding-of-st-field-in-transaction-descriptor-register). If auto-increment or auto-decrement of a source or destination memory address is specified in the SAD or DAD fields, then the state of this field determines the size of the increment or decrement operation.
 
+<a id="table-9-7-encoding-of-st-field-in-transaction-descriptor-register"></a>
 <br/>
 
 Encoding | Size of<br/>Transfer | Number to Increment<br/>or Decrement By
@@ -602,7 +604,6 @@ Encoding | Size of<br/>Transfer | Number to Increment<br/>or Decrement By
 10 | Long word | 4
 11 | Reserved
 
-<a id="table-9-7-encoding-of-st-field-in-transaction-descriptor-register"></a>
 _Table 9-7. Encoding of ST Field in Transaction Descriptor Register_
 
 <br/>
@@ -641,6 +642,7 @@ DMA0's Destination Address register is cleared to 0 by a reset; all other Source
 
 All DMA registers are located in I/O page FF<sub>H</sub>. The DMA Master Control register is accessed at I/O port address FFxx1F. [Table 9-8](#table-9-8-io-addresses-of-dma-registers) lists the I/O port addresses for the other DMA registers. All DMA registers can be read or written using word I/O instructions.
 
+<a id="table-9-8-io-addresses-of-dma-registers"></a>
 <br/>
 
 Register | DMA0 | DMA1 | DMA2 | DMA3
@@ -655,7 +657,6 @@ Transaction<br/>Descriptor | FFxx05 | FFxx0D | FFxx15 | FFxx1D
 All addresses are in hexadecimal.<br/>
 "x" means "don't care".
 
-<a id="table-9-8-io-addresses-of-dma-registers"></a>
 _Table 9-8. I/O Addresses of DMA Registers_
 
 <br/>
@@ -790,6 +791,7 @@ The control fields within this register are described below.
 
 **Clock Rate (CR).** This 2-bit field determines the multiplier between the UART clock and data rates (that is, the number of clocks per bit time), as specified in [Table 9-9](#table-9-9-cr-field-of-uart-configuration-register). The same data rate is used by both the transmitter and receiver. If the X1 clock rate is selected, bit synchronization must be accomplished externally. In the X1 mode, the transmitter sends data on the falling edge of the clock and the receiver samples data on the rising edge of the clock.
 
+<a id="table-9-9-cr-field-of-uart-configuration-register"></a>
 <br/>
 
 CR Field | UART Clock Rate
@@ -799,7 +801,6 @@ CR Field | UART Clock Rate
 10 | X32
 11 | X64
 
-<a id="table-9-9-cr-field-of-uart-configuration-register"></a>
 _Table 9-9. CR Field of UART Configuration Register_
 
 <br/>
@@ -812,6 +813,7 @@ _Table 9-9. CR Field of UART Configuration Register_
 
 **Bits per Character (B/C).** This 2-bit field determines the number of bits per character in both the transmitter and receiver, as specified in [Table 9-10](#table-9-10-bc-field-of-uart-control-register). If this field is changed while a character is being transmitted or received, the results are unpredictable.
 
+<a id="table-9-10-bc-field-of-uart-control-register"></a>
 <br/>
 
 BC Field | Bits per Character
@@ -821,7 +823,6 @@ BC Field | Bits per Character
 10 | 7
 11 | 8
 
-<a id="table-9-10-bc-field-of-uart-control-register"></a>
 _Table 9-10. BC Field of UART Control Register_
 
 <br/>
@@ -888,6 +889,7 @@ The Receiver Control/Status register is cleared to all zeros by a reset, unless 
 
 All UART registers are in I/O page FE and are accessed via byte I/O instructions. [Table 9-11](#table-9-11-io-addresses-of-uart-registers) lists the I/O port addresses for the UART registers.
 
+<a id="table-9-11-io-addresses-of-uart-registers"></a>
 <br/>
 
 Register | I/O Port<br/>Address
@@ -901,7 +903,6 @@ Transmit Data Register | FExx18
 All addresses are in hexadecimal.<br/>
 "x" means "don't care".
 
-<a id="table-9-11-io-addresses-of-uart-registers"></a>
 _Table 9-11. I/O Addresses of UART Registers_
 
 
@@ -924,6 +925,7 @@ The on-chip UART and DMA Channel 0 can be used to automatically initialize the Z
 
 As described in [Section 3.2.1](3-CPU_Control_Registers.md#321-bus-timing-and-initialization-register) and [Chapter 11](11-Reset.md), bootstrap mode is selected by driving <ins>WAIT</ins> low and AD<sub>6</sub> high while <ins>RESET</ins> is asserted. The appropriate UART and DMA registers are automatically programmed as shown in [Table 9-12](#table-9-12-reset-value-of-uart-and-dma-registers-when-bootstrap-mode-is-selected) as a result of selecting bootstrap mode. The UART is initialized to receive data in 8-bit characters with odd parity, an external clock source, and a x16 clock rate. DMA Channel 0 is initialized with the link to the UART receiver and end-of-process capability enabled, and set up for flowthrough byte transfers in continuous mode. The destination address starts at memory location 0, with an autoincrement after each transfer, and a transfer count of 256 (100<sub>H</sub>).
 
+<a id="table-9-12-reset-value-of-uart-and-dma-registers-when-bootstrap-mode-is-selected"></a>
 <br/>
 
 Register | Initial Hex<br/>Value
@@ -936,7 +938,6 @@ DMA Channel 0 Destination Address register | 000000
 DMA Channel 0 Source Address register | Undefined
 DMA Channel 0 Count register | 0100
 
-<a id="table-9-12-reset-value-of-uart-and-dma-registers-when-bootstrap-mode-is-selected"></a>
 _Table 9-12. Reset Value of UART and DMA Registers When Bootstrap Mode Is Selected_
 
 <br/>
