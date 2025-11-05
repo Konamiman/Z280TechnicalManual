@@ -16,7 +16,7 @@
 
 [1.2.5 Instruction Set](#125-instruction-set)
 
-[1.2.6 Exception Coditions](#126-exception-coditions)
+[1.2.6 Exception Conditions](#126-exception-conditions)
 
 [1.2.7 Memory Management](#127-memory-management)
 
@@ -111,7 +111,7 @@ The Z280 CPU instruction set is an expansion of the Z80 instruction set; the enh
 8-bit computational instructions support logical and decimal operations. Bit manipulation, rotate, and shift instructions round out the data manipulation capabilities of the Z280 CPU. The Jump, Call, and Return instructions have both conditional and unconditional versions; Relative addressing is provided for the Jump and Call instructions to support position-independent programs. Block move, search, and I/O instructions provide powerful data movement capabilities. In addition, special instructions have been included to facilitate multitasking, multiple processor configurations, and typical high-level language and operating system functions.
 
 
-### 1.2.6 Exception Coditions
+### 1.2.6 Exception Conditions
 
 The Z280 MPU supports three types of exceptions (conditions that alter the normal flow of program execution): interrupts, traps, and resets.
 

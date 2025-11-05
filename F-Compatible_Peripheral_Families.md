@@ -16,7 +16,7 @@ Z8410 | DMA Direct Memory Access Controller
 Z8420 | PIO Parallel Input/Output Controller
 Z8430 | CTC Counter/Timer Circuit
 Z8440/1/2 | SIO Serial Input/Output Controller
-Z8470 | DART Dual Asynchronous Receiver/Ttansmitter
+Z8470 | DART Dual Asynchronous Receiver/Transmitter
 
 _Table F-1. Z8400 Peripheral Family_
 
