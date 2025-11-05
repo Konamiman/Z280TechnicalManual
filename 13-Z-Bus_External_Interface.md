@@ -41,7 +41,7 @@ This chapter describes the external manifestations (that is, the activity on the
 
 The condition of the OPT pin determines the configuration of the bus interface for the Z280 MPU: the Z-BUS configuration is selected either by applying a logical 1 (Vcc) level on the OPT pin or by leaving the OPT pin disconnected.
 
-The Z-BUS on the Z280 MPU includes a 24-bit address bus, 16-bit data bus, and associated status and control signals. The data bus is multiplexed with the low-order 16 bits of the address bus. The Z-BUS configuration of the Z280 MPU supports the use of Extended Processing Units and burst-mode memories. Figure 13-1 shows the pin functions and pin assignments for the Z-BUS configuration of the Z280 MPU. The Z-BUS described here is compatible with Zilog's Z8000 family of peripheral devices. Other Z-BUS compatible components include the Z8000 family of CPUs. Refer to Zilog's Component Data Book for a complete description of the Z-BUS Component Interconnect convention.
+The Z-BUS on the Z280 MPU includes a 24-bit address bus, 16-bit data bus, and associated status and control signals. The data bus is multiplexed with the low-order 16 bits of the address bus. The Z-BUS configuration of the Z280 MPU supports the use of Extended Processing Units and burst-mode memories. [Figure 13-1](#figure-13-1-z-bus-configuration-input-opt-tied-to-5v-or-not-connected) shows the pin functions and pin assignments for the Z-BUS configuration of the Z280 MPU. The Z-BUS described here is compatible with Zilog's Z8000 family of peripheral devices. Other Z-BUS compatible components include the Z8000 family of CPUs. Refer to Zilog's Component Data Book for a complete description of the Z-BUS Component Interconnect convention.
 
 <br/>
 
@@ -57,6 +57,7 @@ _Figure 13-1a. Pin Functions_
 _Figure 13-1b. Pin Assignments_
 <br/>
 
+<a id="figure-13-1-z-bus-configuration-input-opt-tied-to-5v-or-not-connected"></a>
 _Figure 13-1. Z-BUS Configuration (input OPT tied to + 5V or not connected)_
 
 
@@ -92,7 +93,7 @@ acknowledge sequence is generated; for bus requests, the CPU relinquishes the bu
 
 ## 13.3 PIN DESCRIPTIONS
 
-The pin functions and assignments for the Z-BUS configuration of the Z280 MPU are illustrated in Figure 13-1. A functional description of each pin is given below:
+The pin functions and assignments for the Z-BUS configuration of the Z280 MPU are illustrated in [Figure 13-1](#figure-13-1-z-bus-configuration-input-opt-tied-to-5v-or-not-connected). A functional description of each pin is given below:
 
 **A<sub>16</sub>-A<sub>23</sub>.** _Address_ (output, active High, 3-state). These address lines carry I/O addresses and memory addresses during bus transactions.
 
@@ -179,7 +180,7 @@ The state of the Multiprocessor Configuration Enable bit in the Bus Timing and I
 
 At any given time, one device (either the CPU or a bus requester) has control of the bus and is known as the bus master. A transaction is initiated by the bus master and is responded to by some other device on the bus. Information transfers (both instructions and data) to and from the Z280 MPU are accomplished through the use of transactions. All transactions start when Address Strobe (<ins>AS</ins>) is driven low and then raised high.
 
-On the rising edge <ins>AS</ins>, the bus status signals (ST<sub>0</sub>-ST<sub>3</sub>, R/<ins>W</ins>, and B/<ins>W</ins>) are valid. The ST<sub>0</sub>-ST<sub>3</sub> status lines indicate the type of transaction being performed (Table 13-1). Typically, these signals are decoded and used to enable the appropriate buffers, drivers, and chip select logic necessary for proper completion of the data transfer.
+On the rising edge <ins>AS</ins>, the bus status signals (ST<sub>0</sub>-ST<sub>3</sub>, R/<ins>W</ins>, and B/<ins>W</ins>) are valid. The ST<sub>0</sub>-ST<sub>3</sub> status lines indicate the type of transaction being performed ([Table 13-1](#table-13-1-st-status-line-decode)). Typically, these signals are decoded and used to enable the appropriate buffers, drivers, and chip select logic necessary for proper completion of the data transfer.
 
 <br/>
 
@@ -202,6 +203,7 @@ Status Lines<br/>3..0 | Type of Transaction
 1110 | Data transfer between EPU and CPU
 1111 | Test and Set (data transfers)
 
+<a id="table-13-1-st-status-line-decode"></a>
 _Table 13-1. ST Status Line Decode_
 
 <br/>
@@ -245,16 +247,18 @@ Data accesses may be byte or word accesses. Data words aligned at even-address m
 
 #### 13.5.1.2 Memory Transaction Timing
 
-Memory transaction timing is illustrated in Figures 13-2 and 13-3. During the first bus cycle, <ins>AS</ins> is asserted to indicate the beginning of a transaction; Output Enable (<ins>OE</ins>) is also asserted at this time. All address and status information is guaranteed valid on the rising edge of <ins>AS</ins>. The ST<sub>0</sub>-ST<sub>3</sub> status lines indicate that a memory transaction is occurring. For a read operation (Figure 13-2), <ins>DS</ins> is activated during the first half of the second bus cycle, after the bus master has 3-3tated the AD lines; <ins>OE</ins> is deasserted at the beginning of the second cycle and Input Enable (<ins>IE</ins>) is asserted during the second half of the second cycle. The bus master samples the information returned from memory on the Address/Data bus on the falling edge of the clock during the third bus cycle; after the data is sampled, <ins>DS</ins> and <ins>IE</ins> are deasserted. For a write operation (Figure 13-3), <ins>DS</ins> is asserted during the second half of the second cycle, after the bus master has placed the data to be written on the AD lines, and <ins>OE</ins> stays active throughout the transaction.
+Memory transaction timing is illustrated in Figures 13-2 and 13-3. During the first bus cycle, <ins>AS</ins> is asserted to indicate the beginning of a transaction; Output Enable (<ins>OE</ins>) is also asserted at this time. All address and status information is guaranteed valid on the rising edge of <ins>AS</ins>. The ST<sub>0</sub>-ST<sub>3</sub> status lines indicate that a memory transaction is occurring. For a read operation ([Figure 13-2](#figure-13-2-memory-read-timing)), <ins>DS</ins> is activated during the first half of the second bus cycle, after the bus master has 3-3tated the AD lines; <ins>OE</ins> is deasserted at the beginning of the second cycle and Input Enable (<ins>IE</ins>) is asserted during the second half of the second cycle. The bus master samples the information returned from memory on the Address/Data bus on the falling edge of the clock during the third bus cycle; after the data is sampled, <ins>DS</ins> and <ins>IE</ins> are deasserted. For a write operation ([Figure 13-3](#figure-13-3-memory-write-timing)), <ins>DS</ins> is asserted during the second half of the second cycle, after the bus master has placed the data to be written on the AD lines, and <ins>OE</ins> stays active throughout the transaction.
 
 <br/>
 
 ![Figure 13-2. Memory Read Timing](Images/Figure13.2.png)<br/>
+<a id="figure-13-2-memory-read-timing"></a>
 _Figure 13-2. Memory Read Timing_
 
 <br/>
 
 ![Figure 13-3. Memory Write Timing](Images/Figure13.3.png)<br/>
+<a id="figure-13-3-memory-write-timing"></a>
 _Figure 13-3. Memory Write Timing_
 
 <br/>
@@ -264,16 +268,19 @@ The <ins>WAIT</ins> input is also sampled on the falling edge of the clock durin
 <br/>
 
 ![Figure 13-4. Memory Read Timing with External Wait Cycle](Images/Figure13.4.png)<br/>
+<a id="figure-13-4-memory-read-timing-with-external-wait-cycle"></a>
 _Figure 13-4. Memory Read Timing with External Wait Cycle_
 
 <br/>
 
 ![Figure 13-5. Memory Write Timing with External Wait Cycle](Images/Figure13.5.png)<br/>
+<a id="figure-13-5-memory-write-timing-with-external-wait-cycle"></a>
 _Figure 13-5. Memory Write Timing with External Wait Cycle_
 
 <br/>
 
 ![Figure 13-6. Memory Read Timing with Internal Wait Cycle](Images/Figure13.6.png)<br/>
+<a id="figure-13-6-memory-read-timing-with-internal-wait-cycle"></a>
 _Figure 13-6. Memory Read Timing with Internal Wait Cycle_
 
 
@@ -283,13 +290,14 @@ The Z-BUS configuration of the Z280 MPU supports a special kind of memory transa
 
 Burst memory transactions are used only during instruction fetches to "prefetch" instructions into the on-chip cache. In a burst memory read, four consecutive words of memory are read. If a byte is to be read from a portion of external memory that supports burst transactions, and that read operation is cacheable, the CPU reads the four words that contain the desired byte of the instruction with a single burst transaction. The address of the first word read during a burst transaction has zeros in the three least significant bits. The CPU reads a total of eight bytes via four word transfers, where the last byte read has all ones in the three least significant bits of its address. This effectively increases the bus bandwidth by prefetching a cache block on a cache miss. Burst transactions are not used when fetching templates in extended instructions.
 
-The timing of a burst transaction is illustrated in Figure 13-7. During burst transactions, four Data Strobes are generated with a single Address Strobe. Timing for the first data transfer is identical to that for a single memory read, including the insertion of automatic wait states.
+The timing of a burst transaction is illustrated in [Figure 13-7](#figure-13-7-burst-memory-read-timing). During burst transactions, four Data Strobes are generated with a single Address Strobe. Timing for the first data transfer is identical to that for a single memory read, including the insertion of automatic wait states.
 
 This first transfer is immediately followed by three more transfers in the next three bus clock cycles. The <ins>WAIT</ins> input is sampled during each transfer and any resulting wait states, thereby allowing wait states to be added before any of the transfers. However, automatic wait states are added only before the first transfer.
 
 <br/>
 
 ![Figure 13-7. Burst Memory Read Timing](Images/Figure13.7.png)<br/>
+<a id="figure-13-7-burst-memory-read-timing"></a>
 _Figure 13-7. Burst Memory Read Timing_
 
 
@@ -302,13 +310,14 @@ The Test and Set (TSET) instruction provides a locking mechanism that can be use
 
 There are two kinds of bus transactions that do not transfer data: Halt and Refresh transactions. These transactions are similar to memory transactions, except that <ins>DS</ins> remains high, the <ins>WAIT</ins> input is not sampled, and no data is transferred.
 
-The Halt transaction (Figure 13-8) is generated when a HALT instruction is encountered or a fatal sequence of traps occurs. The "0011" status code on the ST<sub>3</sub>-ST<sub>0</sub> lines identifies the Halt transaction. For Halt transactions generated by the HALT instruction, once the Halt transaction is executed, all subsequent CPU activity is suspended until an active interrupt request or reset is detected. After Halt transactions generated due to a fatal condition, all CPU activity is suspended until an active reset is detected (see [section 6.6](6-Interrupts_And_Traps.md#66-the-fatal-condition)). However, Refresh transactions or DMA transfers may occur while the CPU is in the Halt state; also, the bus can be granted. The address emitted during the address phase of the Halt transaction is the address of the HALT instruction or the instruction that initiated the fatal sequence of traps.
+The Halt transaction ([Figure 13-8](#figure-13-8-halt-timing)) is generated when a HALT instruction is encountered or a fatal sequence of traps occurs. The "0011" status code on the ST<sub>3</sub>-ST<sub>0</sub> lines identifies the Halt transaction. For Halt transactions generated by the HALT instruction, once the Halt transaction is executed, all subsequent CPU activity is suspended until an active interrupt request or reset is detected. After Halt transactions generated due to a fatal condition, all CPU activity is suspended until an active reset is detected (see [section 6.6](6-Interrupts_And_Traps.md#66-the-fatal-condition)). However, Refresh transactions or DMA transfers may occur while the CPU is in the Halt state; also, the bus can be granted. The address emitted during the address phase of the Halt transaction is the address of the HALT instruction or the instruction that initiated the fatal sequence of traps.
 
 <br/>
 
 ![Figure 13-8. Halt Timing](Images/Figure13.8.png)<br/>
 \* Address of HALT instruction.
 
+<a id="figure-13-8-halt-timing"></a>
 _Figure 13-8. Halt Timing_
 
 <br/>
@@ -320,6 +329,7 @@ A memory refresh transaction (Figure 13-9) is generated by the Z280 MPU refresh 
 ![Figure 13-9. Memory Refresh Timing](Images/Figure13.9.png)<br/>
 \* 10 least significant bits are Refresh address.
 
+<a id="figure-13-9-memory-refresh-timing"></a>
 _Figure 13-9. Memory Refresh Timing_
 
 
@@ -334,11 +344,13 @@ For byte I/O operations (B/<ins>W</ins> = high), the byte of data is always tran
 <br/>
 
 ![Figure 13-10. I/O Read Timing](Images/Figure13.10.png)<br/>
+<a id="figure-13-10-io-read-timing"></a>
 _Figure 13-10. I/O Read Timing_
 
 <br/>
 
 ![Figure 13-11. I/O Write Timing](Images/Figure13.11.png)<br/>
+<a id="figure-13-11-io-write-timing"></a>
 _Figure 13-11. I/O Write Timing_
 
 
@@ -346,7 +358,7 @@ _Figure 13-11. I/O Write Timing_
 
 Interrupt Acknowledge transactions acknowledge an interrupt and read an identifier from the device that generated the interrupt. These transactions are generated automatically by the CPU when an interrupt request is detected.
 
-Interrupt Acknowledge transactions are five cycles long at a mimimum, with two automatic wait cycles (Figure 13-12). The wait cycles are used to give the interrupt priority daisy chain (or other priority resolution devices) time to settle before the identifier is read. Additional automatic wait states can be generated by programming the Bus Timing and Control register.
+Interrupt Acknowledge transactions are five cycles long at a mimimum, with two automatic wait cycles ([Figure 13-12](#figure-13-12-interrupt-acknowledge-timing)). The wait cycles are used to give the interrupt priority daisy chain (or other priority resolution devices) time to settle before the identifier is read. Additional automatic wait states can be generated by programming the Bus Timing and Control register.
 
 The ST<sub>3</sub>-ST<sub>0</sub> status lines indicate the type of interrupt being acknowledged. No address is generated, so the contents of the address bus are undefined when <ins>AS</ins> is asserted. The R/<ins>W</ins> line indicates read (high), and the B/<ins>W</ins> line indicates word (low). The identifier is sampled by the CPU on the <ins>AD</ins> lines at the falling clock edge before DS is raised high.
 
@@ -355,6 +367,7 @@ There are two places where the <ins>WAIT</ins> line is sampled and, thus, where 
 <br/>
 
 ![Figure 13-12. Interrupt Acknowledge Timing](Images/Figure13.12.png)<br/>
+<a id="figure-13-12-interrupt-acknowledge-timing"></a>
 _Figure 13-12. Interrupt Acknowledge Timing_
 
 
@@ -378,33 +391,37 @@ If an extended instruction involves a read or write to memory, then the transfer
 <br/>
 
 ![Figure 13-13. Memory to EPU Timing](Images/Figure13.13.png)<br/>
+<a id="figure-13-13-memory-to-epu-timing"></a>
 _Figure 13-13. Memory to EPU Timing_
 
 <br/>
 
 ![Figure 13-14. EPU Write to Memory](Images/Figure13.14.png)<br/>
+<a id="figure-13-14-epu-write-to-memory"></a>
 _Figure 13-14. EPU Write to Memory_
 
 
 #### 13.5.5.3 EPU-CPU Transactions
 
-If an extended instruction involves a transfer from the EPU to the Z280 CPU, the next non-refresh transaction following the fetch of the template is the EPU-to-CPU data transfer (Figure 13-15).
+If an extended instruction involves a transfer from the EPU to the Z280 CPU, the next non-refresh transaction following the fetch of the template is the EPU-to-CPU data transfer ([Figure 13-15](#figure-13-15-epu-to-cpu-timing)).
 EPU-to-CPU transactions have the same form as I/O read transactions and thus are four clock
 cycles long, unless extended by wait states. Although <ins>AS</ins> is asserted, no address is generated and the contents of the address bus are undefined. The "1110" status code on the ST<sub>3</sub>-ST<sub>0</sub> lines indicate an EPU-to-CPU transaction.
 
 <br/>
 
 ![Figure 13-15. EPU to CPU Timing](Images/Figure13.15.png)<br/>
+<a id="figure-13-15-epu-to-cpu-timing"></a>
 _Figure 13-15. EPU to CPU Timing_
 
 
 #### 13.5.5.4 <ins>PAUSE</ins> Timing
 
-The <ins>PAUSE</ins> signal is used to synchronize CPU-EPU activity in the case of overlapping extended instructions. The CPU samples the <ins>PAUSE</ins> signal within one bus clock period of the completion of the fetch of an extended instruction's template (Figure 13-16). If <ins>PAUSE</ins> is active when sampled, the CPU enters an idle state wherein all CPU activity is suspended. While in this idle state, the CPU samples the <ins>PAUSE</ins> input each processor clock cycle until <ins>PAUSE</ins> is deasserted. The CPU then resumes operation at the point at which it was suspended, either by executing the data transactions associated with the extended instruction (in the case of an extended instruction specifying an EPU-memory or CPU-EPU data transfer) or by starting the fetch of the next instruction (in the case of an extended instruction specifying an internal EPU operation).
+The <ins>PAUSE</ins> signal is used to synchronize CPU-EPU activity in the case of overlapping extended instructions. The CPU samples the <ins>PAUSE</ins> signal within one bus clock period of the completion of the fetch of an extended instruction's template ([Figure 13-16](#figure-13-16-pause-timing)). If <ins>PAUSE</ins> is active when sampled, the CPU enters an idle state wherein all CPU activity is suspended. While in this idle state, the CPU samples the <ins>PAUSE</ins> input each processor clock cycle until <ins>PAUSE</ins> is deasserted. The CPU then resumes operation at the point at which it was suspended, either by executing the data transactions associated with the extended instruction (in the case of an extended instruction specifying an EPU-memory or CPU-EPU data transfer) or by starting the fetch of the next instruction (in the case of an extended instruction specifying an internal EPU operation).
 
 <br/>
 
 ![Figure 13-16. PAUSE Timing](Images/Figure13.16.png)<br/>
+<a id="figure-13-16-pause-timing"></a>
 _Figure 13-16. PAUSE Timing_
 
 
@@ -417,18 +434,20 @@ Flyby transactions controlled by the on-chip DMA channels always include one aut
 <br/>
 
 ![Figure 13-17. On-Chip DMA Channel Flyby Memory Read Transaction](Images/Figure13.17.png)<br/>
+<a id="figure-13-17-on-chip-dma-channel-flyby-memory-read-transaction"></a>
 _Figure 13-17. On-Chip DMA Channel Flyby Memory Read Transaction_
 
 <br/>
 
 ![Figure 13-18. On-Chip DMA Channel Flyby Memory Write Transaction](Images/Figure13.18.png)<br/>
+<a id="figure-13-18-on-chip-dma-channel-flyby-memory-write-transaction"></a>
 _Figure 13-18. On-Chip DMA Channel Flyby Memory Write Transaction_
 
 <br/>
 
-For Flyby transactions that read from memory and write to a peripheral (Figure 13-17), <ins>DMASTB</ins> is asserted during the automatic wait state and any subsequent wait states due to an active <ins>WAIT</ins> signal. Thus, if the <ins>WAIT</ins> input is asserted during the automatic wait state, the additional wait states extend the width of the <ins>DMASTB</ins> pulse. Wait states added via the assertion of <ins>WAIT</ins> during T3 (after <ins>DMASTB</ins> is deasserted) stretch the <ins>DS</ins> signal without affecting <ins>DMASTB</ins>.
+For Flyby transactions that read from memory and write to a peripheral ([Figure 13-17](#figure-13-17-on-chip-dma-channel-flyby-memory-read-transaction)), <ins>DMASTB</ins> is asserted during the automatic wait state and any subsequent wait states due to an active <ins>WAIT</ins> signal. Thus, if the <ins>WAIT</ins> input is asserted during the automatic wait state, the additional wait states extend the width of the <ins>DMASTB</ins> pulse. Wait states added via the assertion of <ins>WAIT</ins> during T3 (after <ins>DMASTB</ins> is deasserted) stretch the <ins>DS</ins> signal without affecting <ins>DMASTB</ins>.
 
-For flyby transactions that read from a peripheral and write to memory (Figure 13-18), <ins>DMASTB</ins> is asserted at the beginning of T2 and remains asserted until the second half of T3. The <ins>DS</ins> signal is asserted only during the automatic wait state. Wait states added via the assertion of <ins>WAIT</ins> stretch the <ins>DMASTB</ins> signal without affecting <ins>DS</ins>.
+For flyby transactions that read from a peripheral and write to memory ([Figure 13-18](#figure-13-18-on-chip-dma-channel-flyby-memory-write-transaction)), <ins>DMASTB</ins> is asserted at the beginning of T2 and remains asserted until the second half of T3. The <ins>DS</ins> signal is asserted only during the automatic wait state. Wait states added via the assertion of <ins>WAIT</ins> stretch the <ins>DMASTB</ins> signal without affecting <ins>DS</ins>.
 
 
 ## 13.6 REQUESTS
@@ -453,9 +472,10 @@ an active BUSACK, as described in [section 10.2](10-Multiprocessor_Configuration
 
 If the multiprocessor mode is specified in the Bus Timing and Initialization register, then the contents of the Local Address register determine the range of memory addresses dedicated to the shared global bus. Before accessing an address on the global bus, the Z280 MPU must issue a Global Bus Request (<ins>GREQ</ins>) and receive an active Global Bus Acknowledge (<ins>GACK</ins>) signal, as described in [Section 10.3](10-Multiprocessor_Configurations.md#103-tightly-coupled-multiple-processors).
 
-Figure 13-19 illustrates the timing of the global bus request/acknowledge sequence. When the Z280 MPU needs to access a location on the global bus, <ins>GREQ</ins> is asserted in order to request use of the global bus. <ins>GACK</ins> is then sampled on each successive rising edge of the clock; when <ins>GACK</ins> becomes active (and if <ins>BUSREQ</ins> is not asserted), the memory transaction proceeds as described in [section 13.5.1](#1351-memory-transactions). <ins>GREQ</ins> is deasserted in the bus cycle immediately following the end of the memory transaction (except when executing the Test and Set instruction, where both the memory read and write operations are executed before deasserting <ins>GREQ</ins>).
+[Figure 13-19](#figure-13-19-multiprocessor-mode-timing) illustrates the timing of the global bus request/acknowledge sequence. When the Z280 MPU needs to access a location on the global bus, <ins>GREQ</ins> is asserted in order to request use of the global bus. <ins>GACK</ins> is then sampled on each successive rising edge of the clock; when <ins>GACK</ins> becomes active (and if <ins>BUSREQ</ins> is not asserted), the memory transaction proceeds as described in [section 13.5.1](#1351-memory-transactions). <ins>GREQ</ins> is deasserted in the bus cycle immediately following the end of the memory transaction (except when executing the Test and Set instruction, where both the memory read and write operations are executed before deasserting <ins>GREQ</ins>).
 
 <br/>
 
 ![Figure 13-19. Multiprocessor Mode Timing](Images/Figure13.18.png)<br/>
+<a id="figure-13-19-multiprocessor-mode-timing"></a>
 _Figure 13-19. Multiprocessor Mode Timing_

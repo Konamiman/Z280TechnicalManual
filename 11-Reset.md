@@ -6,7 +6,7 @@ The <ins>RESET</ins> input must be asserted for a minimum of 128 processor clock
 
 When <ins>RESET</ins> is sampled high (deasserted), the state of the <ins>WAIT</ins> input is sampled. If <ins>WAIT</ins> is asserted, the contents of the AD<sub>0</sub>-AD<sub>7</sub> lines are sampled on the falling edge of the processor clock and loaded into the Bus Timing and Initialization register; if this method of initialization is chosen, AD<sub>7</sub> must be a 1 and AD<sub>4</sub> must be a 0 when the bus is sampled, and the state of the AD<sub>6</sub> line determines whether the bootstrap mode option is selected. <ins>WAIT</ins> must be asserted for at least two processor clock cycles after <ins>RESET</ins> is deasserted in order for the Bus Timing and Initialization register, thereby specifying a bus clock frequency of one-half the processor clock, no automatic wait states when accessing the lower 8M bytes of memory, and disabling the multiprocessor mode of operation.
 
-Table 11-1 delineates the effect of a reset on other CPU registers. A reset places the CPU in
+[Table 11-1](#table-11-1-effect-of-a-reset-on-z280-mpu-and-mmu-registers) delineates the effect of a reset on other CPU registers. A reset places the CPU in
 interrupt mode 0; thus, the IM field in the Interrupt Status register will be a 0. The Interrupt Vector Enable bits in the Interrupt Status register also are cleared to 0 by a reset, and the Interrupt Pending bits will reflect the current status of the interrupt requests. All other CPU and MMU registers, including the remaining registers in the CPU register file, the MMU page descriptor registers, and the Interrupt/Trap Vector Table Pointer are unaffected by a reset.
 
 <br/>
@@ -32,11 +32,12 @@ User Stack Pointer | | Unaffected
 MMU Master Control | 0000 | MMU disabled
 MMU Page Descriptor Register, Page Descriptor Register Pointer | Unaffected
 
+<a id="table-11-1-effect-of-a-reset-on-z280-mpu-and-mmu-registers"></a>
 _Table 11-1. Effect of a Reset on Z280 MPU and MMU Registers_
 
 <br/>
 
-The effect of a reset on the on-chip peripherals' programmable registers is shown in Table 11-2. The on-chip counter/timers are always disabled by a reset. The on-chip DMA channels and UART are also disabled by a reset, unless bootstrap mode is selected (see [Section 9.7](9-On-Chip_Peripherals.md#97-uart-bootstrapping-option)). The counter/timers' Time Constant and Count-Time registers are unaffected by a reset. The DMA channels' Destination Address, Source Address, and Count registers also are unaffected by a reset, except for DMA Channel 0's Destination Address and Count registers.
+The effect of a reset on the on-chip peripherals' programmable registers is shown in [Table 11-2](#table-11-2-effect-of-a-reset-on-z280-on-chip-peripheral-registers). The on-chip counter/timers are always disabled by a reset. The on-chip DMA channels and UART are also disabled by a reset, unless bootstrap mode is selected (see [Section 9.7](9-On-Chip_Peripherals.md#97-uart-bootstrapping-option)). The counter/timers' Time Constant and Count-Time registers are unaffected by a reset. The DMA channels' Destination Address, Source Address, and Count registers also are unaffected by a reset, except for DMA Channel 0's Destination Address and Count registers.
 
 <br/>
 
@@ -59,6 +60,7 @@ UART:
 
 \* Unless bootstrap mode is selected.
 
+<a id="table-11-2-effect-of-a-reset-on-z280-on-chip-peripheral-registers"></a>
 _Table 11-2. Effect of a Reset on Z280 On-Chip Peripheral Registers_
 
 <br/>

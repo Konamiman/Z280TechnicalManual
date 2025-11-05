@@ -62,7 +62,7 @@ A hardware reset overrides all other conditions, including interrupts and traps.
 
 Two kinds of interrupts are activated by four different pins on the Z280 MPU. The nonmaskable interrupt (NMI) is an interrupt that cannot be disabled (masked) by software. Typically, NMI is reserved for high-priority external events that need immediate attention, such as an imminent power failure. Maskable interrupts are interrupts that can be disabled (masked) via software by clearing the appropriate bits in the Interrupt Request Enable field of the Master Status register.
 
-There are seven maskable interrupts in the Z280 MPU architecture. Three of these interrupts are external inputs to the device (Interrupts A, B, and C); the other four maskable interrupts are asserted by the on-chip peripherals. The seven Interrupt Request Enable bits in the Master Status register control which of the requested interrupts are accepted. Interrupt requests are grouped as listed in Table 6-1, with each group controlled by a separate Interrupt Request Enable bit. The list is presented in order of decreasing priority, with sources within a group listed in order of decreasing priority.
+There are seven maskable interrupts in the Z280 MPU architecture. Three of these interrupts are external inputs to the device (Interrupts A, B, and C); the other four maskable interrupts are asserted by the on-chip peripherals. The seven Interrupt Request Enable bits in the Master Status register control which of the requested interrupts are accepted. Interrupt requests are grouped as listed in [Table 6-1](#table-6-1-grouping-of-maskable-interrupt-requests), with each group controlled by a separate Interrupt Request Enable bit. The list is presented in order of decreasing priority, with sources within a group listed in order of decreasing priority.
 
 The Enable Interrupt (EI) instruction is used to selectively enable the maskable interrupts (by setting the appropriate bits in the MSR to 1) and the Disable Interrupt (DI) instruction is used to selectively disable interrupts (by clearing the appropriate bits in the MSR to 0). When an interrupt source has been disabled, the CPU ignores any requests from that source. Because maskable interrupt requests are not retained by the CPU, the request signal on a maskable interrupt line must be asserted until the CPU acknowledges the request.
 
@@ -81,6 +81,7 @@ Maskable Interrupt C line | 4
 UART Transmitter, DMA Channel 2 | 5
 Counter/Timer 2, DMA Channel 3 | 6
 
+<a id="table-6-1-grouping-of-maskable-interrupt-requests"></a>
 _Table 6-1. Grouping of Maskable Interrupt Requests_
 
 <br/>
@@ -108,7 +109,7 @@ Interrupt mode 2 is a vectored interrupt response mode for maskable interrupts, 
 
 An externally generated interrupt (maskable or nonmaskable) causes the User/System bit, the Single-Step bit, and the Interrupt Enable Request bits in the Master Status register to be cleared to 0, which puts the CPU in system mode with single-stepping disabled. The previous condition of the MSR is not saved. The current value in the Program Counter is pushed onto the system mode stack.
 
-For nonmaskable interrupts, the constant 0066<sub>H</sub> is then loaded into the Program Counter; thus, 0066<sub>H</sub> is the starting address of the nonmaskable interrupt service routine. For maskable interrupts, the programmer must maintain a table in memory of the 16-bit starting addresses for every maskable interrupt service routine. This table can be located anywhere in the system mode data memory address space, starting on a 256-byte memory boundary. When a maskable interrupt is accepted, a 16-bit pointer into this table is generated in order to select the starting address of the appropriate service routine from the table entries. The peripheral generating the interrupt places an 8-bit vector on the data bus in response to the interrupt acknowledge. This vector becomes the lower eight bits of the pointer into the table. The upper eight bits of the pointer are the contents of the I register. This pointer is treated as an address in the system data memory space that can be translated to a physical address by the MMU. The actual logical address of the service routine is found by referencing the word located at the address formed by concatenating the I register's contents with the vector. Figure 6-1 illustrates the sequence of events for processing mode 2 maskable interrupts. A reset clears the I register to all zeros.
+For nonmaskable interrupts, the constant 0066<sub>H</sub> is then loaded into the Program Counter; thus, 0066<sub>H</sub> is the starting address of the nonmaskable interrupt service routine. For maskable interrupts, the programmer must maintain a table in memory of the 16-bit starting addresses for every maskable interrupt service routine. This table can be located anywhere in the system mode data memory address space, starting on a 256-byte memory boundary. When a maskable interrupt is accepted, a 16-bit pointer into this table is generated in order to select the starting address of the appropriate service routine from the table entries. The peripheral generating the interrupt places an 8-bit vector on the data bus in response to the interrupt acknowledge. This vector becomes the lower eight bits of the pointer into the table. The upper eight bits of the pointer are the contents of the I register. This pointer is treated as an address in the system data memory space that can be translated to a physical address by the MMU. The actual logical address of the service routine is found by referencing the word located at the address formed by concatenating the I register's contents with the vector. [Figure 6-1](#figure-6-1-mode-2-interrupt-processing) illustrates the sequence of events for processing mode 2 maskable interrupts. A reset clears the I register to all zeros.
 
 <br/>
 
@@ -120,6 +121,7 @@ For nonmaskable interrupts, the constant 0066<sub>H</sub> is then loaded into th
 3. Two bytes are read sequentially from vector table. These two bytes are read into the PC.
 4. Processor control is transferred to interrupt service routine and execution continues.
 
+<a id="figure-6-1-mode-2-interrupt-processing"></a>
 _Figure 6-1. Mode 2 Interrupt Processing_
 
 <br/>
@@ -138,7 +140,7 @@ Interrupt mode 3 exploits the advanced features of the Z280 MPU architecture. Wh
 Interrupt mode 3 is the intended mode of operation when using the advanced features of the Z280 MPU architecture, such as system and user modes and single-stepping, since the Master Status register of the interrupted task is automatically saved and another loaded for the service routine. This allows each service routine to be executed in the appropriate mode without affecting the status of the interrupted task. Also, vector tables can be provided for both maskable and nonmaskable interrupts when in mode 3.
 Interrupt mode 3 is always used for processing interrupts from the Z280 MPU's on-chip peripherals, regardless of which mode is selected for the external interrupt requests.
 
-Table 6-2 summarizes interrupt processing for all four modes.
+[Table 6-2](#table-6-2-interrupt-modes) summarizes interrupt processing for all four modes.
 
 <br/>
 
@@ -155,6 +157,7 @@ Interrupt<br/>Mode | Interrupt<br/>Type | Saved Status<br/>Information | Effect 
 
 *: Depends on Instruction returned by interrupting device during acknowledge cycle.
 
+<a id="table-6-2-interrupt-modes"></a>
 _Table 6-2. Interrupt Modes_
 
 
@@ -207,11 +210,12 @@ The Division Exception trap occurs while executing a Divide instruction if the d
 
 ### 6.3.7 Single-Step Trap
 
-Two control bits in the Master Status register are used to control Single-Step traps: the Single-Step bit (bit 8) and the Single-Step Pending bit (bit 9). The Single-Step trap occurs when the Single-Step Pending bit in the MSR is set to 1. To enter single-step mode, wherein a Single-Step trap is executed after each instruction, the Single-Step bit in the MSR is set to 1. At the beginning of instruction execution, the state of the Single-Step Pending bit is checked; if it is set, a Single-Step trap ip executed. Then, the state of the Single-Step bit is copied into the Single-Step Pending bit and the instruction is executed. If the instruction generates another trap (such as a Privileged Instruction trap), that trap handling routine is executed before the Single-Step Pending bit is again checked and the Single-Step trap is processed. This execution sequence is illustrated in Figure 6-2. Note that once the Single-Step bit gets set, a Single-Step trap does not occur until after the next instruction, because the Single-Step Pending bit is checked before being loaded with the state of the Single-Step bit. Single-Step traps are then executed after each instruction until the Single-Step bit in the MSR is cleared to 0.
+Two control bits in the Master Status register are used to control Single-Step traps: the Single-Step bit (bit 8) and the Single-Step Pending bit (bit 9). The Single-Step trap occurs when the Single-Step Pending bit in the MSR is set to 1. To enter single-step mode, wherein a Single-Step trap is executed after each instruction, the Single-Step bit in the MSR is set to 1. At the beginning of instruction execution, the state of the Single-Step Pending bit is checked; if it is set, a Single-Step trap ip executed. Then, the state of the Single-Step bit is copied into the Single-Step Pending bit and the instruction is executed. If the instruction generates another trap (such as a Privileged Instruction trap), that trap handling routine is executed before the Single-Step Pending bit is again checked and the Single-Step trap is processed. This execution sequence is illustrated in [Figure 6-2](#figure-6-2-instruction-execution-sequence). Note that once the Single-Step bit gets set, a Single-Step trap does not occur until after the next instruction, because the Single-Step Pending bit is checked before being loaded with the state of the Single-Step bit. Single-Step traps are then executed after each instruction until the Single-Step bit in the MSR is cleared to 0.
 
 <br/>
 
 ![Figure 6-2. Instruction Execution Sequence](Images/Figure6.2.png)<br/>
+<a id="figure-6-2-instruction-execution-sequence"></a>
 _Figure 6-2. Instruction Execution Sequence_
 
 <br/>
@@ -266,7 +270,7 @@ The Breakpoint-on-Halt trap occurs if a Halt instruction is encountered while th
 
 The Breakpoint-on-Halt trap provides a breakpoint facility that is useful in debugging environments in which breakpoints on instruction boundaries are desired.
 
-The trap types and the status saved during the processing of each trap are summarized in Table 6-3.
+The trap types and the status saved during the processing of each trap are summarized in [Table 6-3](#table-6-3-trap-types).
 
 <br/>
 
@@ -281,6 +285,7 @@ Division Exception | No | Address of instruction causing trap<br/>MSR value
 Single-Step | Yes | Address of next instruction<br/>MSR value
 Breakpoint-on-Halt | Yes | Address of Halt instruction<br/>MSR value
 
+<a id="table-6-3-trap-types"></a>
 _Table 6-3. Trap Types_
 
 
@@ -292,7 +297,7 @@ The Z280 CPU response to an interrupt request or trap condition consists of up t
 ### 6.4.1 Interrupt Acknowledge
 
 An interrupt acknowledge bus transaction is required only for externally-generated interrupts. The main effect of the interrupt acknowledge is to establish communication between the requestor and the Z280 CPU.
-For Z80 Bus configurations of the Z280 MPU, the type of interrupt being acknowledged is indicated on bus lines AD<sub>1</sub> and AD<sub>2</sub> while the Address Strobe is being asserted during the interrupt acknowledge cycle, as per Table 6-4.
+For Z80 Bus configurations of the Z280 MPU, the type of interrupt being acknowledged is indicated on bus lines AD<sub>1</sub> and AD<sub>2</sub> while the Address Strobe is being asserted during the interrupt acknowledge cycle, as per [Table 6-4](#table-6-4-interrupt-acknowledge-encoding-for-z80-bus-configuration).
 
 <br/>
 
@@ -303,6 +308,7 @@ AD<sub>2</sub> | AD<sub>1</sub> | Interrupt Being Acknowledged
 1 | 0 | Interrupt B
 1 | 1 | Interrupt C
 
+<a id="table-6-4-interrupt-acknowledge-encoding-for-z80-bus-configuration"></a>
 _Table 6-4. Interrupt Acknowledge Encoding for Z80 Bus Configuration_
 
 <br/>
@@ -319,17 +325,18 @@ Interrupt requests from the on-chip peripherals never generate an acknowledge cy
 ### 6.4.2 Status Saving
 
 During exception processing, the status of the interrupted program is saved on the system stack. In interrupt mode 0, the Program Counter is automatically saved when processing nonmaskable interrupts; the instruction returned by the peripheral device will determine what status information is
-saved when processing maskable interrupts. For interrupts in interrupt mode 1 or 2, the Program Counter is automatically saved. For interrupts in interrupt mode 3, the Program Counter and MSR of the interrupted task are saved, followed by the "reason code" (Figure 6-3). For external interrupt requests, the reason code is the value read from the data bus during the interrupt acknowledge cycle; the upper byte of the reason code is all zeros for 8-bit data bus (Z80 Bus) configurations of the Z280 MPU. For interrupts from the on-chip peripherals, the reason code is the offset address in the Interrupt/Trap Vector Table that corresponds to the MSR value entry for that interrupt type.
+saved when processing maskable interrupts. For interrupts in interrupt mode 1 or 2, the Program Counter is automatically saved. For interrupts in interrupt mode 3, the Program Counter and MSR of the interrupted task are saved, followed by the "reason code" ([Figure 6-3](#figure-6-3-format-of-saved-status-on-system-stack-due-to-a-mode-3-interrupt)). For external interrupt requests, the reason code is the value read from the data bus during the interrupt acknowledge cycle; the upper byte of the reason code is all zeros for 8-bit data bus (Z80 Bus) configurations of the Z280 MPU. For interrupts from the on-chip peripherals, the reason code is the offset address in the Interrupt/Trap Vector Table that corresponds to the MSR value entry for that interrupt type.
 
 <br/>
 
 ![Figure 6-3. Format of Saved Status on System Stack Due to a Mode 3 Interrupt](Images/Figure6.3.png)<br/>
+<a id="figure-6-3-format-of-saved-status-on-system-stack-due-to-a-mode-3-interrupt"></a>
 _Figure 6-3. Format of Saved Status on System Stack Due to a Mode 3 Interrupt_
 
 <br/>
 
 The Program Counter value saved during interrupt processing is the address of the next instruction in the interrupted routine, except for interrupts during block move, block search, and block 1/0 instructions. The block instructions can be interrupted between any one iteration of their operation, in which case the PC value saved is the address of the block instruction itself.
-The status saved as a result of a trap depends on the type of trap being executed, as noted in Figure 6-3. The PC and MSR values are always saved during trap processing, along with other trap-dependent information.
+The status saved as a result of a trap depends on the type of trap being executed, as noted in [Figure 6-3](#figure-6-3-format-of-saved-status-on-system-stack-due-to-a-mode-3-interrupt). The PC and MSR values are always saved during trap processing, along with other trap-dependent information.
 If any memory write operation involved in saving status information during interrupt or trap processing causes a memory access violation, a special "fatal condition" is entered, as described in [section 6.6](#66-the-fatal-condition).
 
 
@@ -369,7 +376,7 @@ The Return from Interrupt Long (RETIL) instruction is used to return from interr
 
 ## 6.5 INTERRUPT/TRAP VECTOR TABLE
 
-During interrupt processing under interrupt mode 3 and all trap processing, the PC and MSR values that determine the starting location and operating modes of the appropriate service routine are fetched from a table in memory called the Interrupt/Trap Vector Table. This table holds an MSR and PC value for the service routine for every possible type of interrupt and trap. The particular values fetched from the table during exception processing are a function of the type of exception that occurred and, for vectored external interrupts, the vector returned by the peripheral during the acknowledge cycle. The format of the Interrupt/Trap Vector Table is given in Table 6-5. Each entry in the Interrupt/Trap Vector Table consists of two words—an MSR value followed by a PC value. If an external interrupt is vectored, as determined by the contents of the Interrupt Status register, the 8-bit vector returned by the peripheral is used as an index into a list of up to 128 possible PC values for the service routine; only even-valued vectors are supported by the Z280 CPU architecture. Thus, for a vectored interrupt, there is only one starting MSR value for all the possible service routines, but up to 128 potential PC values. The NMI and Interrupt A requests share the same vectors.
+During interrupt processing under interrupt mode 3 and all trap processing, the PC and MSR values that determine the starting location and operating modes of the appropriate service routine are fetched from a table in memory called the Interrupt/Trap Vector Table. This table holds an MSR and PC value for the service routine for every possible type of interrupt and trap. The particular values fetched from the table during exception processing are a function of the type of exception that occurred and, for vectored external interrupts, the vector returned by the peripheral during the acknowledge cycle. The format of the Interrupt/Trap Vector Table is given in [Table 6-5](#table-6-5-interrupttrap-vector-table-format). Each entry in the Interrupt/Trap Vector Table consists of two words—an MSR value followed by a PC value. If an external interrupt is vectored, as determined by the contents of the Interrupt Status register, the 8-bit vector returned by the peripheral is used as an index into a list of up to 128 possible PC values for the service routine; only even-valued vectors are supported by the Z280 CPU architecture. Thus, for a vectored interrupt, there is only one starting MSR value for all the possible service routines, but up to 128 potential PC values. The NMI and Interrupt A requests share the same vectors.
 
 For example, suppose an interrupt is requested by the on-chip counter/timer 0. If that interrupt request is enabled (bit 1 in the MSR is set to 1), the interrupt is processed as follows: the current PC and MSR values are saved on the system stack; an identifier word with the value 14<sub>H</sub> is saved on the system stack; a new value for the MSR is fetched from location 14<sub>H</sub> in the Interrupt/Trap Vector Table; a new value for the PC is fetched from location 16<sub>H</sub> in the Interrupt/Trap Vector Table; execution of the service routine is begun.
 
@@ -421,6 +428,7 @@ Address In Table<br/>(Hexadecimal) | Contents
 170-26E | 128 Program Counter values for interrupt line B (MSR value from position 0C in this table)
 270-36E | 128 Program counter values for interrupt line C (MSR value from position 10 in this table)
 
+<a id="table-6-5-interrupttrap-vector-table-format"></a>
 _Table 6-5. Interrupt/Trap Vector Table Format_
 
 

@@ -307,11 +307,12 @@ Thie chapter describes the instruction set of the Z280 CPUs. First, flags and co
 
 ## 5.2 PROCESSOR FLAGS
 
-The Flag register contains six bits of status information, that are set or cleared by CPU operations (Figure 5-1). Four of these bits are testable (C, P/V, Z, and S) for use with conditional jump, call, or return instructions. Two flags are not testable (H, N) and are used for binary-coded decimal (BCD) arithmetic.
+The Flag register contains six bits of status information, that are set or cleared by CPU operations ([Figure 5-1](#figure-5-1-flag-register)). Four of these bits are testable (C, P/V, Z, and S) for use with conditional jump, call, or return instructions. Two flags are not testable (H, N) and are used for binary-coded decimal (BCD) arithmetic.
 
 <br/>
 
 ![Figure 5-1. Flag Register](Images/Figure5.1.png)<br/>
+<a id="figure-5-1-flag-register"></a>
 _Figure 5-1. Flag Register_
 
 <br/>
@@ -377,7 +378,7 @@ For the Test and Set instruction, the Sign bit is set to 1 if the tested bit is 
 
 The Carry, Zero, Sign, and Parity/Overflow flags are used to control the operation of the conditional instructions. The operation of these instructions is a function of the state of one of the flags. Special mnemonics called condition codes are used to specify the flag setting to be tested during execution of a conditional instruction; the condition codes are encoded into a 3-bit field in the instruction opcode itself.
 
-Table 5-1 lists the condition code mnemonic, the flag setting it represents, and the binary encoding for each condition code.
+[Table 5-1](#table-5-1-condition-codes) lists the condition code mnemonic, the flag setting it represents, and the binary encoding for each condition code.
 
 <br/>
 
@@ -409,6 +410,7 @@ Table 5-1 lists the condition code mnemonic, the flag setting it represents, and
 |NC | No Carry | C = 0 | 110
 |C  | Carry    | C = 1 | 111
 
+<a id="table-5-1-condition-codes"></a>
 _Table 5-1. Condition Codes_
 
 
@@ -463,7 +465,7 @@ This section presents an overview of the Z280 instruction set, arranged by funct
 
 ### 5.4.1 8-Bit Load Group
 
-This group of instructions (Table 5-2) includes load instructions for transferring data between byte registers, transferring data between a byte register and memory, and loading immediate data into byte registers or memory. All addressing modes are supported for loading between the accumulator and memory or for loading immediate values into memory. Loads between other registers and memory use the IR and SX addressing modes. An exchange instruction is available for swapping the contents of the accumulator with another register or with memory.
+This group of instructions ([Table 5-2](#table-5-2-8-bit-load-group-instructions)) includes load instructions for transferring data between byte registers, transferring data between a byte register and memory, and loading immediate data into byte registers or memory. All addressing modes are supported for loading between the accumulator and memory or for loading immediate values into memory. Loads between other registers and memory use the IR and SX addressing modes. An exchange instruction is available for swapping the contents of the accumulator with another register or with memory.
 
 The LDUD and LDUP instructions are available for loading to or from the user-mode memory address space while executing in system mode. The CPU flags are used to indicate if the transfer was successfully completed. LDUD and LDUP are privileged instructions. The other instructions in this group do not affect the flags, nor can their execution cause exception conditions.
 
@@ -485,12 +487,13 @@ The LDUD and LDUP instructions are available for loading to or from the user-mod
 
 R ... BX = Addressing Modes Available
 
+<a id="table-5-2-8-bit-load-group-instructions"></a>
 _Table 5-2. 8-Bit Load Group Instructions_
 
 
 ### 5.4.2 16-Bit Load and Exchange Group
 
-This group of load and exchange instructions (Table 5-3) allows words of data (two bytes equal one word) to be transferred between registers and memory. The exchange instructions allow for switching between the primary and alternate register files, exchanging the contents of two 16-bit registers, or exchanging the contents of an addressing register with the top word on the stack. The 16-bit loads include transfers between registers and memory and immediate loads of registers or memory. The Load Address instruction facilitates the loading of the address registers with a calculated address. The Push and Pop stack instructions are also included in this group. None of these instructions affect the CPU flags, except for EX AF, AF'. The Push instruction can cause a System Stack Overflow Warning trap; otherwise, no exceptions can arise from the execution of these instructions.
+This group of load and exchange instructions ([Table 5-3](#table-5-3-16-bit-load-and-exchange-group-instructions)) allows words of data (two bytes equal one word) to be transferred between registers and memory. The exchange instructions allow for switching between the primary and alternate register files, exchanging the contents of two 16-bit registers, or exchanging the contents of an addressing register with the top word on the stack. The 16-bit loads include transfers between registers and memory and immediate loads of registers or memory. The Load Address instruction facilitates the loading of the address registers with a calculated address. The Push and Pop stack instructions are also included in this group. None of these instructions affect the CPU flags, except for EX AF, AF'. The Push instruction can cause a System Stack Overflow Warning trap; otherwise, no exceptions can arise from the execution of these instructions.
 
 <br/>
 
@@ -515,12 +518,13 @@ This group of load and exchange instructions (Table 5-3) allows words of data (t
 <span>*</span> Restricted to an addressing register (HL, IX, or IY)<br/>
 R ... BX = Addressing Modes Available
 
+<a id="table-5-3-16-bit-load-and-exchange-group-instructions"></a>
 _Table 5-3. 16-Bit Load and Exchange Group Instructions_
 
 
 ### 5.4.3 Block Transfer and Search Group
 
-This group of instructions (Table 5-4) supports block transfer and string search functions. Using these instructions, a block of up to 65,536 bytes can be moved in memory, or a byte string can be searched until a given value is found. All the operations can proceed through the data in either direction. Furthermore, the operations can be repeated automatically while decrementing a length counter until it reaches zero, or they can operate on one storage unit per execution with the length counter decremented by one and the source and destination pointer registers properly adjusted. The latter form is useful for implementing more complex operations in software by adding other instructions within a loop containing the block instructions.
+This group of instructions ([Table 5-4](#table-5-4-block-transfer-and-search-group)) supports block transfer and string search functions. Using these instructions, a block of up to 65,536 bytes can be moved in memory, or a byte string can be searched until a given value is found. All the operations can proceed through the data in either direction. Furthermore, the operations can be repeated automatically while decrementing a length counter until it reaches zero, or they can operate on one storage unit per execution with the length counter decremented by one and the source and destination pointer registers properly adjusted. The latter form is useful for implementing more complex operations in software by adding other instructions within a loop containing the block instructions.
 
 Various Z280 MPU registers are dedicated to specific functions for these instructions: the BC register for a counter, the DE and HL registers for memory pointers, and the accumulator for holding the byte value being sought. The repetitive forms of these instructions are
 interruptible; this is essential since the repetition count can be as high as 65,536. The instruction can be interrupted after any iteration, in which case the address of the instruction itself, rather than the next one, is saved on the system stack; the contents of the operand pointer registers, as well as the repetition counter, are such that the instruction can simply be reissued after returning from the interrupt without any visible difference in the instruction execution.
@@ -538,12 +542,13 @@ interruptible; this is essential since the repetition count can be as high as 65
 | Load and Increment | LDI
 | Load, Increment and Repeat | LDIR
 
+<a id="table-5-4-block-transfer-and-search-group"></a>
 _Table 5-4. Block Transfer and Search Group_
 
 
 ### 5.4.4 8-Bit Arithmetic and Logic Group
 
-This group of instructions (Table 5-5) performs 8-bit arithmetic and logical operations. The Add, Add with Carry, Subtract, Subtract with Carry, And, Or, Exclusive Or, Compare, and signed and unsigned Multiply take one input operand from the accumulator and the other from a register, from immediate data in the instruction itself, or from memory. All memory addressing modes are supported: Indirect Register, Short Index, Direct Address, PC Relative Address, Stack Pointer Relative, Indexed, and Base Index. Except for the multiplies, which return the 16-bit result to the HL register, these instructions return the computed result to the accumulator. Both signed
+This group of instructions ([Table 5-5](#table-5-5-8-bit-arithmetic-and-logic-group)) performs 8-bit arithmetic and logical operations. The Add, Add with Carry, Subtract, Subtract with Carry, And, Or, Exclusive Or, Compare, and signed and unsigned Multiply take one input operand from the accumulator and the other from a register, from immediate data in the instruction itself, or from memory. All memory addressing modes are supported: Indirect Register, Short Index, Direct Address, PC Relative Address, Stack Pointer Relative, Indexed, and Base Index. Except for the multiplies, which return the 16-bit result to the HL register, these instructions return the computed result to the accumulator. Both signed
 and unsigned division are provided. All memory addressing modes except Indirect Register can be used to specify the divisor.
 
 The Increment and Decrement instructions operate on data in a register or in memory; all memory addressing modes are supported. Three instructions operate only on the accumulator: Decimal Adjust, Complement, and Negate. The final instruction in this group, Extend Sign, takes its 8-bit input from the accumulator and returns its 16-bit result to the HL register.
@@ -575,12 +580,13 @@ All these instructions except Extend Sign set the CPU flags according to the com
 
 R ... BX = Addressing Modes Available
 
+<a id="table-5-5-8-bit-arithmetic-and-logic-group"></a>
 _Table 5-5. 8-Bit Arithmetic and Logic Group_
 
 
 ### 5.4.5 16-Bit Arithmetic Operations
 
-This group of instructions (Table 5-6) provides 16-bit arithmetic operations. The Add, Add with Carry, Subtract with Carry, and Compare instructions take one input operand from an addressing register and the other from a 16-bit register or from the instruction itself; the result is returned to the addressing register. The 16-bit Increment and Decrement instructions operate on data found in a register or in memory; the Indirect Register, Direct Address or PC Relative addressing mode can be used to specify the memory operand. The instruction that adds the contents of the accumulator to an addressing register supports the use of signed byte indices into tables or arrays in memory.
+This group of instructions ([Table 5-6](#table-5-6-16-bit-arithmetic-operation-instructions)) provides 16-bit arithmetic operations. The Add, Add with Carry, Subtract with Carry, and Compare instructions take one input operand from an addressing register and the other from a 16-bit register or from the instruction itself; the result is returned to the addressing register. The 16-bit Increment and Decrement instructions operate on data found in a register or in memory; the Indirect Register, Direct Address or PC Relative addressing mode can be used to specify the memory operand. The instruction that adds the contents of the accumulator to an addressing register supports the use of signed byte indices into tables or arrays in memory.
 
 The remaining 16-bit instructions provide general arithmetic capability using the HL register as one of the input operands. The word Add, Subtract, Compare, and signed and unsigned Multiply instructions take one input operand from the HL register and the other from a 16-bit register, from the instruction itself, or from memory using Indexed, Direct Address, or Relative addressing mode. The 32-bit result of a multiply is returned to the DE and HL registers, with the DE register containing the most significant bits. The signed and unsigned divide instructions take a 32-bit dividend in the DE and HL registers (the DE register containing the most significant bits) and a 16-bit divisor from a register, from the instruction, or from memory using the Indexed, Direct Address, or Relative addressing mode. The 16-bit quotient is returned to the HL register and the 16-bit remainder is returned to the DE register. The Extend Sign instruction takes the contents of the HL register and delivers the 32-bit result to the DE and HL registers, with the DE register containing the most significant bits of the result. The Negate HL instruction negates
 the contents of the HL register.
@@ -609,12 +615,13 @@ Except for Increment, Decrement, and Extend Sign, all the instructions in this g
 
 R ... RA = Addressing Modes Available
 
+<a id="table-5-6-16-bit-arithmetic-operation-instructions"></a>
 _Table 5-6. 16-Bit Arithmetic Operation Instructions_
 
 
 ### 5.4.6 Bit Manipulation, Rotate ands Shift Group
 
-Instructions in this group (Table 5-7) test, set, and reset bits within bytes and rotate and shift byte data one bit position. Bits to be manipulated are specified by a field within the instruction. Rotation can optionally concatenate the Carry flag to the byte to be manipulated. Both left and right shifting is supported. Right shifts can either shift 0 into bit 7 (logical shifts) or can replicate the sign in bits 6 and 7 (arithmetic shifts). The Test and Set instruction is useful in multiprogramming and multiprocessing environments for implementing synchronization mechanisms between processes. All these instructions except Set Bit and Reset Bit set the CPU flags according to the calculated result; the operand can be a register or a memory location specified by the Indirect Register or Short Index addressing modes.
+Instructions in this group ([Table 5-7](#table-5-7-bit-manipulation-rotate-and-shift-group)) test, set, and reset bits within bytes and rotate and shift byte data one bit position. Bits to be manipulated are specified by a field within the instruction. Rotation can optionally concatenate the Carry flag to the byte to be manipulated. Both left and right shifting is supported. Right shifts can either shift 0 into bit 7 (logical shifts) or can replicate the sign in bits 6 and 7 (arithmetic shifts). The Test and Set instruction is useful in multiprogramming and multiprocessing environments for implementing synchronization mechanisms between processes. All these instructions except Set Bit and Reset Bit set the CPU flags according to the calculated result; the operand can be a register or a memory location specified by the Indirect Register or Short Index addressing modes.
 
 The RLD and RRD instructions are provided for manipulating strings of BCD digits; these rotate 4-bit quantities in memory specified by the indirect register. The low-order four bits of the accumulator are used as a link between rotations of successive bytes.
 
@@ -644,12 +651,13 @@ None of these instructions generate exceptions.
 
 R ... SX = Addressing Modes Available
 
+<a id="table-5-7-bit-manipulation-rotate-and-shift-group"></a>
 _Table 5-7. Bit Manipulation, Rotate and Shift Group_
 
 
 ### 5.4.7 Program Control Group
 
-This group (Table 5-8) consists of the instructions that affect the Program Counter (PC) and thereby control program flow. The CPU registers and memory are not altered except for the Stack Pointer and the stack, which play a significant role in procedures and interrupts. (An exception is Decrement and Jump if Non-Zero [DJNZ], which uses a register as a loop counter.) The flags are also preserved except for the two instructions specifically designed to set and complement the Carry flag.
+This group ([Table 5-8](#table-5-8-program-control-group-instructions)) consists of the instructions that affect the Program Counter (PC) and thereby control program flow. The CPU registers and memory are not altered except for the Stack Pointer and the stack, which play a significant role in procedures and interrupts. (An exception is Decrement and Jump if Non-Zero [DJNZ], which uses a register as a loop counter.) The flags are also preserved except for the two instructions specifically designed to set and complement the Carry flag.
 
 The Jump (JP) and Jump Relative (JR) instructions provide a conditional transfer of control to a new location if the processor flags satisfy the condition specified in the instruction. Jump Relative is a 2-byte instruction that jumps to any instruction within the range -126 to +129 bytes from the location of this instruction. Most conditional jumps in programs are made to locations only a few bytes away; the Jump Relative instruction exploits this fact to improve code compactness and efficiency.
 
@@ -683,12 +691,13 @@ System Call (SC) is used for controlled access to facilities provided by the ope
 
 IR ... RA = Addressing Modes Available
 
+<a id="table-5-8-program-control-group-instructions"></a>
 _Table 5-8. Program Control Group Instructions_
 
 
 ### 5.4.8 Input/Output Instruction Group
 
-This group (Table 5-9) consists of instructions for transferring a byte, a word, or a string of bytes or words between peripheral devices and the CPU registers or memory. Byte I/O port addresses transfer bytes on AD<sub>0</sub>-AD<sub>7</sub> only. Thus in a 16-bit data bus environment, 8-bit peripherals must be connected to bus lines AD<sub>0</sub>-AD<sub>7</sub>. In an 8-bit data bus environment, word I/O instructions to external peripherals should not be used; however, on-chip peripherals can still be accessed by word I/O instructions.
+This group ([Table 5-9](#table-5-9-inputoutput-instruction-group-instructions)) consists of instructions for transferring a byte, a word, or a string of bytes or words between peripheral devices and the CPU registers or memory. Byte I/O port addresses transfer bytes on AD<sub>0</sub>-AD<sub>7</sub> only. Thus in a 16-bit data bus environment, 8-bit peripherals must be connected to bus lines AD<sub>0</sub>-AD<sub>7</sub>. In an 8-bit data bus environment, word I/O instructions to external peripherals should not be used; however, on-chip peripherals can still be accessed by word I/O instructions.
 
 The instructions for transferring a single byte (IN, OUT) can transfer data between any 8-bit CPU register or memory address specified in the instruction and the peripheral port specified by the contents of the C register. The IN instruction sets the CPU flags according to the input data; however, special cases of these instructions, restricted to using the CPU accumulator and Direct Address mode, do not affect the CPU flags. Another variant tests an input port specified by the contents of the C register and sets the CPU flags without modifying CPU registers or memory.
 
@@ -726,12 +735,13 @@ Output, Increment and Repeat (Byte) | OTIR
 Output, Increment and Repeat (Word) | OTIRW
 Test Input |TSTI (C)
 
+<a id="table-5-9-inputoutput-instruction-group-instructions"></a>
 _Table 5-9. Input/Output Instruction Group Instructions_
 
 
 ### 5.4.9 CPU Control Group
 
-The instructions in this group (Table 5-10) act upon the CPU control and status registers or perform other functions that do not fit into any of the other instruction groups. There are three instructions used for returning from an interrupt or trap service routine. Return from Nonmaskable Interrupt (REIN) and Return from Interrupt (RETI) are used in interrupt modes 0, 1, and 2 to pop the Program Counter from the stack and manipulate the Interrupt Mask register, or to signal a reset to Z8400 Family peripherals. The Return from Interrupt Long (RETIL) instruction pops a 4-byte program status from the System stack, and is used in interrupt mode 3 and trap processing.
+The instructions in this group ([Table 5-10](#table-5-10-cpu-control-group)) act upon the CPU control and status registers or perform other functions that do not fit into any of the other instruction groups. There are three instructions used for returning from an interrupt or trap service routine. Return from Nonmaskable Interrupt (REIN) and Return from Interrupt (RETI) are used in interrupt modes 0, 1, and 2 to pop the Program Counter from the stack and manipulate the Interrupt Mask register, or to signal a reset to Z8400 Family peripherals. The Return from Interrupt Long (RETIL) instruction pops a 4-byte program status from the System stack, and is used in interrupt mode 3 and trap processing.
 
 Two of these instructions are not privileged: No Operation (NOP) and Purge Cache (PCACHE). The remaining instructions are privileged.
 
@@ -752,12 +762,13 @@ Return From Interrupt | RETI
 Return From Interrupt Long | RETIL
 Return From Nonmaskable Interrupt | RETN
 
+<a id="table-5-10-cpu-control-group"></a>
 _Table 5-10. CPU Control Group_
 
 
 ### 5.4.10 Extended Instruction Group
 
-The Z280 MPU architecture contains a powerful mechanism for extending the basic instruction set through the use of external co-processors called Extended Processing Units (EPUs). A group of 22 opcodes is dedicated for the implementation of extended instructions using this facility. The extended instructions (Table 5-11) are intended for use on a 16-bit data bus; thus, this facility is available only on the Z-BUS configuration of the Z280 MPU.
+The Z280 MPU architecture contains a powerful mechanism for extending the basic instruction set through the use of external co-processors called Extended Processing Units (EPUs). A group of 22 opcodes is dedicated for the implementation of extended instructions using this facility. The extended instructions ([Table 5-11](#table-5-11-extended-instructions)) are intended for use on a 16-bit data bus; thus, this facility is available only on the Z-BUS configuration of the Z280 MPU.
 
 There are four types of extended instructions in the Z280 MPU instruction set: EPU internal operations, data transfers from an EPU to memory, data transfers from memory to an EPU, and data transfers between an EPU and the CPU's accumulator. The extended instructions that access memory can use any of the six basic memory addressing modes (Indexed, Base Index, PC Relative, SP Relative, Indirect Register, and Direct Address). Transfers between the EPU and CPU accumulator are useful when the program must branch based on conditions generated by an EPU operation.
 
@@ -774,6 +785,7 @@ Load Memory From EPU | MEPU dst
 Load Accumulator From EPU | EPUF
 EPU Internal Operation | EPUI
 
+<a id="table-5-11-extended-instructions"></a>
 _Table 5-11. Extended Instructions_
 
 
@@ -846,7 +858,7 @@ indicates that the source data is added to the destination data and the result i
 
 The notation "addr(n)" is used to refer to bit "n" of 8 given location, for example, dst(7).
 
-The register field in the binary encoding of an instruction opcode is encoded as shown in Table 5-12.
+The register field in the binary encoding of an instruction opcode is encoded as shown in [Table 5-12](#table-5-12-encoding-of-8-bit-registers-in-instruction-opcodes).
 
 <br/>
 
@@ -860,6 +872,7 @@ E | 011
 H | 100
 L | 101
 
+<a id="table-5-12-encoding-of-8-bit-registers-in-instruction-opcodes"></a>
 _Table 5-12. Encoding of 8-Bit Registers in Instruction Opcodes_
 
 <br/>
@@ -4251,7 +4264,7 @@ SX | LD (XY + d),R | `11 *11 101` `01 110 r  ` `     d      `
 **rxa:** 100 for high byte, 101 for low byte<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;rxa and rxb refer to the same index register<br/>
 **r\*:** Only registers A, B, C, D and E can be accessed<br/>
-**r1, r2:** See Table 5-12
+**r1, r2:** See [Table 5-12](#table-5-12-encoding-of-8-bit-registers-in-instruction-opcodes)
 
 ### Example
 
