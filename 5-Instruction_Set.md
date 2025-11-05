@@ -308,8 +308,8 @@ Thie chapter describes the instruction set of the Z280 CPUs. First, flags and co
 ## 5.2 PROCESSOR FLAGS
 
 The Flag register contains six bits of status information, that are set or cleared by CPU operations ([Figure 5-1](#figure-5-1-flag-register)). Four of these bits are testable (C, P/V, Z, and S) for use with conditional jump, call, or return instructions. Two flags are not testable (H, N) and are used for binary-coded decimal (BCD) arithmetic.
-<a id="figure-5-1-flag-register"></a>
 
+<a id="figure-5-1-flag-register"></a>
 <br/>
 
 ![Figure 5-1. Flag Register](Images/Figure5.1.png)<br/>
@@ -401,8 +401,8 @@ The Carry, Zero, Sign, and Parity/Overflow flags are used to control the operati
 
 <br/>
 
-**Condition Codes for Jump Relative Instruction:**
 <a id="table-5-1-condition-codes"></a>
+**Condition Codes for Jump Relative Instruction:**
 
 | Mnemonic | Meaning | Flag Setting | Binary Code
 |-|-|-|-
@@ -469,6 +469,7 @@ This group of instructions ([Table 5-2](#table-5-2-8-bit-load-group-instructions
 
 The LDUD and LDUP instructions are available for loading to or from the user-mode memory address space while executing in system mode. The CPU flags are used to indicate if the transfer was successfully completed. LDUD and LDUP are privileged instructions. The other instructions in this group do not affect the flags, nor can their execution cause exception conditions.
 
+<a id="table-5-2-8-bit-load-group-instructions"></a>
 <br/>
 
 | Instruction Name     | Format   | R | RX | IM | IR | DA | X | SX | RA | SR | BX |
@@ -487,7 +488,6 @@ The LDUD and LDUP instructions are available for loading to or from the user-mod
 
 R ... BX = Addressing Modes Available
 
-<a id="table-5-2-8-bit-load-group-instructions"></a>
 _Table 5-2. 8-Bit Load Group Instructions_
 
 
@@ -495,6 +495,7 @@ _Table 5-2. 8-Bit Load Group Instructions_
 
 This group of load and exchange instructions ([Table 5-3](#table-5-3-16-bit-load-and-exchange-group-instructions)) allows words of data (two bytes equal one word) to be transferred between registers and memory. The exchange instructions allow for switching between the primary and alternate register files, exchanging the contents of two 16-bit registers, or exchanging the contents of an addressing register with the top word on the stack. The 16-bit loads include transfers between registers and memory and immediate loads of registers or memory. The Load Address instruction facilitates the loading of the address registers with a calculated address. The Push and Pop stack instructions are also included in this group. None of these instructions affect the CPU flags, except for EX AF, AF'. The Push instruction can cause a System Stack Overflow Warning trap; otherwise, no exceptions can arise from the execution of these instructions.
 
+<a id="table-5-3-16-bit-load-and-exchange-group-instructions"></a>
 <br/>
 
 | Instruction Name     | Format   | R | IM | IR | DA | X | SX | RA | SR | BX |
@@ -508,9 +509,9 @@ This group of load and exchange instructions ([Table 5-3](#table-5-3-16-bit-load
 |                           | LD dst,XX |   |   |   | • | • |   | • | • | • |
 | Load Register (Word)      | LD RR,src |   | • | • | • |   | • |   |   |   |
 |                           | LD dst,RR |   |   | • | • |   | • |   |   |   |
-| Load Immediate Word       | LD dst,nn | • |   | • | • |   |   | • 
-| Load Stack Pointer        | LD SP,src | * | • | • | • |   | • 
-|                           | LD dst,SP |   |   | • | • |   | • 
+| Load Immediate Word       | LD dst,nn | • |   | • | • |   |   | •
+| Load Stack Pointer        | LD SP,src | * | • | • | • |   | •
+|                           | LD dst,SP |   |   | • | • |   | •
 | Load Address              | LDA XX,src|   |   |   | • | • |   | • | • | • |
 | Pop                       | POP dst   | • |   | • | • |   |   | •
 | Push                      | PUSH src  | • | • | • | • |   |   | •
@@ -518,7 +519,6 @@ This group of load and exchange instructions ([Table 5-3](#table-5-3-16-bit-load
 <span>*</span> Restricted to an addressing register (HL, IX, or IY)<br/>
 R ... BX = Addressing Modes Available
 
-<a id="table-5-3-16-bit-load-and-exchange-group-instructions"></a>
 _Table 5-3. 16-Bit Load and Exchange Group Instructions_
 
 
@@ -528,8 +528,8 @@ This group of instructions ([Table 5-4](#table-5-4-block-transfer-and-search-gro
 
 Various Z280 MPU registers are dedicated to specific functions for these instructions: the BC register for a counter, the DE and HL registers for memory pointers, and the accumulator for holding the byte value being sought. The repetitive forms of these instructions are
 interruptible; this is essential since the repetition count can be as high as 65,536. The instruction can be interrupted after any iteration, in which case the address of the instruction itself, rather than the next one, is saved on the system stack; the contents of the operand pointer registers, as well as the repetition counter, are such that the instruction can simply be reissued after returning from the interrupt without any visible difference in the instruction execution.
-<a id="table-5-4-block-transfer-and-search-group"></a>
 
+<a id="table-5-4-block-transfer-and-search-group"></a>
 <br/>
 
 | Instruction Name | Format |
@@ -555,6 +555,7 @@ The Increment and Decrement instructions operate on data in a register or in mem
 
 All these instructions except Extend Sign set the CPU flags according to the computed result. Only the Divide instructions can generate an exception.
 
+<a id="table-5-5-8-bit-arithmetic-and-logic-group"></a>
 <br/>
 
 | Instruction Name     | Format   | R | RX | IM | IR | DA | X | SX | RA | SR | BX |
@@ -580,7 +581,6 @@ All these instructions except Extend Sign set the CPU flags according to the com
 
 R ... BX = Addressing Modes Available
 
-<a id="table-5-5-8-bit-arithmetic-and-logic-group"></a>
 _Table 5-5. 8-Bit Arithmetic and Logic Group_
 
 
@@ -593,6 +593,7 @@ the contents of the HL register.
 
 Except for Increment, Decrement, and Extend Sign, all the instructions in this group set the CPU flags to reflect the computed result. The only instructions that can generate exceptions are the Divide instructions.
 
+<a id="table-5-6-16-bit-arithmetic-operation-instructions"></a>
 <br/>
 
 | Instruction Name     | Format   | R | IM | IR | DA | X | RA
@@ -615,7 +616,6 @@ Except for Increment, Decrement, and Extend Sign, all the instructions in this g
 
 R ... RA = Addressing Modes Available
 
-<a id="table-5-6-16-bit-arithmetic-operation-instructions"></a>
 _Table 5-6. 16-Bit Arithmetic Operation Instructions_
 
 
@@ -627,6 +627,7 @@ The RLD and RRD instructions are provided for manipulating strings of BCD digits
 
 None of these instructions generate exceptions.
 
+<a id="table-5-7-bit-manipulation-rotate-and-shift-group"></a>
 <br/>
 
 | Instruction Name     | Format   | R | IR | SX
@@ -637,7 +638,7 @@ None of these instructions generate exceptions.
 | Rorate Left Accumulator | RLA
 | Rotate Left Circular | RLC dst | • | • | •
 | Rotate Left Circular (Accumulator) | RLCA
-| Rotate Left Digit | RLD |   | • |  
+| Rotate Left Digit | RLD |   | • |
 | Rotate Right | RR dst | • | • | •
 | Rotate Right Accumulator | RRA
 | Rotate Right Circular | RRC dst | • | • | •
@@ -651,7 +652,6 @@ None of these instructions generate exceptions.
 
 R ... SX = Addressing Modes Available
 
-<a id="table-5-7-bit-manipulation-rotate-and-shift-group"></a>
 _Table 5-7. Bit Manipulation, Rotate and Shift Group_
 
 
@@ -673,6 +673,7 @@ A special instruction, Decrement and Jump if Non-Zero (DJNZ), implements the con
 
 System Call (SC) is used for controlled access to facilities provided by the operating system. It is implemented identically to a trap or interrupt in interrupt mode 3: the current program status is pushed onto the system stack, and a new program status is loaded from a dedicated part of memory.
 
+<a id="table-5-8-program-control-group-instructions"></a>
 <br/>
 
 | Instruction Name     | Format   | IR | DA | RA
@@ -691,7 +692,6 @@ System Call (SC) is used for controlled access to facilities provided by the ope
 
 IR ... RA = Addressing Modes Available
 
-<a id="table-5-8-program-control-group-instructions"></a>
 _Table 5-8. Program Control Group Instructions_
 
 
@@ -707,6 +707,7 @@ The remaining instructions in this group form a powerful and complete complement
 
 I/O instructions are not privileged if the Inhibit User I/O bit in the Trap Control register is clear; they can be executed in either system or user mode, so that I/O service routines can execute in user mode. The Memory Management Unit and on-chip peripherals' control and status registers are accessed using the I/O instructions. The contents of the I/O Page register are output on AD<sub>23</sub>-AD<sub>16</sub> with the I/O port address and can be used by external decoding to select specific devices. Pages FF and FE are reserved for on-chip I/O and no external bus transaction is generated. I/O devices can be protected from unrestricted access by using the I/O Page register to select among I/O peripherals.
 
+<a id="table-5-9-inputoutput-instruction-group-instructions"></a>
 <br/>
 
 | Instruction Name | Format |
@@ -735,7 +736,6 @@ Output, Increment and Repeat (Byte) | OTIR
 Output, Increment and Repeat (Word) | OTIRW
 Test Input |TSTI (C)
 
-<a id="table-5-9-inputoutput-instruction-group-instructions"></a>
 _Table 5-9. Input/Output Instruction Group Instructions_
 
 
@@ -745,6 +745,7 @@ The instructions in this group ([Table 5-10](#table-5-10-cpu-control-group)) act
 
 Two of these instructions are not privileged: No Operation (NOP) and Purge Cache (PCACHE). The remaining instructions are privileged.
 
+<a id="table-5-10-cpu-control-group"></a>
 <br/>
 
 | Instruction Name | Format |
@@ -762,7 +763,6 @@ Return From Interrupt | RETI
 Return From Interrupt Long | RETIL
 Return From Nonmaskable Interrupt | RETN
 
-<a id="table-5-10-cpu-control-group"></a>
 _Table 5-10. CPU Control Group_
 
 
@@ -776,6 +776,7 @@ A 4-byte long "template" is embedded in each of the extended instruction opcodes
 
 The action taken by the CPU upon encountering an extended instruction depends upon the EPA control bit in the CPU's Trap Control register. When this bit is set to 1, indicating that EPUs are included in the system, extended instructions are executed. If this bit is cleared to 0, indicating that there are no EPUs in the system, the CPU executes an extended instruction trap whenever an extended instruction is encountered; this allows a trap service routine to emulate the desired operation in software.
 
+<a id="table-5-11-extended-instructions"></a>
 <br/>
 
 | Instruction Name | Format
@@ -785,7 +786,6 @@ Load Memory From EPU | MEPU dst
 Load Accumulator From EPU | EPUF
 EPU Internal Operation | EPUI
 
-<a id="table-5-11-extended-instructions"></a>
 _Table 5-11. Extended Instructions_
 
 
@@ -860,6 +860,7 @@ The notation "addr(n)" is used to refer to bit "n" of 8 given location, for exam
 
 The register field in the binary encoding of an instruction opcode is encoded as shown in [Table 5-12](#table-5-12-encoding-of-8-bit-registers-in-instruction-opcodes).
 
+<a id="table-5-12-encoding-of-8-bit-registers-in-instruction-opcodes"></a>
 <br/>
 
 | Register | Encoding
@@ -872,7 +873,6 @@ E | 011
 H | 100
 L | 101
 
-<a id="table-5-12-encoding-of-8-bit-registers-in-instruction-opcodes"></a>
 _Table 5-12. Encoding of 8-Bit Registers in Instruction Opcodes_
 
 <br/>

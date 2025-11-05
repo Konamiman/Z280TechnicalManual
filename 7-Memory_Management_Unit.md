@@ -60,8 +60,8 @@ When translation is disabled for a particular mode (system or user), the MMU doe
 ## 7.3 PAGE DESCRIPTOR REGISTERS
 
 There are two sets of 16 page descriptor registers in the MMU, one set for system mode operation and one set for user mode operation. Each page descriptor register is 16 bits long, consisting of a 12-bit page frame address field and a 4-bit attribute field ([Figure 7-1](#figure-7-1-page-descriptor-register)).
-<a id="figure-7-1-page-descriptor-register"></a>
 
+<a id="figure-7-1-page-descriptor-register"></a>
 <br/>
 
 ![Figure 7-1. Page Descriptor Register](Images/Figure7.1.png)<br/>
@@ -90,8 +90,8 @@ If address translation is enabled, logical addresses are translated to physical 
 ### 7.4.1 Address Translation Without Program/Data Separation
 
 When program/data separation is not in effect, the 16-bit logical address from the CPU is divided into two fields, a 4-bit index field used to select one of the 16 page descriptor registers, and a 12-bit offset field that forms the lower 12 bits of the resulting physical address. The upper 12 bits of the physical address are provided by the page frame address field of the selected page descriptor register. The pages are 4K bytes long. This translation mechanism is illustrated in [Figure 7-2](#figure-7-2-address-translation-without-programdata-separation). Page descriptor register 0 is the descriptor for logical addresses 0000<sub>H</sub> to 0FFF<sub>H</sub>, page descriptor register 1 is the descriptor for logical addresses 1000<sub>H</sub> to 1FFF<sub>H</sub>, and so on. Thus, the index portion of the logical address selects the page descriptor register. The page frame address field of that page descriptor register then determines the actual starting address for that page in physical memory; the low-order 12 bits of the logical address specify the offset within that 4K byte page.
-<a id="figure-7-2-address-translation-without-programdata-separation"></a>
 
+<a id="figure-7-2-address-translation-without-programdata-separation"></a>
 <br/>
 
 ![Figure 7-2. Address Translation without Program/Data Separation](Images/Figure7.2.png)<br/>
@@ -102,8 +102,8 @@ _Figure 7-2. Address Translation without Program/Data Separation_
 
 When program/data separation is in effect, the 16-bit logical address from the CPU is divided into a 3-bit index and a 13-bit offset. A Program/Data address control signal from the CPU becomes the most significant bit of the 4-bit index that selects the appropriate page descriptor register; the three most significant bits of the logical address form the least significant bits of this index. The upper 11 bits of the page frame address field in the selected page descriptor register provide the upper 11 bits of the resulting physical address. The least significant 13 bits of the logical address form the low order 13 bits of the physical address, as illustrated in Figure
 7-3. Page descriptor register 0 is the descriptor for logical addresses 0000<sub>H</sub>-1FFF<sub>H</sub> in the data addres space, Page descriptor register 1 is the descriptor for logical addresses 2000<sub>H</sub>-3FFF<sub>H</sub> in the data address space, and so on through page descriptor register 7; page descriptor register 8 is the descriptor for logical addresses 0000<sub>H</sub>-1FFF<sub>H</sub> in the program address space, page descriptor register 9 is the descriptor for logical addresses 2000<sub>H</sub>-3FFF<sub>H</sub> in the program address space, and so on. Thus, each page is 8K bytes long, where the starting address of the page in physical memory is determined by the page frame address field in the selected page descriptor register, and the 13 least significant bits of the logical address specify the offset within that 8K byte page. In this mode, the least significant bit of the page frame address field in each page descriptor register is not used; this bit is modified by translation, and values read from it are unpredictable.
-<a id="figure-7-3-address-translation-with-programdata-separation"></a>
 
+<a id="figure-7-3-address-translation-with-programdata-separation"></a>
 <br/>
 
 ![Figure 7-3. Address Translation with Program/Data Separation](Images/Figure7.3.png)<br/>
@@ -115,8 +115,8 @@ _Figure 7-3. Address Translation with Program/Data Separation_
 Besides the two sets of 16 page descriptor registers, the MMU contains a Master Control register and a Page Descriptor Register Pointer. The 16-bit Master Control register controls the operation of the MMU; the 8-bit Page Descriptor Register Pointer is used to select a particular page descriptor register during I/O accesses to the descriptors.
 
 The 16-bit MMU Master Control register is shown in [Figure 7-4](#figure-7-4-mmu-master-control-register). This register consists of four control bits and a 5-bit status field; the fields in this register are described below:
-<a id="figure-7-4-mmu-master-control-register"></a>
 
+<a id="figure-7-4-mmu-master-control-register"></a>
 <br/>
 
 ![Figure 7-4. MMU Master Control Register](Images/Figure7.4.png)<br/>
@@ -158,6 +158,8 @@ PDR Pointer or<br/>PFI Field | Selected Page Descriptor Register
 1F | System Page Descriptor 15
 
 <a id="table-7-1-page-descriptor-register-addresses"></a>
+<br/>
+
 _Table 7-1. Page Descriptor Register Addresses_
 
 
@@ -194,6 +196,8 @@ Data Written to<br/>Port FFxxF2<br/>(Hexadecimal) | Page Descriptor Registers<br
 0C | User Page Descriptor Registers 0-15
 
 <a id="table-7-2-mmu-invalidation-port"></a>
+<br/>
+
 _Table 7-2. MMU Invalidation Port_
 
 <br/>
@@ -211,6 +215,8 @@ FFxxF4<sub>H</sub> | Block Move Port
 FFxxF2<sub>H</sub> | Invalidation Port
 
 <a id="table-7-3-io-port-addresses-for-mmu-control-registers"></a>
+<br/>
+
 _Table 7-3. I/O Port Addresses for MMU Control Registers_
 
 <br/>

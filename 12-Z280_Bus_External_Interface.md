@@ -198,32 +198,32 @@ Memory transactions move instructions or data to or from memory when a bus maste
 Memory transaction timing is illustrated in Figures 12-2 and 12-3. During the first bus cycle, <ins>AS</ins> is asserted to indicate the beginning of a transaction; Output Enable (<ins>OE</ins>) is also asserted at this time. The <ins>MREQ</ins> signal goes active during the second half of this bus cycle, which indicates a memory transaction. For a Read operation ([Figure 12-2](#figure-12-2-memory-read-timing)), <ins>RD</ins> is activated during the first half of the second bus cycle, after the bus master has 3-stated the AD lines; <ins>OE</ins> is deasserted at the beginning of the second cycle and Input Enable (<ins>IE</ins>) is asserted during the second half of the second cycle. The bus master samples the information returned from memory on the Address/Data bus on the falling edge of the clock during the third bus cycle; after the data is sampled, <ins>RD</ins>, <ins>MREQ</ins>, and <ins>IE</ins> are deasserted. For a Write operation ([Figure 12-3](#figure-12-3-memory-write-timing)), the <ins>WR</ins> line is asserted during the second half of the second cycle, after the bus master has placed the data to be written on the AD lines, and <ins>OE</ins> stays active throughout the transaction.
 
 The <ins>WAIT</ins> input is also sampled on the falling edge of the clock during the third clock cycle; if <ins>WAIT</ins> is low, another bus clock cycle is added before sampling the data. Wait states can also be added through programming of the Bus Timing and Initialization register and Bus Timing and Control register. For example, Figures 12-4, 12-5, and 12-6 illustrate memory transactions with one wait state.
-<a id="figure-12-2-memory-read-timing"></a>
 
+<a id="figure-12-2-memory-read-timing"></a>
 <br/>
 
 ![Figure 12-2. Memory Read Timing](Images/Figure12.2.png)<br/>
 _Figure 12-2. Memory Read Timing_
-<a id="figure-12-3-memory-write-timing"></a>
 
+<a id="figure-12-3-memory-write-timing"></a>
 <br/>
 
 ![Figure 12-3. Memory Write Timing](Images/Figure12.3.png)<br/>
 _Figure 12-3. Memory Write Timing_
-<a id="figure-12-4-memory-read-timing-with-one-external-wait-state"></a>
 
+<a id="figure-12-4-memory-read-timing-with-one-external-wait-state"></a>
 <br/>
 
 ![Figure 12-4. Memory Read Timing with One External Wait State](Images/Figure12.4.png)<br/>
 _Figure 12-4. Memory Read Timing with One External Wait State_
-<a id="figure-12-5-memory-write-timing-with-one-external-wait-state"></a>
 
+<a id="figure-12-5-memory-write-timing-with-one-external-wait-state"></a>
 <br/>
 
 ![Figure 12-5. Memory Write Timing with One External Wait State](Images/Figure12.5.png)<br/>
 _Figure 12-5. Memory Write Timing with One External Wait State_
-<a id="figure-12-6-memory-read-timing-with-one-internal-wait-state"></a>
 
+<a id="figure-12-6-memory-read-timing-with-one-internal-wait-state"></a>
 <br/>
 
 ![Figure 12-6. Memory Read Timing with One Internal Wait State](Images/Figure12.6.png)<br/>
@@ -233,8 +233,8 @@ _Figure 12-6. Memory Read Timing with One Internal Wait State_
 ### 12.5.2 RETI Transactions
 
 RETI transactions ([Figure 12-7](#figure-12-7-reti-read-timing)) are similar to memory read transactions with two exceptions: M1 is asserted throughout each read transaction, falling early in the first bus cycle, and <ins>MREQ</ins>, <ins>M1</ins>, <ins>RD</ins>, and <ins>IE</ins> are deasserted on the rising edge of the clock following the third cycle. Each of the read transactions is followed by a minimum of three bus cycles of inactivity. These transactions are invoked whenever an RETI instruction is encountered in the instruction stream; they are used to re-fetch the instruction from external memory so that interrupt logic within Z8400 family peripherals that monitor the bus for this instruction will function correctly.
-<a id="figure-12-7-reti-read-timing"></a>
 
+<a id="figure-12-7-reti-read-timing"></a>
 <br/>
 
 ![Figure 12-7. RETI Read Timing](Images/Figure12.7.png)<br/>
@@ -275,14 +275,14 @@ I/O transactions move data to or from peripherals and are generated during the e
 Figures 12-10 and 12-11 illustrate I/O transaction timing. I/O transactions are four clock cycles long at a minimum, and, like memory transactions, may be lengthened by the addition of wait cycles. I/O transaction timing is similar to memory transaction timing with one automatic wait state.
 
 The <ins>IORQ</ins> line indicates that an I/O transaction is taking place. The I/O address is found on AD<sub>0</sub>-AD<sub>7</sub> and A<sub>8</sub>-A<sub>23</sub> when <ins>AS</ins> rises. For read operations, <ins>RD</ins> and </ins>IE</ins> are asserted during the second clock cycle, and input data from the peripheral is sampled by the bus master during the fourth cycle (unless additional wait states are inserted in the transaction). For write operations, <ins>WR</ins> is asserted during the second cycle with <ins>OE</ins> remaining asserted; output data to the peripheral is placed on the bus at this time.
-<a id="figure-12-10-io-read-timing"></a>
 
+<a id="figure-12-10-io-read-timing"></a>
 <br/>
 
 ![Figure 12-10. I/O Read Timing](Images/Figure12.10.png)<br/>
 _Figure 12-10. I/O Read Timing_
-<a id="figure-12-11-io-write-timing"></a>
 
+<a id="figure-12-11-io-write-timing"></a>
 <br/>
 
 ![Figure 12-11. I/O Write Timing](Images/Figure12.11.png)<br/>
@@ -315,14 +315,14 @@ There are two places where the <ins>WAIT</ins> line is sampled and, thus, where 
 On-chip DMA channels 0 and 1 can transfer data between memory and peripheral devices using flyby type transfers; external DMA controllers in Z280 MPU systems may also have this capability. The timing of flyby transactions is identical to memory transaction timing, with the exception that the DMA Flyby Strobe (<ins>DMASTB</ins>) signal is activated; the <ins>DMASTB</ins> signal is used to select the participating I/O device that must capture or supply the data during the memory access transaction.
 
 Flyby transactions controlled by the on-chip DMA channels always include one automatic wait state (Figures 12-13 and 12-14). As with all memory transactions, other hardware- and software-generated wait states can be added to the transaction. The external <ins>WAIT</ins> signal is sampled at two different times: during the automatic wait state and during T3.
-<a id="figure-12-13-on-chip-dma-channel-flyby-memory-read-transaction"></a>
 
+<a id="figure-12-13-on-chip-dma-channel-flyby-memory-read-transaction"></a>
 <br/>
 
 ![Figure 12-13. On-Chip DMA Channel Flyby Memory Read Transaction](Images/Figure12.13.png)<br/>
 _Figure 12-13. On-Chip DMA Channel Flyby Memory Read Transaction_
-<a id="figure-12-14-on-chip-dma-channel-flyby-memory-write-transaction"></a>
 
+<a id="figure-12-14-on-chip-dma-channel-flyby-memory-write-transaction"></a>
 <br/>
 
 ![Figure 12-14. On-Chip DMA Channel Flyby Memory Write Transaction](Images/Figure12.14.png)<br/>
@@ -357,8 +357,8 @@ To generate transactions on the bus, a potential bus master (such as a DMA contr
 If the multiprocessor mode is specified in the Bus Timing and Initialization register, then the contents of the Local Address register determine the range of memory addresses dedicated to the shared global bus. Before accessing an address on the global bus, the Z280 MPU must issue a Global Bus Request (<ins>GREQ</ins>) and receive an active Global Bus Acknowledge (<ins>GACKQ</ins>) signal, as described in [Section 10.3](10-Multiprocessor_Configurations.md#103-tightly-coupled-multiple-processors).
 
 [Figure 12-15](#figure-12-15-multiprocessor-mode-timing) illustrates the timing of the global bus request/acknowledge sequence. When the Z280 MPU needs to access a location on the global bus, <ins>GREQ</ins> is asserted in order to request use of the global bus. <ins>GACKQ</ins> is then sampled on each successive rising edge of the clock; when <ins>GACKQ</ins> becomes active (and if <ins>BUSREQ</ins> is not asserted), the memory transaction proceeds as described in [section 12.5.1](#1251-memory-transactions). <ins>GREQ</ins> is deasserted in the bus clock cycle immediately following the end of the memory transaction (except when executing the Test and Set instruction, where both the memory read and write operations are executed before deasserting <ins>GREQ</ins>).
-<a id="figure-12-15-multiprocessor-mode-timing"></a>
 
+<a id="figure-12-15-multiprocessor-mode-timing"></a>
 <br/>
 
 ![Figure 12-15. Multiprocessor Mode Timing](Images/Figure12.15.png)<br/>

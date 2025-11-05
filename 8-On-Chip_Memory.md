@@ -28,6 +28,8 @@ Valid bits = 16 bits that indicate which bytes in the cache contain valid data<b
 Cache data = 16 bytes
 
 <a id="figure-8-1-cache-organization"></a>
+<br/>
+
 _Figure 8-1. Cache Organization_
 
 <br/>
@@ -75,6 +77,8 @@ Don't care | Don't care | Don't care | Don't care | Updated* | No change | Yes |
 \* Updated if a cache line contains the accessed location, otherwise unaffected.
 
 <a id="table-8-1-cpu-accesses-to-on-chip-memory-as-cache"></a>
+<br/>
+
 _Table 8-1. CPU Accesses to On-Chip Memory as Cache_
 
 <br/>
@@ -125,7 +129,9 @@ Operation | Hit/Miss | Cache<br/>Instruction | Cache Data | Cache Activity :<br/
 Read | Hit | Don't care | Don't care | No change | No change | No | Cache
 | | Miss | Don't care | Don't care | No change | No change | Yes | Memory
 Write | Hit | Don't care | Don't care | Updated | No change | No | —
-<a id="table-8-3-dmacpu-accesses-to-on-chip-memory-as-fixed-memory-location"></a>
 | | Miss | Don't care | Don't care | No change | No change | Yes | —
+
+<a id="table-8-3-dmacpu-accesses-to-on-chip-memory-as-fixed-memory-location"></a>
+<br/>
 
 _Table 8-3. DMA/CPU Accesses to On-Chip Memory as Fixed Memory Location_

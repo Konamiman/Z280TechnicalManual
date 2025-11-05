@@ -9,6 +9,7 @@ When <ins>RESET</ins> is sampled high (deasserted), the state of the <ins>WAIT</
 [Table 11-1](#table-11-1-effect-of-a-reset-on-z280-mpu-and-mmu-registers) delineates the effect of a reset on other CPU registers. A reset places the CPU in
 interrupt mode 0; thus, the IM field in the Interrupt Status register will be a 0. The Interrupt Vector Enable bits in the Interrupt Status register also are cleared to 0 by a reset, and the Interrupt Pending bits will reflect the current status of the interrupt requests. All other CPU and MMU registers, including the remaining registers in the CPU register file, the MMU page descriptor registers, and the Interrupt/Trap Vector Table Pointer are unaffected by a reset.
 
+<a id="table-11-1-effect-of-a-reset-on-z280-mpu-and-mmu-registers"></a>
 <br/>
 
 Register | Value Loaded on Reset<br/>(Hexadecimal) | Comments
@@ -32,13 +33,13 @@ User Stack Pointer | | Unaffected
 MMU Master Control | 0000 | MMU disabled
 MMU Page Descriptor Register, Page Descriptor Register Pointer | Unaffected
 
-<a id="table-11-1-effect-of-a-reset-on-z280-mpu-and-mmu-registers"></a>
 _Table 11-1. Effect of a Reset on Z280 MPU and MMU Registers_
 
 <br/>
 
 The effect of a reset on the on-chip peripherals' programmable registers is shown in [Table 11-2](#table-11-2-effect-of-a-reset-on-z280-on-chip-peripheral-registers). The on-chip counter/timers are always disabled by a reset. The on-chip DMA channels and UART are also disabled by a reset, unless bootstrap mode is selected (see [Section 9.7](9-On-Chip_Peripherals.md#97-uart-bootstrapping-option)). The counter/timers' Time Constant and Count-Time registers are unaffected by a reset. The DMA channels' Destination Address, Source Address, and Count registers also are unaffected by a reset, except for DMA Channel 0's Destination Address and Count registers.
 
+<a id="table-11-2-effect-of-a-reset-on-z280-on-chip-peripheral-registers"></a>
 <br/>
 
 Register | Value Loaded on Reset<br/>(Hexadecimal) | Comments
@@ -60,7 +61,6 @@ UART:
 
 \* Unless bootstrap mode is selected.
 
-<a id="table-11-2-effect-of-a-reset-on-z280-on-chip-peripheral-registers"></a>
 _Table 11-2. Effect of a Reset on Z280 On-Chip Peripheral Registers_
 
 <br/>

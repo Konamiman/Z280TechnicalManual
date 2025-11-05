@@ -27,8 +27,8 @@
 
 The Z280 MPU architecture provides support for four types of multiprocessor configurations
 ([Figure 10-1](#figure-10-1-multiprocessor-configurations)): slave processors, tightly coupled multiple CPUs, loosely coupled multiple CPUs, and coprocessors.
-<a id="figure-10-1-multiprocessor-configurations"></a>
 
+<a id="figure-10-1-multiprocessor-configurations"></a>
 <br/>
 
 ![Figure 10-1. Multiprocessor Configurations](Images/Figure10.1.png)<br/>
@@ -60,8 +60,8 @@ While in the multiprocessor mode, Counter/Timer 0's I/O and IN pins are used as 
 ### 10.3.1 The Local Address Register
 
 During each memory transaction while in multiprocessor mode, the Z280 CPU uses the Local Address register to determine if that transaction is to occur on the local or global bus. The Local Address register includes a 4-bit Base field and a 4-bit Match Enable field ([Figure 10-2](#figure-10-2-local-address-register)). For each bus transaction, the four most-significant bits of the physical address (address bits A<sub>20</sub> through A<sub>23</sub>) are compared with the 4-bit Base field; the Match Enable field specifies which bits are going to be used during this comparison. If all the corresponding address bits match the Base field in the bit positions specified by the Match Enable field, then the bus transaction can proceed on the local bus without requesting the global bus. If there is a mismatch in at least one specified bit position, then the global bus is requested and the bus transaction does not proceed until the global bus acknowledge signal is asserted. (See [section 3.2.3](3-CPU_Control_Registers.md#323-local-address-register).)
-<a id="figure-10-2-local-address-register"></a>
 
+<a id="figure-10-2-local-address-register"></a>
 <br/>
 
 ![Figure 10-2. Local Address Register](Images/Figure10.2.png)<br/>
@@ -122,8 +122,8 @@ If the automatic memory refresh mechanism is enabled, refresh cycles are inhibit
 The Z280 MPU's multiprocessor mode of operation facilitates the development of tightly coupled multiprocessor systems and systems using the Z280 MPU as a front-end I/O processor.
 
 [Figure 10-4](#figure-10-4-tightly-coupled-processors-with-shared-global-memory) is a block diagram illustrating the use of multiple Z280 MPUs as tightly-coupled processors. Access to the global memory via the global bus is controlled by a centralized bus arbitration circuit. The <ins>GACK</ins> circuit controls the buffers that connect or isolate the global bus from each MPU's local bus. Each Z280 MPU can access its local memory independent of the other MPU's activity. Only one MPU at a time can access the shared global memory. Note that memory-mapped I/O devices could also be shared using the global bus.
-<a id="figure-10-4-tightly-coupled-processors-with-shared-global-memory"></a>
 
+<a id="figure-10-4-tightly-coupled-processors-with-shared-global-memory"></a>
 <br/>
 
 ![Figure 10-4. Tightly Coupled Processors with Shared Global Memory](Images/Figure10.4.png)<br/>
@@ -133,8 +133,8 @@ _Figure 10-4. Tightly Coupled Processors with Shared Global Memory_
 Figure 10-5 shows a tightly coupled multiple Z280 MPU system without a global memory, where each processor can directly access the local memory of the other processor. For this system, priority resolution logic would control both the local and global bus requests. A global bus request from
 one processor is used to generate a local bus request to the other processor. When one
 processor generates a global bus request, an active <ins>GACK</ins> signal is not returned to that processor until the other processor's local bus is available, as indicated by <ins>BUSACK</ins>.
-<a id="figure-10-5-tightly-coupled-processors-without-global-memory"></a>
 
+<a id="figure-10-5-tightly-coupled-processors-without-global-memory"></a>
 <br/>
 
 ![Figure 10-5. Tightly Coupled Processors without Global Memory](Images/Figure10.5.png)<br>
@@ -145,8 +145,8 @@ Although both Figure 10-4 and 10-5 show only two tightly coupled processors, mor
 
 [Figure 10-6](#figure-10-6-z280-mpu-as-an-io-processor) illustrates the use of a Z280 MPU as an I/O processor in a Z8000-based system. The
 Z280 MPU's <ins>GREQ</ins> signal is used as the bus request signal to the Z8000 CPU; the Z8000 CPU's <ins>BUSACK</ins> signal is input directly to the Z280 MPU's <ins>GACK</ins>, as well as controlling the buffers that normally isolate the Z280 MPU's local bus from the Z8000 CPU's bus.
-<a id="figure-10-6-z280-mpu-as-an-io-processor"></a>
 
+<a id="figure-10-6-z280-mpu-as-an-io-processor"></a>
 <br/>
 
 ![Figure 10-6. Z280 MPU as an I/O Processor](Images/Figure10.6.png)<br/>
@@ -164,8 +164,8 @@ Loosely coupled multiple CPUs generally communicate through a multiple-port peri
 The Zilog Extended Processing Architecture (EPA) provides a flexible and modular approach to expanding the capabilities of the Z280 MPU through the use of coprocessors called Extended Processing Units (EPUs). The Extended Processing Architecture is available on the Z-BUS configurations of the Z280 MPU, but not the Z80 Bus configurations. Up to four EPUs can be connected to a single Z280 MPU.
 
 An Extended Processing Unit is a coprocessor that can be used to execute complex, time-consuming tasks in order to unburden the CPU. EPUs connect directly to the Z-BUS; no extra external logic is required to interface an EPU to a Z280-based system ([Figure 10-7](#figure-10-7-epu-connection-in-z280-mpu-system)). As the Z280 CPU fetches and executes instructions, the EPU continuously monitors the instruction stream on the bus. A special group of instructions, called extended instructions, are processed by EPUs. When the Z280 CPU encounters an extended instruction, it performs any specified data transactions, but otherwise assumes that the instruction will be recognized and handled by an EPU. (In systems without EPUs, extended instructions can be used to generate a trap condition.) Thus, when EPUs are added to a system, the instruction set is expanded to include the extended instructions applicable to those EPUs, thereby boosting the processing power of the whole system. The Z280 CPU and EPUs work together like a single central processor; a system with EPUs can be thought of as a system whose central processor consists of 1 + N separate devices, where N is the number of EPUs in the system.
-<a id="figure-10-7-epu-connection-in-z280-mpu-system"></a>
 
+<a id="figure-10-7-epu-connection-in-z280-mpu-system"></a>
 <br/>
 
 ![Figure 10-7. EPU Connection in Z280 MPU System](Images/Figure10.7.png)<br/>
@@ -190,8 +190,8 @@ executed as the Extended Instruction trap service routine; when EPUs are added t
 ### 10.5.2 Extended Instruction Execution Sequence
 
 The CPU and EPU instruction execution sequence is diagrammed in [Figure 10-8](#figure-10-8-cpu-epu-instruction-execution-sequence). When the CPU fetches an extended instruction, the EPU Enable bit in the Trap Control register is examined. If the EPU Enable bit is a 0, an Extended Instruction trap is executed. If the EPU Enable bit is a 1, indicating that there is an EPU in the system, then the CPU fetches the four-byte instruction template from memory. The fetching of the template is indicated by the ST<sub>3</sub>-ST<sub>0</sub> status lines from the CPU. EPUs must continuously monitor the address/data bus and ST<sub>3</sub>-ST<sub>0</sub> status lines for its templates. A 2-bit identification field in the template can select one of up to four EPUs for execution of a given extended instruction. If the extended instruction calls for the transfer of data between the CPU and EPU or between the EPU and memory, the CPU generates the appropriate bus transaction cycles. These transactions are identified by unique encodings of the ST<sub>3</sub>-ST<sub>0</sub> status lines. The EPU monitors the status and timing signals output by the CPU to determine when to participate in the data transaction; the EPU supplies or captures the data when <ins>DS</ins> is active. For transactions between an EPU and memory, the CPU 3-states its address/data lines while <ins>DS</ins> is active so that the EPU or memory can supply the data. (See [section 13.5.5](13-Z-Bus_External_Interface.md#1355-extended-processing-unit-epu-transactions) for a description of the bus transaction timing.)
-<a id="figure-10-8-cpu-epu-instruction-execution-sequence"></a>
 
+<a id="figure-10-8-cpu-epu-instruction-execution-sequence"></a>
 <br/>
 
 ![Figure 10-8. CPU-EPU Instruction Execution Sequence](Images/Figure10.8.png)<br/>
