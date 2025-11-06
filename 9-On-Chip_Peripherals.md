@@ -59,12 +59,12 @@
 
 The Z280 MPU features a number of peripheral devices on-chip in addition to the CPU, MMU, and cache memory. These peripheral devices include a clock oscillator, dynamic RAM refresh controller, four direct memory access (DMA) controllers, three counter/timers, and a universal asynchronous receiver/transmitter (UART).
 
-The DMA channels, counter/timers, and UART are user-programmable devices that can be configured to operate in several different modes. These devices are accessed using I/O instructions; however, no external I/O bus transactions are generated when the on-chip peripherals are accessed by the CPU. These devices can generate interrupt requests to the Z280 MPU, as described below and in Chapter 6. Interrupts from these on-chip peripherals are always processed using interrupt mode 3, regardless of which interrupt mode is used for externally generated interrupts.
+The DMA channels, counter/timers, and UART are user-programmable devices that can be configured to operate in several different modes. These devices are accessed using I/O instructions; however, no external I/O bus transactions are generated when the on-chip peripherals are accessed by the CPU. These devices can generate interrupt requests to the Z280 MPU, as described below and in [Chapter 6](6-Interrupts_And_Traps.md). Interrupts from these on-chip peripherals are always processed using interrupt mode 3, regardless of which interrupt mode is used for externally generated interrupts.
 
 
 ## 9.2 CLOCK OSCILLATOR
 
-The Z280 MPU has an on-chip clock oscillator/generator that can be connected directly to a crystal or any other suitable clock source. The frequency of the processor clock is one-half of the frequency of the external clock source or crystal. The processor clock can be further divided by a factor of 1, 2, or 4 to provide the bus timing clock, as specified by the contents of the Bus Timing and Initialization register (see Chapter 3). The bus timing clock is output by the MPU for use by the rest of the system.
+The Z280 MPU has an on-chip clock oscillator/generator that can be connected directly to a crystal or any other suitable clock source. The frequency of the processor clock is one-half of the frequency of the external clock source or crystal. The processor clock can be further divided by a factor of 1, 2, or 4 to provide the bus timing clock, as specified by the contents of the Bus Timing and Initialization register (see [Chapter 3](3-CPU_Control_Registers.md)). The bus timing clock is output by the MPU for use by the rest of the system.
 
 The on-chip clock oscillator, a high-gain amplifier, is enabled by either connecting a crystal across the Clock/Crystal Input (XTAL1) and Crystal Output (XTALO) pins or connecting a clock input to the Clock/Crystal Input pin. The crystal must be a parallel resonant fundamental type.
 
@@ -73,8 +73,9 @@ The on-chip clock oscillator, a high-gain amplifier, is enabled by either connec
 
 An on-chip memory refresh controller in the Z280 MPU is available for generating memory refresh operations in systems utilizing dynamic RAMs. Operation of this mechanism is controlled by the Refresh Rate register, which is located in the Z280 MPU'S I/O address space. If enabled, memory refreshes are performed at a rate specified by the contents of this register.
 
-The format of the 8-bit Refresh Rate register is shown in Figure 9-1. This register enables the refresh mechanism and determines the frequency of refresh transactions. The fields in this register are described below
+The format of the 8-bit Refresh Rate register is shown in [Figure 9-1](#figure-9-1-refresh-rate-register). This register enables the refresh mechanism and determines the frequency of refresh transactions. The fields in this register are described below
 
+<a id="figure-9-1-refresh-rate-register"></a>
 <br/>
 
 ![Figure 9-1. Refresh Rate Register](Images/Figure9.1.png)<br/>
@@ -97,8 +98,9 @@ Pseudo-static memories and some peripheral devices (such as the Z8000 family of 
 
 ## 9.4 COUNTER/TIMERS
 
-The Z280 MPU's three on-chip 16-bit counter/timers can be configured to satisfy a broad range of counting and timing applications, including event counting, interval timing, watchdog timing, and clock generation. Each counter/timer is composed of a 16-bit downcounter, a 16-bit time constant register, and two 8-bit control and status registers (the Counter/Timer Configuration register and the Counter/Timer Command/Status register). The three independent devices are referred to as counter/timer 0 (C/T 0), counter/timer 1 (C/T 1), and counter/timer 2 (C/T 2). Figure 9-2 is a block diagram of a Z280 MPU counter/timer.
+The Z280 MPU's three on-chip 16-bit counter/timers can be configured to satisfy a broad range of counting and timing applications, including event counting, interval timing, watchdog timing, and clock generation. Each counter/timer is composed of a 16-bit downcounter, a 16-bit time constant register, and two 8-bit control and status registers (the Counter/Timer Configuration register and the Counter/Timer Command/Status register). The three independent devices are referred to as counter/timer 0 (C/T 0), counter/timer 1 (C/T 1), and counter/timer 2 (C/T 2). [Figure 9-2](#figure-9-2-countertimer-block-diagram) is a block diagram of a Z280 MPU counter/timer.
 
+<a id="figure-9-2-countertimer-block-diagram"></a>
 <br/>
 
 ![Figure 9-2. Counter/Timer Block Diagram](Images/Figure9.2.png)<br/>
@@ -134,8 +136,9 @@ Gate and trigger inputs are used to control counter/timer activity in either cou
 
 Gate signals are used in applications where counting or timing is to occur only during certain specified intervals; the counter/timer will count or time only while the gating condition is met. For applications where an external pin is configured as a gate input, counting or timing operations are performed only while the gate input is high. A software gate bit (one bit of the Counter/Timer Command/Status register) is used as a filter for the gate input; while the software gate bit is cleared to 0, the gating condition is not met regardless of the state of the gating line. In other words, the gating condition is a logical AND of the hardware and software gates; both the gate input must be high and the software gate bit must be set to 1 for the counter timer to be operating. If no external pins are configured as a gating signal, then the software gate bit must be set to 1 to satisfy the gating condition.
 
-Figure 9-3 illustrates the gating facility in an application where the counter/timer is in counter mode with both the gate and the count signals coming from external pins. This example assumes that the software gate bit has been set to 1. The contents of the downcounter are decremented on a low-to-high transition of the count input only if the gate input is high.
+[Figure 9-3](#figure-9-3-counter-operation-with-gate-only) illustrates the gating facility in an application where the counter/timer is in counter mode with both the gate and the count signals coming from external pins. This example assumes that the software gate bit has been set to 1. The contents of the downcounter are decremented on a low-to-high transition of the count input only if the gate input is high.
 
+<a id="figure-9-3-counter-operation-with-gate-only"></a>
 <br/>
 
 ![Figure 9-3. Counter Operation with Gate Only](Images/Figure9.3.png)<br/>
@@ -145,8 +148,9 @@ _Figure 9-3. Counter Operation with Gate Only_
 
 If trigger mode is selected, a countdown sequence for a counter/timer begins only after a triggering condition occurs; a counting or timing operation can begin only after a low-to-high transition is detected on the trigger. If an external input is used as a trigger, that line is monitored by the counter/timer. Alternatively, a software trigger bit (one bit in the Counter/Timer Command/Status register) can be set to 1 from a previously cleared value to activate the counter/timer. The trigger condition is a logical OR of the hardware and software triggers; that is, either a hardware or software trigger will activate an enabled counter/timer.
 
-Figure 9-4 illustrates trigger operation in an application where the counter/timer is in the counter mode with both the trigger and count inputs provided by external pins. This example assumes that the software trigger bit does not make a low to high transition. The contents of the downcounter are decremented on a low-to-high transition of the count input only after a low-to-high transition on the trigger input has been detected.
+[Figure 9-4](#figure-9-4-counter-operation-with-trigger-only) illustrates trigger operation in an application where the counter/timer is in the counter mode with both the trigger and count inputs provided by external pins. This example assumes that the software trigger bit does not make a low to high transition. The contents of the downcounter are decremented on a low-to-high transition of the count input only after a low-to-high transition on the trigger input has been detected.
 
+<a id="figure-9-4-counter-operation-with-trigger-only"></a>
 <br/>
 
 ![Figure 9-4. Counter Operation with Trigger Only](Images/Figure9.4.png)<br/>
@@ -156,8 +160,9 @@ _Figure 9-4. Counter Operation with Trigger Only_
 
 Either a retriggerable or nonretriggerable operation can be specified. In the retriggerable mode, the occurrence of a trigger condition causes the counter/timer to reload its initial time constant value regardless of the current contents of the downcounter. This mode is used in applications such as watchdog timers. In the nonretriggerable mode, after the first trigger condition starts counter/timer activity, subsequent trigger conditions are ignored. Nonretriggerable mode is used in applications such as delay counters that measure a fixed delay from a given event.
 
-Gate and trigger operations can be combined in a single counter/timer. Separate gate and trigger inputs (either hardware or software) can be specified, or one external input can be used as both a gate and a trigger. In the latter case, a low-to-high transition on the input acts as a trigger that starts counter/timer activity, and then counting or timing continues only as long as the input signal remains high. Again, either retriggerable or nonretriggerable modes are available. Figure 9-5 illustrates counter/timer operation in an application where counter mode is selected, one input is a count input, and the other input is used as both the trigger and gate.
+Gate and trigger operations can be combined in a single counter/timer. Separate gate and trigger inputs (either hardware or software) can be specified, or one external input can be used as both a gate and a trigger. In the latter case, a low-to-high transition on the input acts as a trigger that starts counter/timer activity, and then counting or timing continues only as long as the input signal remains high. Again, either retriggerable or nonretriggerable modes are available. [Figure 9-5](#figure-9-5-counter-operation-with-gate-and-trigger) illustrates counter/timer operation in an application where counter mode is selected, one input is a count input, and the other input is used as both the trigger and gate.
 
+<a id="figure-9-5-counter-operation-with-gate-and-trigger"></a>
 <br/>
 
 ![Figure 9-5. Counter Operation with Gate and Trigger](Images/Figure9.5.png)<br/>
@@ -172,7 +177,7 @@ During operation, the counter/timer counts down from a preset time constant valu
 
 Another set of operating modes determines counter/timer activity upon reaching the terminal count. Whether in counter or timer mode, a counter/timer can be configured for single-cycle mode or continuous mode. In single-cycle mode, the counter/timer halts operation upon reaching terminal count; a new trigger is required to reload the time constant and initiate another countdown sequence. In continuous mode, the counter/timer is automatically reloaded with the time constant upon reaching terminal count; the downcounter is reloaded on the next count input after reaching terminal count. For example, a counter/timer in continuous mode with a 3 in its Time Constant register will be reloaded on every fourth count input.
 
-An interrupt enable bit in the Counter/Timer Configuration register determines if an interrupt request is generated at the terminal count. This request will be processed by the CPU if the appropriate Interrupt Request Enable bit in the CPU's Master Status register is set to 1 (see Chapter 6).
+An interrupt enable bit in the Counter/Timer Configuration register determines if an interrupt request is generated at the terminal count. This request will be processed by the CPU if the appropriate Interrupt Request Enable bit in the CPU's Master Status register is set to 1 (see [Chapter 6](6-Interrupts_And_Traps.md)).
 
 The CTIO pin can be configured as a counter/timer output signal. Reaching the terminal count condition causes a low-to-high transition on the CTIO pin; this signal remains high as long as the downcounter holds a value of zero (that is, until a non-zero time constant is loaded into the downcounter due to a trigger condition).
 
@@ -181,13 +186,14 @@ The CTIO pin can be configured as a counter/timer output signal. Reaching the te
 
 Each counter/timer has two 8-bit command and status registers and two 16-bit count registers. The 8-bit Counter/Timer Configuration and Counter/Timer Command/Status registers determine the counter/timer's operating modes and provide status information about the current operation.
 
-If C/T 0 and C/T 1 are linked to form a 32-bit counter/timer, the functionality of these registers is affected, as described in section 9.4.5. The 16-bit Time Constant register holds the initialization value for the counter/timer, and the 16-bit Count-Time register contains the value of the current count in progress.
+If C/T 0 and C/T 1 are linked to form a 32-bit counter/timer, the functionality of these registers is affected, as described in [section 9.4.5](#945-linking-countertimers). The 16-bit Time Constant register holds the initialization value for the counter/timer, and the 16-bit Count-Time register contains the value of the current count in progress.
 
 
 #### 9.4.4.1 Counter/Timer Configuration Register
 
-The Counter/Timer Configuration register, shown in Figure 9-6, specifies the counter/timer's mode of operation.
+The Counter/Timer Configuration register, shown in [Figure 9-6](#figure-9-6-countertimer-configuration-register), specifies the counter/timer's mode of operation.
 
+<a id="figure-9-6-countertimer-configuration-register"></a>
 <br/>
 
 ![Figure 9-6. Counter/Timer Configuration Register](Images/Figure9.6.png)<br/>
@@ -205,10 +211,11 @@ The five fields in this register are described below.
 
 **Interrupt Enable (IE)**. While this bit is set to 1, the counter/timer generates an interrupt request to the Z280 CPU upon reaching terminal count. While this bit is cleared to 0, no interrupt requests can be generated by the counter/timer.
 
-**Counter/Timer Cascade (CTC).** For C/T 0, this is the enable bit for linking to C/T 1 in order to form a 32-bit counter/timer (see section 9.4.5). The state of this bit has no effect in C/T 1 and C/T 2.
+**Counter/Timer Cascade (CTC).** For C/T 0, this is the enable bit for linking to C/T 1 in order to form a 32-bit counter/timer (see [section 9.4.5](#945-linking-countertimers)). The state of this bit has no effect in C/T 1 and C/T 2.
 
-**Input Pin Assignments (IPA)**. The contents of this 4-bit field determine the operating mode of the counter/timer (counter or timer mode) and the functionality of the external pins associated with that counter/timer. The four bits in this field are associated with enabling the generation of an output pulse (EO), selecting the counter or timer mode (C/T), enabling the gating facility (G), and enabling the triggering facility (T). Table 9-1 shows the encoding of this field.
+**Input Pin Assignments (IPA)**. The contents of this 4-bit field determine the operating mode of the counter/timer (counter or timer mode) and the functionality of the external pins associated with that counter/timer. The four bits in this field are associated with enabling the generation of an output pulse (EO), selecting the counter or timer mode (C/T), enabling the gating facility (G), and enabling the triggering facility (T). [Table 9-1](#table-9-1-encoding-of-the-ipa-field-in-the-countertimer-configuration-register) shows the encoding of this field.
 
+<a id="table-9-1-encoding-of-the-ipa-field-in-the-countertimer-configuration-register"></a>
 <br/>
 
 EO | C/T | G | T | Counter/Timer I/O | Counter/Timer Input | Mode
@@ -241,8 +248,9 @@ The Counter/Timer Configuration registers are cleared to all zeros by a reset.
 
 #### 9.4.4.2 Counter/Timer Command/Status Register
 
-The Counter/Timer Command/Status register provides for software control of counter/timer operation and reflects the current status of the counter/timer. Three control bits and three status bits are included in the Command/Status register. The format for this register is illustrated in Figure 9-7.
+The Counter/Timer Command/Status register provides for software control of counter/timer operation and reflects the current status of the counter/timer. Three control bits and three status bits are included in the Command/Status register. The format for this register is illustrated in [Figure 9-7](#figure-9-7-countertimer-commandstatus-register).
 
+<a id="figure-9-7-countertimer-commandstatus-register"></a>
 <br/>
 
 ![Figure 9-7. Counter/Timer Command/Status Register](Images/Figure9.7.png)<br/>
@@ -274,8 +282,9 @@ The 16-bit Count-Time register holds the current value in the downcounter and ca
 
 Both the Time Constant and Count-Time registers hold unpredictable values after a reset.
 
-Table 9-2 lists the I/O port addresses associated with each of the counter/timers' registers. The Counter/Timer Configuration register and Counter/Timer Command/Status register are accessed with byte I/O instructions and, with the exception of the read-only CIP bit, can be read or written. The Time Constant and Count-Time registers are accessed with word I/O instructions. The Time Constant register can be read or written; the Count-Time register is read-only.
+[Table 9-2](#table-9-2-io-addresses-of-countertimer-registers) lists the I/O port addresses associated with each of the counter/timers' registers. The Counter/Timer Configuration register and Counter/Timer Command/Status register are accessed with byte I/O instructions and, with the exception of the read-only CIP bit, can be read or written. The Time Constant and Count-Time registers are accessed with word I/O instructions. The Time Constant register can be read or written; the Count-Time register is read-only.
 
+<a id="table-9-2-io-addresses-of-countertimer-registers"></a>
 <br/>
 
 Register | C/T 0 | C/T 1 | C/T 2
@@ -297,7 +306,7 @@ Under software control, two Z280 MPU counter/timers can be linked to form a 32-b
 
 Linking the two counter/timers together affects the functionality of the counter/timers' registers. If C/T 0 and C/T 1 are linked to form a 32-bit counter, C/T 1's Time Constant register holds the upper 16 bits and C/T 0's Time Constant register holds the lower 16 bits of the 32-bit count to be loaded into the downcounter when a counter/timer operation begins. Similarly, C/T 1's Count-Time register holds the upper 16 bits and C/T 0's Count-Time register holds the lower 16 bits of the current count.
 
-The effect of linking counter/timers on the Configuration and Command/Status registers is summarized in Table 9-3. The configuration of the 32-bit counter/timer is determined by the state of the C/S, RE, and IPA fields in the Configuration register of the more significant counter/timer (C/T 1). Any external connections specified in the IPA field of the C/T 1 Configuration register use the pins associated with C/T 1. The controls in the Configuration register for C/T 0 are ignored, with the exception of the CTC, IE, and EO bits. The CTC bit in C/T 0 is used to specify linking of the counter/timers. If the IE bit in the more significant counter/timer (C/T 1) is set to 1, an interrupt request is generated when the 32-bit counter reaches end-of-count, using the interrupt request signal from C/T 1; if the IE bit in the less significant counter/timer (C/T 0) is set to 1, an interrupt request is generated when the lower 16 bits of the 32-bit downcounter reach 0 (in other words, when C/T 0 reaches end-of-count), using the interrupt request signal from C/T 0. If the OE bit in C/T 0 is set, the C/T I/O signal associated with C/T 0 goes high whenever the lower half of the 32-bit down-counter holds a 0 (in other words, when C/T 0's downcounter holds a 0).
+The effect of linking counter/timers on the Configuration and Command/Status registers is summarized in [Table 9-3](#table-9-3-configuration-and-commandstatus-registers-for-linked-countertimers). The configuration of the 32-bit counter/timer is determined by the state of the C/S, RE, and IPA fields in the Configuration register of the more significant counter/timer (C/T 1). Any external connections specified in the IPA field of the C/T 1 Configuration register use the pins associated with C/T 1. The controls in the Configuration register for C/T 0 are ignored, with the exception of the CTC, IE, and EO bits. The CTC bit in C/T 0 is used to specify linking of the counter/timers. If the IE bit in the more significant counter/timer (C/T 1) is set to 1, an interrupt request is generated when the 32-bit counter reaches end-of-count, using the interrupt request signal from C/T 1; if the IE bit in the less significant counter/timer (C/T 0) is set to 1, an interrupt request is generated when the lower 16 bits of the 32-bit downcounter reach 0 (in other words, when C/T 0 reaches end-of-count), using the interrupt request signal from C/T 0. If the OE bit in C/T 0 is set, the C/T I/O signal associated with C/T 0 goes high whenever the lower half of the 32-bit down-counter holds a 0 (in other words, when C/T 0's downcounter holds a 0).
 
 Similarly, the Command/Status register in the more significant counter/timer (C/T 1) contains the control and status bits for the linked 32-bit counter/timer. However, the status bits in the less significant counter/timer (C/T 0) hold valid status for the lower-half of the 32-bit counter/timer (that is, the status of C/T 0 itself).
 
@@ -344,6 +353,7 @@ CIP | Active | Count-in-Progress status bit for 32-bit counter/timer.
 CC | Active | End-of-Count Has Been Reached status bit for 32-bit counter/timer.
 COR | Active | Count Overrun status bit for 32-bit counter/timer.
 
+<a id="table-9-3-configuration-and-commandstatus-registers-for-linked-countertimers"></a>
 <br/>
 
 _C/T 0 Command/Status Register:_
@@ -417,8 +427,9 @@ In the single transaction mode, the DMA controller transfers only one byte or wo
 
 In the burst mode, once the DMA channel gains control of the bus, it continues to transfer data until the <ins>RDY</ins> input goes inactive. When the <ins>RDY</ins> line becomes inactive, the DMA releases the system bus; bus control then returns back to the CPU or to the next lower-priority DMA channel with a bus request pending.
 
-In the continuous mode, the DMA channel retains control of the system bus until the entire block of data has been transferred. If the <ins>RDY</ins> line goes inactive before the entire data block is transferred, the DMA simply waits until <ins>RDY</ins> becomes active again, without releasing the bus. This mode is the fastest mode since it has the least response-time overhead when the <ins>RDY</ins> line momentarily goes inactive and returns active again. However, this mode does not allow any CPU activity for the duration of the transfer. Figure 9-8 summarizes the DMA transfer modes.
+In the continuous mode, the DMA channel retains control of the system bus until the entire block of data has been transferred. If the <ins>RDY</ins> line goes inactive before the entire data block is transferred, the DMA simply waits until <ins>RDY</ins> becomes active again, without releasing the bus. This mode is the fastest mode since it has the least response-time overhead when the <ins>RDY</ins> line momentarily goes inactive and returns active again. However, this mode does not allow any CPU activity for the duration of the transfer. [Figure 9-8](#figure-9-8-modes-of-operation) summarizes the DMA transfer modes.
 
+<a id="figure-9-8-modes-of-operation"></a>
 <br/>
 
 ![Figure 9-8. Modes of Operation](Images/Figure9.8.png)<br/>
@@ -484,8 +495,9 @@ DMA registers consist of a DMA Master Control register that specifies the genera
 
 #### 9.5.6.1 DMA Master Control Register
 
-The 16-bit DMA Master Control register is illustrated in Figure 9-9.
+The 16-bit DMA Master Control register is illustrated in [Figure 9-9](#figure-9-9-dma-master-control-register).
 
+<a id="figure-9-9-dma-master-control-register"></a>
 <br/>
 
 ![Figure 9-9. DMA Master Control Register](Images/Figure9.9.png)<br/>
@@ -514,8 +526,9 @@ The DMA Master Control register is cleared to all zeros by a reset, unless boots
 
 #### 9.5.6.2 DMA Transaction Descriptor Register
 
-Each DMA channel has its own 16-bit Transaction Descriptor register. The Transaction Descriptor register (Figure 9-10) describes the type of DMA transfer to be performed and contains control and status information.
+Each DMA channel has its own 16-bit Transaction Descriptor register. The Transaction Descriptor register ([Figure 9-10](#figure-9-10-transaction-descriptor-register)) describes the type of DMA transfer to be performed and contains control and status information.
 
+<a id="figure-9-10-transaction-descriptor-register"></a>
 <br/>
 
 ![Figure 9.10. Transaction Descriptor Register](Images/Figure9.10.png)<br/>
@@ -525,8 +538,9 @@ _Figure 9.10. Transaction Descriptor Register_
 
 **End-of-Process Signaled (EPS).** This status bit is set to 1 automatically when an active End-of-Process signal prematurely terminates a DMA transfer. This bit can be set to 1 or cleared to 0 under software control.
 
-**Destination Address Descriptor (DAD).** This 3-bit control field determines the type of location (memory or I/O) to be accessed as the destination port during DMA transfers, and whether the destination address is to be incremented, decremented, or left unchanged between transfers, as shown in Table 9-4. When memory addresses are auto-incremented or auto-decremented, the incrementing or decrementing value is determined by the size of the data transfer, as specified in the ST field. I/O port addresses are always auto-incremented and auto-decremented by 1.
+**Destination Address Descriptor (DAD).** This 3-bit control field determines the type of location (memory or I/O) to be accessed as the destination port during DMA transfers, and whether the destination address is to be incremented, decremented, or left unchanged between transfers, as shown in [Table 9-4](#table-9-4-encoding-of-dad-and-sad-fields-in-dma-transaction-descriptor-register). When memory addresses are auto-incremented or auto-decremented, the incrementing or decrementing value is determined by the size of the data transfer, as specified in the ST field. I/O port addresses are always auto-incremented and auto-decremented by 1.
 
+<a id="table-9-4-encoding-of-dad-and-sad-fields-in-dma-transaction-descriptor-register"></a>
 <br/>
 
 Encoding | Address Modification Operation
@@ -546,8 +560,9 @@ _Table 9-4. Encoding of DAD and SAD Fields In DMA Transaction Descriptor Registe
 
 **Transfer Complete (TC).** This status bit is set to 1 automatically when the Count register has reached zero. This bit can be set to 1 or cleared to 0 under software control.
 
-**Transaction Type (Type).** This 2-bit control field specifies the type of DMA operation to be performed, as shown in Table 9-5.
+**Transaction Type (Type).** This 2-bit control field specifies the type of DMA operation to be performed, as shown in [Table 9-5](#table-9-5-encoding-of-type-field-in-transaction-descriptor-register).
 
+<a id="table-9-5-encoding-of-type-field-in-transaction-descriptor-register"></a>
 <br/>
 
 Encoding | DMA Operation
@@ -561,8 +576,9 @@ _Table 9-5. Encoding of Type Field in Transaction Descriptor Register_
 
 <br/>
 
-**Bus Request Protocol (BRP).** This 2-bit control field determines the transfer mode for the DMA operation, as shown in Table 9-6.
+**Bus Request Protocol (BRP).** This 2-bit control field determines the transfer mode for the DMA operation, as shown in [Table 9-6](#table-9-6-encoding-of-brp-field-in-transaction-descriptor-register).
 
+<a id="table-9-6-encoding-of-brp-field-in-transaction-descriptor-register"></a>
 <br/>
 
 Encoding | DMA Transfer Mode
@@ -576,8 +592,9 @@ _Table 9-6. Encoding of BRP Field In Transaction Descriptor Register_
 
 <br/>
 
-**Size of Transfer (ST).** This 2-bit control field specifies the size of the entity to be transferred during each DMA-controlled transaction, as shown in Table 9-7. If auto-increment or auto-decrement of a source or destination memory address is specified in the SAD or DAD fields, then the state of this field determines the size of the increment or decrement operation.
+**Size of Transfer (ST).** This 2-bit control field specifies the size of the entity to be transferred during each DMA-controlled transaction, as shown in [Table 9-7](#table-9-7-encoding-of-st-field-in-transaction-descriptor-register). If auto-increment or auto-decrement of a source or destination memory address is specified in the SAD or DAD fields, then the state of this field determines the size of the increment or decrement operation.
 
+<a id="table-9-7-encoding-of-st-field-in-transaction-descriptor-register"></a>
 <br/>
 
 Encoding | Size of<br/>Transfer | Number to Increment<br/>or Decrement By
@@ -593,7 +610,7 @@ _Table 9-7. Encoding of ST Field in Transaction Descriptor Register_
 
 **Interrupt Enable (IE).** While this bit is set to 1, the DMA channel generates an interrupt request to the CPU either when the Count register goes to zero, indicating the completion of a DMA operation, or when an End-of-Process signal prematurely terminates a DMA operation. While this bit is cleared to 0, no interrupt request is generated.
 
-**Source Address Descriptor (SAD).** This 3-bit control field determines the type of location (memory or I/O) to be accessed as the source port during DMA transfers, and whether the source address is to be incremented, decremented, or left unchanged between transfers, as shown in Table 9-4.
+**Source Address Descriptor (SAD).** This 3-bit control field determines the type of location (memory or I/O) to be accessed as the source port during DMA transfers, and whether the source address is to be incremented, decremented, or left unchanged between transfers, as shown in [Table 9-4](#table-9-4-encoding-of-dad-and-sad-fields-in-dma-transaction-descriptor-register).
 
 **DMA Enable (EN).** While this bit is set to 1, the DMA channel is enabled; while enabled, the DMA can request control of the system bus and, upon becoming bus master, initiate transactions on the bus. While this bit is a 0, the DMA channel is disabled and cannot request control of the bus. The DMA registers can be accessed regardless of the state of this bit.
 
@@ -611,8 +628,9 @@ A reset loads a 0100<sub>H</sub> into DMA0's Count register; the other channels'
 
 The 24-bit Source Address register and Destination Address register hold the port addresses used during DMA transfers. These are physical addresses that are not translated by the MMU. In flyby mode, only one of these registers is used to supply the address for the transaction, as determined by the Type field in the Transaction Descriptor register. The contents of these registers can be automatically incremented or decremented by each DMA transaction, as determined by the SAD and DAD field in the Transaction Descriptor register.
 
-The entire 24-bit Source Address or Destination Address register is read and written via two word accesses to the register. Twelve bits of the address are accessed by each word I/O operation; the format used when accessing these registers is shown in Figure 9-11.
+The entire 24-bit Source Address or Destination Address register is read and written via two word accesses to the register. Twelve bits of the address are accessed by each word I/O operation; the format used when accessing these registers is shown in [Figure 9-11](#figure-9-11-source-and-destination-address-registers-format).
 
+<a id="figure-9-11-source-and-destination-address-registers-format"></a>
 <br/>
 
 ![Figure 9-11. Source and Destination Address Registers Format](Images/Figure9.11.png)<br/>
@@ -622,8 +640,9 @@ _Figure 9-11. Source and Destination Address Registers Format_
 
 DMA0's Destination Address register is cleared to 0 by a reset; all other Source and Destination Address registers are unaffected by a reset.
 
-All DMA registers are located in I/O page FF<sub>H</sub>. The DMA Master Control register is accessed at I/O port address FFxx1F. Table 9-8 lists the I/O port addresses for the other DMA registers. All DMA registers can be read or written using word I/O instructions.
+All DMA registers are located in I/O page FF<sub>H</sub>. The DMA Master Control register is accessed at I/O port address FFxx1F. [Table 9-8](#table-9-8-io-addresses-of-dma-registers) lists the I/O port addresses for the other DMA registers. All DMA registers can be read or written using word I/O instructions.
 
+<a id="table-9-8-io-addresses-of-dma-registers"></a>
 <br/>
 
 Register | DMA0 | DMA1 | DMA2 | DMA3
@@ -698,14 +717,15 @@ When DMA1 is linked to the UART transmitter, the Source Address register is prog
 
 The on-chip universal asynchronous receiver/transmitter (UART) provides the Z280 MPU with serial I/O capability. The full-duplex UART transmits and receives serial data using any common asynchronous data communication protocol.
 
-Figure 9-12 illustrates the general format for an asynchronous transmission using the Z280 MPU's UART. Characters can contain five, six, seven, or eight bits, plus an optional even or odd parity bit. The transmitter can supply one or two stop bits per character. Break outputs can be produced by the transmitter at any time under program control; the receiver can detect breaks as well as parity errors, framing errors, and overrun errors. Transmission and reception are performed independently.
+[Figure 9-12](#figure-9-12-general-format-for-an-asynchronous-transmission) illustrates the general format for an asynchronous transmission using the Z280 MPU's UART. Characters can contain five, six, seven, or eight bits, plus an optional even or odd parity bit. The transmitter can supply one or two stop bits per character. Break outputs can be produced by the transmitter at any time under program control; the receiver can detect breaks as well as parity errors, framing errors, and overrun errors. Transmission and reception are performed independently.
 
 The UART uses the same clock frequency for both the transmitter and the receiver. The UART's clock input can be generated externally or internally. For externally generated clocks, Counter/Timer 1's input line is used as the source of the UART's clock in addition to being an input to the counter/timer. The maximum external clock frequency is the CPU clock divided by 4. Alternately, the UART's clock can be provided by the output pulse from Counter/Timer 1, allowing the internal processor clock to be used for bit rate generation. The UART's clock input is further scaled by a factor of 1, 16, 32, or 64 for clocking the transmitter and receiver.
 
-The UART can be used in an interrupt-driven or polled environment. If enabled, separate transmit and receive interrupt requests are generated by the UART. Transmit interrupts occur when the transmitter's data buffer is emptied, and receive interrupts occur when an entire character is received or an error is detected. In polled environments, status bits in UART registers can be read to determine if the transmit buffer is empty or receive buffer is full. As described in section 9.5.9, DMA channel 0 can be linked to the receiver and DMA channel 1 to the transmitter to provide for DMA-controlled transfers between the UART and memory.
+The UART can be used in an interrupt-driven or polled environment. If enabled, separate transmit and receive interrupt requests are generated by the UART. Transmit interrupts occur when the transmitter's data buffer is emptied, and receive interrupts occur when an entire character is received or an error is detected. In polled environments, status bits in UART registers can be read to determine if the transmit buffer is empty or receive buffer is full. As described in [section 9.5.9](#959-dma-programming-dmas-linked-to-uart), DMA channel 0 can be linked to the receiver and DMA channel 1 to the transmitter to provide for DMA-controlled transfers between the UART and memory.
 
 The UART uses two external pins, Transmit (Tx) and Receive (Rx). Data that is to be transmitted is placed serially on the Transmit pin and data that is to be received is read from the Receive pin.
 
+<a id="figure-9-12-general-format-for-an-asynchronous-transmission"></a>
 <br/>
 
 ![Figure 9-12. General Format for an Asynchronous Transmission](Images/Figure9.12.png)<br/>
@@ -729,8 +749,9 @@ The Tx output line is held high (marking) when the transmitter has no data to se
 
 Receive operations are performed only when the Receiver Enable bit in the Receiver Control/Status register is set to 1. A low (spacing) condition on the Receive input line indicates a start bit; if the low persists for at least one-half of a bit time, the start bit is assumed to be valid and the data input is sampled at mid-bit times until the entire character is assembled. Thus, reception is protected from transients on the input line by checking for a valid start bit one-half bit time after detecting a high-to-low transition on the Receive input; if the low does not persist (as with a transient), the character assembly process is not started. If the bit time is one clock period (the x1 clock mode), bit synchronization must be accomplished externally; received data is sampled on the rising edge of the clock.
 
-Received characters are read from the Receive Data register. If parity is enabled, the parity bit is assembled as part of the character for character lengths other than eight bits. If the resulting character is still less than eight bits, 1's are appended in the unused high-order bit positions. For example, Figure 9-13 illustrates how the character is assembled in the Receive Data register when receiving 5-bit characters with parity.
+Received characters are read from the Receive Data register. If parity is enabled, the parity bit is assembled as part of the character for character lengths other than eight bits. If the resulting character is still less than eight bits, 1's are appended in the unused high-order bit positions. For example, [Figure 9-13](#figure-9-13-byte-assembled-by-receiver-for-5-bit-character-with-parity) illustrates how the character is assembled in the Receive Data register when receiving 5-bit characters with parity.
 
+<a id="figure-9-13-byte-assembled-by-receiver-for-5-bit-character-with-parity"></a>
 <br/>
 
 ![Figure 9-13. Byte Assembled by Receiver for 5-bit Character with Parity](Images/Figure9.13.png)<br/>
@@ -754,8 +775,9 @@ UART operation is controlled by three 8-bit registers: the UART Configuration re
 
 #### 9.6.3.1 UART Configuration Register
 
-The 8-bit UART Configuration register (Figure 9-14) contains control information for both the receiver and transmitter.
+The 8-bit UART Configuration register ([Figure 9-14](#figure-9-14-uart-configuration-register)) contains control information for both the receiver and transmitter.
 
+<a id="figure-9-14-uart-configuration-register"></a>
 <br/>
 
 ![Figure 9-14. UART Configuration Register](Images/Figure9.14.png)<br/>
@@ -767,8 +789,9 @@ The control fields within this register are described below.
 
 **Loop Back Enable (LB).** When set to 1, the UART is in local loopback mode; in this mode, the internal transmit data line is tied to the internal receiver input line and the external receiver input pin is ignored. Thus, all transmitted data is automatically received. When this bit is cleared to 0, the transmitter and receiver operate independently.
 
-**Clock Rate (CR).** This 2-bit field determines the multiplier between the UART clock and data rates (that is, the number of clocks per bit time), as specified in Table 9-9. The same data rate is used by both the transmitter and receiver. If the X1 clock rate is selected, bit synchronization must be accomplished externally. In the X1 mode, the transmitter sends data on the falling edge of the clock and the receiver samples data on the rising edge of the clock.
+**Clock Rate (CR).** This 2-bit field determines the multiplier between the UART clock and data rates (that is, the number of clocks per bit time), as specified in [Table 9-9](#table-9-9-cr-field-of-uart-configuration-register). The same data rate is used by both the transmitter and receiver. If the X1 clock rate is selected, bit synchronization must be accomplished externally. In the X1 mode, the transmitter sends data on the falling edge of the clock and the receiver samples data on the rising edge of the clock.
 
+<a id="table-9-9-cr-field-of-uart-configuration-register"></a>
 <br/>
 
 CR Field | UART Clock Rate
@@ -788,8 +811,9 @@ _Table 9-9. CR Field of UART Configuration Register_
 
 **Parity Even/Odd (E/O).** If parity is specified (P = 1), this bit determines whether an odd or even parity bit is added to transmitted characters and whether odd or even parity is checked for in received characters. E/O = 1 specifies even parity and E/O = 0 specifies odd parity. If P = 0, then this bit is ignored.
 
-**Bits per Character (B/C).** This 2-bit field determines the number of bits per character in both the transmitter and receiver, as specified in Table 9-10. If this field is changed while a character is being transmitted or received, the results are unpredictable.
+**Bits per Character (B/C).** This 2-bit field determines the number of bits per character in both the transmitter and receiver, as specified in [Table 9-10](#table-9-10-bc-field-of-uart-control-register). If this field is changed while a character is being transmitted or received, the results are unpredictable.
 
+<a id="table-9-10-bc-field-of-uart-control-register"></a>
 <br/>
 
 BC Field | Bits per Character
@@ -803,13 +827,14 @@ _Table 9-10. BC Field of UART Control Register_
 
 <br/>
 
-A reset clears the UART Configuration register to all zeros, unless bootstrap mode is selected (see section 9.7).
+A reset clears the UART Configuration register to all zeros, unless bootstrap mode is selected (see [section 9.7](#97-uart-bootstrapping-option)).
 
 
 #### 9.6.3.2 Transmitter Control/Status Register
 
-The 8-bit Transmitter Control/Status register, shown in Figure 9-15, specifies the operation of the UART transmitter, as described below.
+The 8-bit Transmitter Control/Status register, shown in [Figure 9-15](#figure-9-15-transmitter-controlstatus-register), specifies the operation of the UART transmitter, as described below.
 
+<a id="figure-9-15-transmitter-controlstatus-register"></a>
 <br/>
 
 ![Figure 9-15. Transmitter Control/Status Register](Images/Figure9.15.png)<br/>
@@ -836,8 +861,9 @@ A reset sets the Transmitter Control/Status register to a 01<sub>H</sub>. Bit 5 
 
 #### 9.6.3.3 Receiver Control/Status Register
 
-The 8-bit Receiver Control/Status register, shown in Figure 9-16, specifies the operation of the UART receiver, as described below.
+The 8-bit Receiver Control/Status register, shown in [Figure 9-16](#figure-9-16-receiver-controlstatus-register), specifies the operation of the UART receiver, as described below.
 
+<a id="figure-9-16-receiver-controlstatus-register"></a>
 <br/>
 
 ![Figure 9-16. Receiver Control/Status Register](Images/Figure9.16.png)<br/>
@@ -859,10 +885,11 @@ _Figure 9-16. Receiver Control/Status Register_
 
 **Receiver Enable (EN).** When set to 1, receiver operation is enabled. This bit should be set after programming the UART Configuration register.
 
-The Receiver Control/Status register is cleared to all zeros by a reset, unless bootstrap mode is selected (see section 9.7). Bit 5 of this register is not used.
+The Receiver Control/Status register is cleared to all zeros by a reset, unless bootstrap mode is selected (see [section 9.7](#97-uart-bootstrapping-option)). Bit 5 of this register is not used.
 
-All UART registers are in I/O page FE and are accessed via byte I/O instructions. Table 9-11 lists the I/O port addresses for the UART registers.
+All UART registers are in I/O page FE and are accessed via byte I/O instructions. [Table 9-11](#table-9-11-io-addresses-of-uart-registers) lists the I/O port addresses for the UART registers.
 
+<a id="table-9-11-io-addresses-of-uart-registers"></a>
 <br/>
 
 Register | I/O Port<br/>Address
@@ -896,8 +923,9 @@ Once the transmitter has been enabled, there are two ways to produce a break out
 
 The on-chip UART and DMA Channel 0 can be used to automatically initialize the Z280 MPU's memory with values received by the UART following a reset. This system bootstrapping capability permits ROMless system configurations, where memory is initialized using a serial link prior to the first Z280 MPU instruction fetch after the reset.
 
-As described in Section 3.2.1 and Chapter 11, bootstrap mode is selected by driving <ins>WAIT</ins> low and AD<sub>6</sub> high while <ins>RESET</ins> is asserted. The appropriate UART and DMA registers are automatically programmed as shown in Table 9-12 as a result of selecting bootstrap mode. The UART is initialized to receive data in 8-bit characters with odd parity, an external clock source, and a x16 clock rate. DMA Channel 0 is initialized with the link to the UART receiver and end-of-process capability enabled, and set up for flowthrough byte transfers in continuous mode. The destination address starts at memory location 0, with an autoincrement after each transfer, and a transfer count of 256 (100<sub>H</sub>).
+As described in [Section 3.2.1](3-CPU_Control_Registers.md#321-bus-timing-and-initialization-register) and [Chapter 11](11-Reset.md), bootstrap mode is selected by driving <ins>WAIT</ins> low and AD<sub>6</sub> high while <ins>RESET</ins> is asserted. The appropriate UART and DMA registers are automatically programmed as shown in [Table 9-12](#table-9-12-reset-value-of-uart-and-dma-registers-when-bootstrap-mode-is-selected) as a result of selecting bootstrap mode. The UART is initialized to receive data in 8-bit characters with odd parity, an external clock source, and a x16 clock rate. DMA Channel 0 is initialized with the link to the UART receiver and end-of-process capability enabled, and set up for flowthrough byte transfers in continuous mode. The destination address starts at memory location 0, with an autoincrement after each transfer, and a transfer count of 256 (100<sub>H</sub>).
 
+<a id="table-9-12-reset-value-of-uart-and-dma-registers-when-bootstrap-mode-is-selected"></a>
 <br/>
 
 Register | Initial Hex<br/>Value

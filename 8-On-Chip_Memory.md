@@ -11,17 +11,17 @@
 
 ## 8.1 INTRODUCTION
 
-The Z280 MPU has 256 bytes of on-chip memory. This on-chip memory can operate in either of two modes, as determined by the contents of the Cache Control register (see Chapter 3). In one mode, the on-chip memory is dedicated to fixed physical memory locations; the memory addresses that are mapped into the on-chip memory are determined under program control. In the other mode, the on-chip memory acts as a cache for either instructions, data, or both. When acting as a cache, the set of memory locations mapped into the on-chip memory at a given time is determined by the action of the executing program; the memory locations that were most recently accessed are stored in the cache. Memory accesses to locations mapped into the on-chip memory do not generate external bus transactions and, therefore, are faster than accesses to external memory; thus, use of the on-chip memory leads to faster, more efficient program execution. On reset, the on-chip memory is automatically enabled for use as a cache for instructions only.
+The Z280 MPU has 256 bytes of on-chip memory. This on-chip memory can operate in either of two modes, as determined by the contents of the Cache Control register (see [Chapter 3](3-CPU_Control_Registers.md)). In one mode, the on-chip memory is dedicated to fixed physical memory locations; the memory addresses that are mapped into the on-chip memory are determined under program control. In the other mode, the on-chip memory acts as a cache for either instructions, data, or both. When acting as a cache, the set of memory locations mapped into the on-chip memory at a given time is determined by the action of the executing program; the memory locations that were most recently accessed are stored in the cache. Memory accesses to locations mapped into the on-chip memory do not generate external bus transactions and, therefore, are faster than accesses to external memory; thus, use of the on-chip memory leads to faster, more efficient program execution. On reset, the on-chip memory is automatically enabled for use as a cache for instructions only.
 
 
 ## 8.2 CACHE MEMORY MODE
 
 If the M/<ins>C</ins> bit in the Cache Control register is cleared to 0, then the 256 bytes of on-chip memory are treated as a cache. Cache memories are small, high-speed memory buffers situated between the processor and main memory. (Main memory is the semiconductor memory accessed via bus transactions.) For each memory access, control logic in the MPU checks if the memory location involved is currently stored in the cache. If so, the access is made to the cache, usually without generating an external bus transaction; if not, the access is made to main memory and the contents of the cache may be updated.
 
-Z280 MPU cache organization is illustrated in Figure 8-1. The cache is arranged as 16 lines of 16 bytes each. Each line of the cache can hold a copy of sixteen consecutive bytes of memory in physical memory locations whose 20 most significant address bits are identical. Thus, for example, one line of the cache could hold the data from physical memory locations 153820<sub>H</sub> to 15382F<sub>H</sub>. The 20 bits of physical address associated with one line of 16 bytes in the cache is called the tag address for that line. Each line of the cache also has 16 valid bits associated with it; each byte in the line is associated with one valid bit. The valid bit is used to indicate if the corresponding byte in the cache holds a valid copy of the memory contents at the associated physical memory location.
+Z280 MPU cache organization is illustrated in [Figure 8-1](#figure-8-1-cache-organization). The cache is arranged as 16 lines of 16 bytes each. Each line of the cache can hold a copy of sixteen consecutive bytes of memory in physical memory locations whose 20 most significant address bits are identical. Thus, for example, one line of the cache could hold the data from physical memory locations 153820<sub>H</sub> to 15382F<sub>H</sub>. The 20 bits of physical address associated with one line of 16 bytes in the cache is called the tag address for that line. Each line of the cache also has 16 valid bits associated with it; each byte in the line is associated with one valid bit. The valid bit is used to indicate if the corresponding byte in the cache holds a valid copy of the memory contents at the associated physical memory location.
 
+<a id="figure-8-1-cache-organization"></a>
 <br/>
-
 ![Figure 8-1. Cache Organization](Images/Figure8.1.png)<br/>
 Tag n = the 20 Address bits associated with line n<br/>
 Valid bits = 16 bits that indicate which bytes in the cache contain valid data<br/>
@@ -63,6 +63,7 @@ Memory-to-EPU | Don't care | Don't care | Don't care | No change | No change | Y
 EPU Template | Don't care | Don't care | Don't care | No change | No change | Yes | Memory
 RETI Opcode | Don't care | Don't care | Don't care | No change | No change | Yes |Memory
 
+<a id="table-8-1-cpu-accesses-to-on-chip-memory-as-cache"></a>
 <br/>
 
 _MMU Cache Inhibit → Noncacheable Transaction:_
@@ -108,14 +109,15 @@ Effect on On-Chip Memory as Cache_
 
 ## 8.3 FIXED-ADDRESS MODE
 
-When the M/<ins>C</ins> bit in the Cache Control register is set to 1, the on-chip memory is treated as fixed physical memory locations. Accesses to these memory locations never generate external bus transactions and, therefore, are faster than memory accesses that use the external bus (Table 8-3).
+When the M/<ins>C</ins> bit in the Cache Control register is set to 1, the on-chip memory is treated as fixed physical memory locations. Accesses to these memory locations never generate external bus transactions and, therefore, are faster than memory accesses that use the external bus ([Table 8-3](#table-8-3-dmacpu-accesses-to-on-chip-memory-as-fixed-memory-location)).
 
 In this mode, the on-chip memory is still organized as 16 lines of 16 bytes each, with a 20-bit tag address that specifies the 16 physical memory locations in each line. All locations are assumed to contain valid information, whether or not they have been initialized; the individual valid bits associated with each byte in the line are ignored in this mode. The Cache Data Disable and Cache Instruction Disable bits in the Cache Control register are also ignored in this mode, and no distinction is made as to whether the CPU is accessing instructions or data.
 
 Before entering this mode, the user must initialize the tag addresses for all 16 lines of on-chip memory. The values for these tags determine the 256 physical memory addresses that are mapped into the on-chip memory. This is accomplished by enabling the on-chip memory as a cache for data only, reading data from 16 physical memory locations that are in different cache lines, and then setting the M/<ins>C</ins> bit in the Cache Control register to 1 to enable the fixed-address mode for the on-chip memory. Altering the M/<ins>C</ins> bit in the Cache Control register does not affect the contents of the on-chip memory, including the tag addresses.
 
-Note that each line of the on-chip memory must be assigned a unique tag address before entering this mode so that no unpredictable addresses are mapped into the on-chip memory. If instructions are to be fetched from the on-chip memory while in this mode, Return from Interrupt (RETI) instructions and the templates within extended instructions should never be resident in the on-chip memory; in each case, the operation of devices external to the MPU depends on these instructions being fetched with external bus transactions, as mentioned in section 8.2. Data to be transferred to or from an EPU cannot be resident in on-chip memory either, since this data must be transferred to the EPU over the external bus.
+Note that each line of the on-chip memory must be assigned a unique tag address before entering this mode so that no unpredictable addresses are mapped into the on-chip memory. If instructions are to be fetched from the on-chip memory while in this mode, Return from Interrupt (RETI) instructions and the templates within extended instructions should never be resident in the on-chip memory; in each case, the operation of devices external to the MPU depends on these instructions being fetched with external bus transactions, as mentioned in [section 8.2](#82-cache-memory-mode). Data to be transferred to or from an EPU cannot be resident in on-chip memory either, since this data must be transferred to the EPU over the external bus.
 
+<a id="table-8-3-dmacpu-accesses-to-on-chip-memory-as-fixed-memory-location"></a>
 <br/>
 
 Operation | Hit/Miss | Cache<br/>Instruction | Cache Data | Cache Activity :<br/>Contents | Cache Activity :<br/>LRU | Bus<br/>Transaction | Cache/Memory<br/>Supplies<br/>Information

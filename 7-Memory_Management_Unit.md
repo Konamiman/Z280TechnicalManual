@@ -59,8 +59,9 @@ When translation is disabled for a particular mode (system or user), the MMU doe
 
 ## 7.3 PAGE DESCRIPTOR REGISTERS
 
-There are two sets of 16 page descriptor registers in the MMU, one set for system mode operation and one set for user mode operation. Each page descriptor register is 16 bits long, consisting of a 12-bit page frame address field and a 4-bit attribute field (Figure 7-1).
+There are two sets of 16 page descriptor registers in the MMU, one set for system mode operation and one set for user mode operation. Each page descriptor register is 16 bits long, consisting of a 12-bit page frame address field and a 4-bit attribute field ([Figure 7-1](#figure-7-1-page-descriptor-register)).
 
+<a id="figure-7-1-page-descriptor-register"></a>
 <br/>
 
 ![Figure 7-1. Page Descriptor Register](Images/Figure7.1.png)<br/>
@@ -88,8 +89,9 @@ If address translation is enabled, logical addresses are translated to physical 
 
 ### 7.4.1 Address Translation Without Program/Data Separation
 
-When program/data separation is not in effect, the 16-bit logical address from the CPU is divided into two fields, a 4-bit index field used to select one of the 16 page descriptor registers, and a 12-bit offset field that forms the lower 12 bits of the resulting physical address. The upper 12 bits of the physical address are provided by the page frame address field of the selected page descriptor register. The pages are 4K bytes long. This translation mechanism is illustrated in Figure 7-2. Page descriptor register 0 is the descriptor for logical addresses 0000<sub>H</sub> to 0FFF<sub>H</sub>, page descriptor register 1 is the descriptor for logical addresses 1000<sub>H</sub> to 1FFF<sub>H</sub>, and so on. Thus, the index portion of the logical address selects the page descriptor register. The page frame address field of that page descriptor register then determines the actual starting address for that page in physical memory; the low-order 12 bits of the logical address specify the offset within that 4K byte page.
+When program/data separation is not in effect, the 16-bit logical address from the CPU is divided into two fields, a 4-bit index field used to select one of the 16 page descriptor registers, and a 12-bit offset field that forms the lower 12 bits of the resulting physical address. The upper 12 bits of the physical address are provided by the page frame address field of the selected page descriptor register. The pages are 4K bytes long. This translation mechanism is illustrated in [Figure 7-2](#figure-7-2-address-translation-without-programdata-separation). Page descriptor register 0 is the descriptor for logical addresses 0000<sub>H</sub> to 0FFF<sub>H</sub>, page descriptor register 1 is the descriptor for logical addresses 1000<sub>H</sub> to 1FFF<sub>H</sub>, and so on. Thus, the index portion of the logical address selects the page descriptor register. The page frame address field of that page descriptor register then determines the actual starting address for that page in physical memory; the low-order 12 bits of the logical address specify the offset within that 4K byte page.
 
+<a id="figure-7-2-address-translation-without-programdata-separation"></a>
 <br/>
 
 ![Figure 7-2. Address Translation without Program/Data Separation](Images/Figure7.2.png)<br/>
@@ -101,6 +103,7 @@ _Figure 7-2. Address Translation without Program/Data Separation_
 When program/data separation is in effect, the 16-bit logical address from the CPU is divided into a 3-bit index and a 13-bit offset. A Program/Data address control signal from the CPU becomes the most significant bit of the 4-bit index that selects the appropriate page descriptor register; the three most significant bits of the logical address form the least significant bits of this index. The upper 11 bits of the page frame address field in the selected page descriptor register provide the upper 11 bits of the resulting physical address. The least significant 13 bits of the logical address form the low order 13 bits of the physical address, as illustrated in Figure
 7-3. Page descriptor register 0 is the descriptor for logical addresses 0000<sub>H</sub>-1FFF<sub>H</sub> in the data addres space, Page descriptor register 1 is the descriptor for logical addresses 2000<sub>H</sub>-3FFF<sub>H</sub> in the data address space, and so on through page descriptor register 7; page descriptor register 8 is the descriptor for logical addresses 0000<sub>H</sub>-1FFF<sub>H</sub> in the program address space, page descriptor register 9 is the descriptor for logical addresses 2000<sub>H</sub>-3FFF<sub>H</sub> in the program address space, and so on. Thus, each page is 8K bytes long, where the starting address of the page in physical memory is determined by the page frame address field in the selected page descriptor register, and the 13 least significant bits of the logical address specify the offset within that 8K byte page. In this mode, the least significant bit of the page frame address field in each page descriptor register is not used; this bit is modified by translation, and values read from it are unpredictable.
 
+<a id="figure-7-3-address-translation-with-programdata-separation"></a>
 <br/>
 
 ![Figure 7-3. Address Translation with Program/Data Separation](Images/Figure7.3.png)<br/>
@@ -111,8 +114,9 @@ _Figure 7-3. Address Translation with Program/Data Separation_
 
 Besides the two sets of 16 page descriptor registers, the MMU contains a Master Control register and a Page Descriptor Register Pointer. The 16-bit Master Control register controls the operation of the MMU; the 8-bit Page Descriptor Register Pointer is used to select a particular page descriptor register during I/O accesses to the descriptors.
 
-The 16-bit MMU Master Control register is shown in Figure 7-4. This register consists of four control bits and a 5-bit status field; the fields in this register are described below:
+The 16-bit MMU Master Control register is shown in [Figure 7-4](#figure-7-4-mmu-master-control-register). This register consists of four control bits and a 5-bit status field; the fields in this register are described below:
 
+<a id="figure-7-4-mmu-master-control-register"></a>
 <br/>
 
 ![Figure 7-4. MMU Master Control Register](Images/Figure7.4.png)<br/>
@@ -128,12 +132,13 @@ _Figure 7-4. MMU Master Control Register_
 
 **System Mode Program/Data Separation Enable (SPD).** When this bit is set to 1, instruction fetches and data accesses using the PC Relative addressing mode use system-mode Page Descriptor registers 8 through 15, and data references using other addressing modes use system-mode Page Descriptor registers 0 through 7; the page size is 8K bytes. When this bit is cleared to 0, both instruction and data fetches use system-mode Page Descriptor registers 0 through 15 and the page size is 4K bytes.
 
-**Page Fault Identifier (PFI) Field.** This 5-bit status field latches an identification number that indicates which Page Descriptor register was being accessed when an access violation was detected. The encoding used is given in Table 7-1.
+**Page Fault Identifier (PFI) Field.** This 5-bit status field latches an identification number that indicates which Page Descriptor register was being accessed when an access violation was detected. The encoding used is given in [Table 7-1](#table-7-1-page-descriptor-register-addresses).
 
 The MMU Master Control register is programmed via a word output instruction to I/O port address FFxxF0<sub>H</sub> (where "x" indicates a "don't care") and is read via a word input instruction to that same port. A reset clears this register to all zeros, thereby disabling address translation and attribute checking in the MMU. Bits 5 through 9, 12, and 13 in this register are not used.
 
-The Page Descriptor registers in the MMU are accessed using the Page Descriptor Register Pointer (PDR Pointer). The 8-bit PDR Pointer contains the address of one of the Page Descriptor registers; the encoding is given in Table 7-1. The permissible contents of the PDR Pointer are 00<sub>H</sub> through 1F<sub>H</sub>. The PDR Pointer is accessed via byte I/O instructions to port address FFxxF1<sub>H</sub>.
+The Page Descriptor registers in the MMU are accessed using the Page Descriptor Register Pointer (PDR Pointer). The 8-bit PDR Pointer contains the address of one of the Page Descriptor registers; the encoding is given in [Table 7-1](#table-7-1-page-descriptor-register-addresses). The permissible contents of the PDR Pointer are 00<sub>H</sub> through 1F<sub>H</sub>. The PDR Pointer is accessed via byte I/O instructions to port address FFxxF1<sub>H</sub>.
 
+<a id="table-7-1-page-descriptor-register-addresses"></a>
 <br/>
 
 PDR Pointer or<br/>PFI Field | Selected Page Descriptor Register
@@ -170,13 +175,14 @@ Moves of one word of data to or from a Page Descriptor register are accomplished
 
 Block moves of data into and out of Page Descriptor registers are accomplished by word accesses to I/O port address FFxxF4<sub>H</sub>. The Page Descriptor register accessed is the one addressed by the PDR Pointer. Any word I/O instruction can be used. After the access, the contents of the PDR Pointer are automatically incremented by one; thus, a single block I/O instruction can be used to access several successive Page Descriptor registers. For example, if the PDR Pointer is initialized to 00, the execution of an INIRW instruction to I/O port FFxxF4<sub>H</sub> causes data from successive Page Descriptor registers starting with user Page Descriptor register 0 to be loaded into memory.
 
-For accesses to the Page Descriptor registers using the Descriptor Select port or the Block Move port, the permissible contents of the PDR Pointer are the addresses for the Page Descriptors given in Table 7-11: 00<sub>H</sub> to 1F<sub>H</sub>. Execution of an I/O instruction to ports FFxxF4<sub>H</sub> or FFxxF5<sub>H</sub> when the contents of the PDR Pointer are outside of this permitted range will have unpredictable results.
+For accesses to the Page Descriptor registers using the Descriptor Select port or the Block Move port, the permissible contents of the PDR Pointer are the addresses for the Page Descriptors given in [Table 7-1](#table-7-1-page-descriptor-register-addresses): 00<sub>H</sub> to 1F<sub>H</sub>. Execution of an I/O instruction to ports FFxxF4<sub>H</sub> or FFxxF5<sub>H</sub> when the contents of the PDR Pointer are outside of this permitted range will have unpredictable results.
 
 
 ### 7.6.3 Invalidation Port
 
-The Valid bits in the Page Descriptor registers can be cleared to 0 via byte writes to I/O port address FFxxF2<sub>H</sub>, thereby invalidating the contents of the Page Descriptor registers. Individual Valid bits can subsequently be set by writing to individual Page Descriptor registers using the Descriptor Select port or the Block Move port. The Page Descriptor registers invalidated by a write to port FFxxF2<sub>H</sub> depend on the data written to that port, as delineated in Table 7-2. When writing to the invalidation port only the least significant four bits are sampled; the upper four bits are not used. Reading port FFxxF2<sub>H</sub> returns unpredictable data.
+The Valid bits in the Page Descriptor registers can be cleared to 0 via byte writes to I/O port address FFxxF2<sub>H</sub>, thereby invalidating the contents of the Page Descriptor registers. Individual Valid bits can subsequently be set by writing to individual Page Descriptor registers using the Descriptor Select port or the Block Move port. The Page Descriptor registers invalidated by a write to port FFxxF2<sub>H</sub> depend on the data written to that port, as delineated in [Table 7-2](#table-7-2-mmu-invalidation-port). When writing to the invalidation port only the least significant four bits are sampled; the upper four bits are not used. Reading port FFxxF2<sub>H</sub> returns unpredictable data.
 
+<a id="table-7-2-mmu-invalidation-port"></a>
 <br/>
 
 Data Written to<br/>Port FFxxF2<br/>(Hexadecimal) | Page Descriptor Registers<br/>Invalidated
@@ -192,8 +198,9 @@ _Table 7-2. MMU Invalidation Port_
 
 <br/>
 
-The I/O port addresses for the MMU registers are listed in Table 7-3.
+The I/O port addresses for the MMU registers are listed in [Table 7-3](#table-7-3-io-port-addresses-for-mmu-control-registers).
 
+<a id="table-7-3-io-port-addresses-for-mmu-control-registers"></a>
 <br/>
 
 Port<br/>Address | Register

@@ -47,11 +47,12 @@
 
 ## 1.1 INTRODUCTION
 
-The Z280™ microprocessor unit (MPU) features an advanced 16-bit CPU that is object-code compatible with the Z80® CPU. The Z280 microprocessor unit includes memory management, peripherals, memory refresh logic, cache memory, wait state generators, and a clock oscillator on the same integrated circuit as the CPU. The on-chip peripheral devices include 4 DMA (Direct Memory Access) channels, 3 counter/timers, and a UART (Universal Asynchronous Receiver/Transmitter). A block diagram of the Z280 MPU is shown in Figure 1-1. This chapter presents some of the features of the Z280 MPU family, with detailed descriptions
+The Z280™ microprocessor unit (MPU) features an advanced 16-bit CPU that is object-code compatible with the Z80® CPU. The Z280 microprocessor unit includes memory management, peripherals, memory refresh logic, cache memory, wait state generators, and a clock oscillator on the same integrated circuit as the CPU. The on-chip peripheral devices include 4 DMA (Direct Memory Access) channels, 3 counter/timers, and a UART (Universal Asynchronous Receiver/Transmitter). A block diagram of the Z280 MPU is shown in [Figure 1-1](#figure-1-1-block-diagram). This chapter presents some of the features of the Z280 MPU family, with detailed descriptions
 of the various aspects of the processor provided in succeeding chapters.
 
 The Z280 MPU has a multiplexed address/data bus for communication with external memory and peripheral devices. Two different bus structures are supported by the Z280: an 8-bit data bus that uses Z80 Bus control signals, and a 16-bit data bus that uses Z-BUS® bus control signals. Zilog's Z80 and Z8500 families of peripherals are easily interfaced to the Z80 Bus; Zilog's Z8000® family of peripherals are easily interfaced to the Z-BUS.
 
+<a id="figure-1-1-block-diagram"></a>
 <br/>
 
 ![Figure 1-1. Block Diagram](Images/Figure1.1.png)<br/>
