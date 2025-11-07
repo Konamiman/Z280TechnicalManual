@@ -2,53 +2,57 @@
 
 ## Index
 
-[E.1 INTRODUCTION](#e1-introduction)
+[INTRODUCTION](#introduction)
 
-[E.2 INSTRUCTION EXECUTION TIMES](#e2-instruction-execution-times)
+[E.1. INSTRUCTION EXECUTION TIMES](#e1-instruction-execution-times)
 
-- [E.2.1 8-Bit Load Group](#e21-8-bit-load-group)
-- [E.2.2 16-Bit Load Group](#e22-16-bit-load-group)
-- [E.2.3 Block Transfer and Search Group](#e23-block-transfer-and-search-group)
-- [E.2.4 8-Bit Arithmetic and Logic Group](#e24-8-bit-arithmetic-and-logic-group)
-- [E.2.5 16-Bit Arithmetic and Logic Group](#e25-16-bit-arithmetic-and-logic-group)
-- [E.2.6 Bit Manipulation, Rotate and Shift Group](#e26-bit-manipulation-rotate-and-shift-group)
-- [E.2.7 Program Control Group](#e27-program-control-group)
-- [E.2.8 Input/Output Instruction Group](#e28-inputoutput-instruction-group)
-- [E.2.9 CPU Control Group](#e29-cpu-control-group)
+- [E.1.1. 8-Bit Load Group](#e11-8-bit-load-group)
+- [E.1.2. 16-Bit Load Group](#e12-16-bit-load-group)
+- [E.1.3. Block Transfer and Search Group](#e13-block-transfer-and-search-group)
+- [E.1.4. 8-Bit Arithmetic and Logic Group](#e14-8-bit-arithmetic-and-logic-group)
+- [E.1.5. 16-Bit Arithmetic and Logic Group](#e15-16-bit-arithmetic-and-logic-group)
+- [E.1.6. Bit Manipulation, Rotate and Shift Group](#e16-bit-manipulation-rotate-and-shift-group)
+- [E.1.7. Program Control Group](#e17-program-control-group)
+- [E.1.8. Input/Output Instruction Group](#e18-inputoutput-instruction-group)
+- [E.1.9. CPU Control Group](#e19-cpu-control-group)
 
-[E.3 EXTENDED INSTRUCTION EXECUTION TIMES](#e3-extended-instruction-execution-times)
+[E.2. EXTENDED INSTRUCTION EXECUTION TIMES](#e2-extended-instruction-execution-times)
 
-[E.4 INTERRUPT, TRAP, AND SPECIAL CONDITION EXECUTION TIMES](#e4-interrupt-trap-and-special-condition-execution-times)
+[E.3. INTERRUPT, TRAP, AND SPECIAL CONDITION EXECUTION TIMES](#e3-interrupt-trap-and-special-condition-execution-times)
 
-[E.5 BUS TRANSACTION TIMING](#e5-bus-transaction-timing)
+[E.4. INSTRUCTION FETCH AND DECODE TIMING](#e4-instruction-fetch-and-decode-timing)
 
-- [E.5.1 Instruction Fetch and Decode Timing](#e51-instruction-fetch-and-decode-timing)
-- [E.5.2 Data Read Timing](#e52-data-read-timing-rdsrc-rddst-and-rdir)
-- [E.5.3 Data Write Timing](#e53-data-write-timing-wrsrc-wrdst-and-wrir)
-- [E.5.4 I/O Read and Write Timing](#e54-io-read-and-write-timing)
-- [E.5.5 EPU Read and Write Timing](#e55-epu-read-and-write-timing)
-- [E.5.6 Interrupt Acknowledge Timing](#e56-interrupt-acknowledge-timing)
-- [E.5.7 Miscellaneous Transaction Timing](#e57-miscellaneous-transaction-timing)
+[E.5. DATA READ TIMING](#e5-data-read-timing--rdsrc-rddst-and-rdir)
 
-## E.1 INTRODUCTION
+[E.6. DATA WRITE TIMING](#e6-data-write-timing--wrsrc-wrdst-and-wrir)
+
+[E.7. I/O READ AND WRITE TIMING](#e7-io-read-and-write-timing)
+
+[E.8. EPU READ AND WRITE TIMING](#e8-epu-read-and-write-timing)
+
+[E.9. INTERRUPT ACKNOWLEDGE TIMING](#e9-interrupt-acknowledge-timing)
+
+[E.10. MISCELLANEOUS TRANSACTION TIMING](#e10-miscellaneous-transaction-timing)
+
+## INTRODUCTION
 
 The Z280 CPU processes instructions using a three-stage pipeline consisting of an instruction prefetch unit, an instruction decoder, and an instruction execution unit. Each section of the pipeline operates autonomously, communicating with the other stages of the pipeline via handshakes and local buses. The pipelined architecture of the Z280 MPU greatly increases program throughput; as one instruction is being executed, the next instruction can be decoded, and the instruction after that can be prefetched.
 
 The autonomous operation of the three stages in the Z280 CPU instruction pipeline makes it difficult to calculate exact instruction execution times. Furthermore, execution times are affected by cache activity; the current cache contents determine the number of external memory transactions made during the fetch and execution of a given instruction. In this appendix, three types of tables are provided for calculation of instruction timings: instruction execution timing, instruction fetch and decode timing, and bus transaction timing. All tables list execution and transaction timings in terms of CPU clock cycles.
 
-[Tables E-1](#e2-instruction-execution-times), [E-2](#e3-extended-instruction-execution-times), and [E-3](#e4-interrupt-trap-and-special-condition-execution-times) show the execution times for all instructions and interrupt and trap processing. [Table E-1](#e2-instruction-execution-times) lists the execution times for all CPU-executed instructions, with the instructions listed by functional group. [Table E-2](#e3-extended-instruction-execution-times) lists the execution times for the extended instructions. [Table E-3](#e4-interrupt-trap-and-special-condition-execution-times) shows execution times for interrupt and trap events. These tables assume that the instruction has been fetched, decoded, and is ready for execution, and that the bus is idle when the execution unit makes a request for a transaction. Thus, the execution times shown in these tables represent the maximum execution rate of the machine. The actual execution rate will be somewhat lower than this maximum for two reasons: (1) the execution unit must compete with the prefetch unit for use of the external bus, and (2) some instructions may take longer to prefetch and decode than the previous instruction will take to execute.
+Tables [E-1](#e1-instruction-execution-times), [E-2](#e2-extended-instruction-execution-times), and [E-3](#e3-interrupt-trap-and-special-condition-execution-times) show the execution times for all instructions and interrupt and trap processing. Table [E-1](#e1-instruction-execution-times) lists the execution times for all CPU-executed instructions, with the instructions listed by functional group. Table [E-2](#e2-extended-instruction-execution-times) lists the execution times for the extended instructions. Table [E-3](#e3-interrupt-trap-and-special-condition-execution-times) shows execution times for interrupt and trap events. These tables assume that the instruction has been fetched, decoded, and is ready for execution, and that the bus is idle when the execution unit makes a request for a transaction. Thus, the execution times shown in these tables represent the maximum execution rate of the machine. The actual execution rate will be somewhat lower than this maximum for two reasons: (1) the execution unit must compete with the prefetch unit for use of the external bus, and (2) some instructions may take longer to prefetch and decode than the previous instruction will take to execute.
 
-Furthermore, the activity of the execution unit can affect the prefetch unit when certain instructions are executed. In [Tables E-1](#e2-instruction-execution-times) and [E-2](#e3-extended-instruction-execution-times), an "F" on the right-hand side of the table indicates that the pipeline is flushed when that instruction is executed; the pipeline is also flushed during all interrupt and trap processing.
+Furthermore, the activity of the execution unit can affect the prefetch unit when certain instructions are executed. In Tables [E-1](#e1-instruction-execution-times) and [E-2](#e2-extended-instruction-execution-times), an "F" on the right-hand side of the table indicates that the pipeline is flushed when that instruction is executed; the pipeline is also flushed during all interrupt and trap processing.
 
 In these cases, the next instruction must be completely fetched and decoded before the execution unit can proceed. The execution times in these tables do not include the time necessary to fetch and decode the next instruction if the pipeline is flushed.
 
-In [Tables E-1](#e2-instruction-execution-times) through [E-3](#e4-interrupt-trap-and-special-condition-execution-times), execution times are given as the number of absolute CPU clock cycles plus the number and type of bus transactions. Bus transaction timings are shown separately in [Tables E-5](#e52-data-read-timing-rdsrc-rddst-and-rdir) through [E-10](#table-e-10-miscellaneous-transaction-timing); the average would be half of the sum of the minimum and maximum numbers listed in the parentheses. The notation "w" in these tables refers to the number of wait states added to the transaction (either by asserting the <ins>WAIT</ins> input or by programming the appropriate CPU control registers) in addition to any automatically inserted wait states. Again, the numbers in these tables assume that the bus is idle when the transaction request is made.
+In Tables [E-1](#e1-instruction-execution-times) through [E-3](#e3-interrupt-trap-and-special-condition-execution-times), execution times are given as the number of absolute CPU clock cycles plus the number and type of bus transactions. Bus transaction timings are shown separately in Tables [E-5](#e5-data-read-timing--rdsrc-rddst-and-rdir) through [E-10](#e10-miscellaneous-transaction-timing); the average would be half of the sum of the minimum and maximum numbers listed in the parentheses. The notation "w" in these tables refers to the number of wait states added to the transaction (either by asserting the <ins>WAIT</ins> input or by programming the appropriate CPU control registers) in addition to any automatically inserted wait states. Again, the numbers in these tables assume that the bus is idle when the transaction request is made.
 
-[Table E-4](#e51-instruction-fetch-and-decode-timing) contains the instruction fetch and decode timing, and [Tables E-5](#e52-data-read-timing-rdsrc-rddst-and-rdir) through [E-10](#table-e-10-miscellaneous-transaction-timing) show bus transaction timings. The CPU clock is divided by a factor of 1, 2, or 4 to form the bus clock; thus, bus transaction timing depends on the relationship between the CPU clock and bus clock. All three types of bus timing are shown in the tables. Furthermore, because of the different phase relationships between the request for a transaction and the bus clock, a variable number of cycles can be included in parentheses in [Tables E-4](#e51-instruction-fetch-and-decode-timing) through [E-10](#table-e-10-miscellaneous-transaction-timing); the average would be half of the sum of the minimum and maximum numbers listed in the parentheses.
+Table [E-4](#e4-instruction-fetch-and-decode-timing) contains the instruction fetch and decode timing, and Tables [E-5](#e5-data-read-timing--rdsrc-rddst-and-rdir) through [E-10](#e10-miscellaneous-transaction-timing) show bus transaction timings. The CPU clock is divided by a factor of 1, 2, or 4 to form the bus clock; thus, bus transaction timing depends on the relationship between the CPU clock and bus clock. All three types of bus timing are shown in the tables. Furthermore, because of the different phase relationships between the request for a transaction and the bus clock, a variable number of cycles can be included in parentheses in Tables [E-4](#e4-instruction-fetch-and-decode-timing) through [E-10](#e10-miscellaneous-transaction-timing); the average would be half of the sum of the minimum and maximum numbers listed in the parentheses.
 
-## E.2 INSTRUCTION EXECUTION TIMES
+## E.1. INSTRUCTION EXECUTION TIMES
 
-### E.2.1 8-Bit Load Group
+### E.1.1. 8-Bit Load Group
 
 | Instruction | Addressing Modes | Execution Time |
 |-------------|------------------|----------------|
@@ -68,7 +72,7 @@ In [Tables E-1](#e2-instruction-execution-times) through [E-3](#e4-interrupt-tra
 | | **or** | |
 | | dst = IR,SX in user<br/>src = A | 3 + wr(dst) |
 
-### E.2.2 16-Bit Load Group
+### E.1.2. 16-Bit Load Group
 
 | Instruction | Addressing Modes | Execution Time |
 |-------------|------------------|----------------|
@@ -91,7 +95,7 @@ In [Tables E-1](#e2-instruction-execution-times) through [E-3](#e4-interrupt-tra
 | POP dst | dst = RR,IR,DA,RA | RR: 9 + rd(IR)<br/>IR,DA,RA: 9 + rd(IR) + wr(dst) |
 | PUSH src | src = RR,IM,IR,DA,RA | RR,IM: 8 + wr(IR)<br/>IR,DA,RA: 9 + rd(src) + wr(IR) |
 
-### E.2.3 Block Transfer and Search Group
+### E.1.3. Block Transfer and Search Group
 
 | Instruction | Execution Time |
 |-------------|----------------|
@@ -104,7 +108,7 @@ In [Tables E-1](#e2-instruction-execution-times) through [E-3](#e4-interrupt-tra
 | LDI | 9 + rd(IR) + wr(IR) |
 | LDIR | 9 + rd(IR) + wr(IR), each iteration |
 
-### E.2.4 8-Bit Arithmetic and Logic Group
+### E.1.4. 8-Bit Arithmetic and Logic Group
 
 | Instruction | Addressing Modes | Execution Time |
 |-------------|------------------|----------------|
@@ -127,7 +131,7 @@ In [Tables E-1](#e2-instruction-execution-times) through [E-3](#e4-interrupt-tra
 | SUB [A,]src | src = R,RX,IM,IR,DA,<br/>X,SX,RA,SR,BX | R,RX,IM: 2<br/>IR,DA,X,SX,RA,SR,BX: 3 + rd(src) |
 | XOR [A,]src | src = R,RX,IM,IR,DA,<br/>X,SX,RA,SR,BX | R,RX,IM: 2<br/>IR,DA,X,SX,RA,SR,BX: 3 + rd(src) |
 
-### E.2.5 16-Bit Arithmetic and Logic Group
+### E.1.5. 16-Bit Arithmetic and Logic Group
 
 | Instruction | Addressing Modes | Execution Time |
 |-------------|------------------|----------------|
@@ -161,7 +165,7 @@ In [Tables E-1](#e2-instruction-execution-times) through [E-3](#e4-interrupt-tra
 | | dst = IY<br/>src = BC,DE,IY,SP | 3 |
 | SUBW [HL,]src | src = RR,IM,DA,X,RA | RR,IM: 3<br/>DA,X,RA: 3 + rd(src) |
 
-### E.2.6 Bit Manipulation, Rotate and Shift Group
+### E.1.6. Bit Manipulation, Rotate and Shift Group
 
 | Instruction | Addressing Modes | Execution Time |
 |-------------|------------------|----------------|
@@ -183,7 +187,7 @@ In [Tables E-1](#e2-instruction-execution-times) through [E-3](#e4-interrupt-tra
 | SRL dst | dst = R,IR,SX | R: 2<br/>IR,SX: 4 + rd(dst) + wr(dst) |
 | TSET dst | dst = R,IR,SX | R: 3<br/>IR,SX: 1 + rd(dst) + wr(dst) |
 
-### E.2.7 Program Control Group
+### E.1.7. Program Control Group
 
 | Instruction | Addressing Modes | Execution Time | F |
 |-------------|------------------|----------------|---|
@@ -205,17 +209,7 @@ In [Tables E-1](#e2-instruction-execution-times) through [E-3](#e4-interrupt-tra
 
 **\* "F" indicates that the pipeline is flushed when that instruction is executed.**
 
-#### Notes for E.2.1 through E.2.9 (Instruction Execution Times)
-
-1. This table assumes that the instruction has been fetched, decoded, and is ready for execution. The execution time for instructions that require the pipeline to be flushed do not include the time necessary to fetch and decode the following instruction.
-
-2. This table assumes that the PAUSE input is inactive. If PAUSE is active, the execution unit will wait before beginning the next instruction.
-
-3. The bus is assumed to be idle when the execution unit makes a request for a transaction.
-
-4. This table assumes that no exceptions occur during instruction execution except where indicated.
-
-### E.2.8 Input/Output Instruction Group
+### E.1.8. Input/Output Instruction Group
 
 | Instruction | Addressing Modes | Execution Time |
 |-------------|------------------|----------------|
@@ -243,7 +237,7 @@ In [Tables E-1](#e2-instruction-execution-times) through [E-3](#e4-interrupt-tra
 | OTIRW | | 8 + rd(IR) + out(), each iteration |
 | TSTI (C) | | 3 + in() |
 
-### E.2.9 CPU Control Group
+### E.1.9. CPU Control Group
 
 | Instruction | Addressing Modes | Execution Time | F |
 |-------------|------------------|----------------|---|
@@ -264,7 +258,18 @@ In [Tables E-1](#e2-instruction-execution-times) through [E-3](#e4-interrupt-tra
 
 **\* "F" indicates that the pipeline is flushed when that instruction is executed.**
 
-## E.3 EXTENDED INSTRUCTION EXECUTION TIMES
+<a id="notes-e1"></a>
+#### NOTES:
+
+1. This table assumes that the instruction has been fetched, decoded, and is ready for execution. The execution time for instructions that require the pipeline to be flushed do not include the time necessary to fetch and decode the following instruction.
+
+2. This table assumes that the PAUSE input is inactive. If PAUSE is active, the execution unit will wait before beginning the next instruction.
+
+3. The bus is assumed to be idle when the execution unit makes a request for a transaction.
+
+4. This table assumes that no exceptions occur during instruction execution except where indicated.
+
+## E.2. EXTENDED INSTRUCTION EXECUTION TIMES
 
 ### Extended Instruction Group Template Fetch (EPU Enable Bit Set to 1)
 
@@ -284,7 +289,7 @@ In [Tables E-1](#e2-instruction-execution-times) through [E-3](#e4-interrupt-tra
 
 **\* "F" indicates that the pipeline is flushed when that instruction is executed.**
 
-#### Notes for E.3 (Extended Instruction Execution Times)
+#### NOTES:
 
 1. Additional cycles are necessary for address computation in the case of EPU-to-Memory and Memory-to-EPU instructions, as shown below:
 
@@ -300,9 +305,9 @@ In [Tables E-1](#e2-instruction-execution-times) through [E-3](#e4-interrupt-tra
    - n is even and aligned: k = n/2
    - n is even and unaligned: k = (n = 2)/2
 
-4. See "Notes" from [Table E-1](#e2-instruction-execution-times).
+4. See ["Notes" from Table E-1](#notes-e1).
 
-## E.4 INTERRUPT, TRAP, AND SPECIAL CONDITION EXECUTION TIMES
+## E.3. INTERRUPT, TRAP, AND SPECIAL CONDITION EXECUTION TIMES
 
 ### INTERRUPTS
 
@@ -340,7 +345,7 @@ In [Tables E-1](#e2-instruction-execution-times) through [E-3](#e4-interrupt-tra
 | RESET | 3 + rd(reset) + out() minimum |
 | EPU Data Page Fault | 1 + epu(f1) and then Access Violation trap |
 
-#### Notes for E.4 (Interrupt, Trap, and Special Condition Execution Times)
+#### NOTES:
 
 1. Additional cycles are necessary for address computation in the case of EPU-to-Memory and Memory-to-EPU traps, as shown below:
 
@@ -350,9 +355,7 @@ In [Tables E-1](#e2-instruction-execution-times) through [E-3](#e4-interrupt-tra
 
 2. The pipeline is flushed at the end of any interrupt or trap sequence.
 
-## E.5 BUS TRANSACTION TIMING
-
-### E.5.1 Instruction Fetch and Decode Timing
+## E.4. INSTRUCTION FETCH AND DECODE TIMING
 
 | Condition | 1× Bus Timing | 2× Bus Timing | 4× Bus Timing |
 |-----------|---------------|---------------|---------------|
@@ -363,7 +366,7 @@ In [Tables E-1](#e2-instruction-execution-times) through [E-3](#e4-interrupt-tra
 | Subsequent byte, external | 5 + w | 8 + 2w + (0-1) | 13 + 4w + (0-3) |
 | Subsequent byte, burst | 8 + w | 14 + 2w + (0-1) | 25 + 4w + (0-3) |
 
-#### Notes for E.5.1 (Instruction Fetch and Decode Timing)
+#### NOTES:
 
 1. The term "first" means the first byte fetched following a flushed pipeline. All other bytes are "subsequent". With a full pipeline, only the execution times are necessary.
 
@@ -384,7 +387,7 @@ In [Tables E-1](#e2-instruction-execution-times) through [E-3](#e4-interrupt-tra
    - f) Four-byte instruction not in cache, burst, cacheable: [12 + w + 1 + 1 + 1]
    - g) Six-byte instruction, burst, first two bytes in cache: [4 + 1 + (8 + w) + 1 + 1 + 1]
 
-### E.5.2 Data Read Timing — rd(src), rd(dst), and rd(IR)
+## E.5. DATA READ TIMING — rd(src), rd(dst), and rd(IR)
 
 | Condition | 1× Bus Timing | 2× Bus Timing | 4× Bus Timing |
 |-----------|---------------|---------------|---------------|
@@ -400,7 +403,7 @@ In [Tables E-1](#e2-instruction-execution-times) through [E-3](#e4-interrupt-tra
 | TSET (fixed memory) | 6 | 6 | 6 |
 | Page Fault | 4 + Access Violation trap | 4 + Access Violation trap | 4 + Access Violation trap |
 
-#### Notes for E.5.2 (Data Read Timing)
+#### NOTES:
 
 1. Additional cycles are necessary for address computation, as shown below:
 
@@ -414,7 +417,7 @@ In [Tables E-1](#e2-instruction-execution-times) through [E-3](#e4-interrupt-tra
 
 4. The notation "w" in the transaction tables is the number of wait states added to the bus cycle that are either externally generated or programmably added. Wait states that are an integral part of the transaction (e.g., one wait state for I/O transactions) should not be included.
 
-### E.5.3 Data Write Timing — wr(src), wr(dst), and wr(IR)
+## E.6. DATA WRITE TIMING — wr(src), wr(dst), and wr(IR)
 
 | Condition | 1× Bus Timing | 2× Bus Timing | 4× Bus Timing |
 |-----------|---------------|---------------|---------------|
@@ -423,7 +426,7 @@ In [Tables E-1](#e2-instruction-execution-times) through [E-3](#e4-interrupt-tra
 | Unaligned Word | 9 + w | 12 + 2w + (0-1) | 17 + 4w + (0-3) |
 | Page Fault | 4 + Access Violation trap | 4 + Access Violation trap | 4 + Access Violation trap |
 
-#### Notes for E.5.3 (Data Write Timing)
+#### NOTES:
 
 1. Additional cycles are necessary for address computation, as shown below:
 
@@ -441,7 +444,7 @@ In [Tables E-1](#e2-instruction-execution-times) through [E-3](#e4-interrupt-tra
 
 6. The notation "w" in the transaction tables is the number of wait states added to the bus cycle that are either externally generated or programmably added. Wait states that are an integral part of the transaction (e.g., one wait state for I/O transactions) should not be included.
 
-### E.5.4 I/O Read and Write Timing
+## E.7. I/O READ AND WRITE TIMING
 
 #### Table E-7. I/O Read and Write Timing
 
@@ -452,7 +455,7 @@ In [Tables E-1](#e2-instruction-execution-times) through [E-3](#e4-interrupt-tra
 | wr(I) | 5 | 5 | 5 |
 | wr( ) | 5 | 5 | 5 |
 
-#### Notes for E.5.4 (I/O Read and Write Timing)
+#### NOTES:
 
 1. The numbers in parentheses depend on the phase relationship between the transaction request and the bus clock. The average will be half of the sum of the minimum and maximum numbers in parentheses.
 
@@ -460,7 +463,7 @@ In [Tables E-1](#e2-instruction-execution-times) through [E-3](#e4-interrupt-tra
 
 3. in(I) and wr(I) are performed internally within the Z280 MPU.
 
-### E.5.5 EPU Read and Write Timing
+## E.8. EPU READ AND WRITE TIMING
 
 #### Table E-8. EPU Read and Write Timing
 
@@ -472,13 +475,13 @@ In [Tables E-1](#e2-instruction-execution-times) through [E-3](#e4-interrupt-tra
 | epu(wr) | 10 + w | 15 + 2w + (0-1) | 24 + 4w + (0-3) |
 | epu(rd) | 8 + w | 11 + 2w + (0-1) | 16 + 4w + (0-3) |
 
-#### Notes for E.5.5 (EPU Read and Write Timing)
+#### NOTES:
 
 1. The numbers in parentheses depend on the phase relationship between the transaction request and the bus clock. The average will be half of the sum of the minimum and maximum numbers in parentheses.
 
 2. The notation "w" in the transaction tables is the number of wait states added to the bus cycle that are either externally generated or programmably added. Wait states that are an integral part of the transaction (e.g., one wait state for I/O transactions) should not be included.
 
-### E.5.6 Interrupt Acknowledge Timing
+## E.9. INTERRUPT ACKNOWLEDGE TIMING
 
 #### Table E-9. Interrupt Acknowledge Timing
 
@@ -490,7 +493,7 @@ In [Tables E-1](#e2-instruction-execution-times) through [E-3](#e4-interrupt-tra
 | iack(m2) | 10 + w | 15 + 2w + (0-1) | 24 + 4w + (0-3) |
 | iack(m3) | 10 + w | 15 + 2w + (0-1) | 24 + 4w + (0-3) |
 
-#### Notes for E.5.6 (Interrupt Acknowledge Timing)
+#### NOTES:
 
 1. The numbers in parentheses depend on the phase relationship between the transaction request and the bus clock. The average will be half of the sum of the minimum and maximum numbers in parentheses.
 
@@ -498,7 +501,7 @@ In [Tables E-1](#e2-instruction-execution-times) through [E-3](#e4-interrupt-tra
 
 3. iack(nmi012) is for NMI in modes 0, 1, and 2. iack(m0) is for mode 0 interrupts.
 
-### E.5.7 Miscellaneous Transaction Timing
+## E.10. MISCELLANEOUS TRANSACTION TIMING
 
 #### Table E-10. Miscellaneous Transaction Timing
 
@@ -508,7 +511,7 @@ In [Tables E-1](#e2-instruction-execution-times) through [E-3](#e4-interrupt-tra
 | RESET Transaction | 6 | 6 | 6 |
 | RETI Transaction | 21 + w | 31 + 2w + (0-2) | 49 + 4w + (0-6) |
 
-#### Notes for E.5.7 (Miscellaneous Transaction Timing)
+#### NOTES:
 
 1. The numbers in parentheses depend on the phase relationship between the transaction request and the bus clock. The average will be half of the sum of the minimum and maximum numbers in parentheses.
 
