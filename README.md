@@ -38,9 +38,9 @@ This repository contains a transcript of the _Z280™ MPU Microprocessor Unit Pr
 
 [Appendix D. Instructions In Numeric Order](D-Instructions_In_Numeric_Order.md)
 
-Appendix E. Instruction Timing
+[Appendix E. Instruction Timing](E-Instruction_Timing.md)
 
-[Appendix F. Compatible Peripheral Families.md](F-Compatible_Peripheral_Families.md)
+[Appendix F. Compatible Peripheral Families](F-Compatible_Peripheral_Families.md)
 
 [Glossary](Glossary.md)
 
@@ -52,7 +52,7 @@ This transcript has been created from two scans of the book that are available o
 
 * `z280_mpu_(noocr_bw_400).pdf`: This version doesn't have extracted text, but is of slightly higher quality; it has been used for the captures of the figures.
 
-The transcript has been performed as follows:
+The transcript has been mostly a manual process:
 
 * All the text has been extracted from the OCR version. Missing styling have been added, and spotted OCR mistakes have been fixed.
   * Data tables have been converted to Markdown tables.
@@ -60,10 +60,7 @@ The transcript has been performed as follows:
 * Figures that represent a 8 bit or 16 bit register of the MPU or bit rotations have been recreated, bit position numbers have been added.
 * Other figures have been captured directly from the original PDF, hopefully with a proper size and with enough quality for all the embedded texts to be recognizable.
 
-This transcript is incomplete, the following is still missing:
-
-* Appendix E (Instruction Timing).
-* Cross-links between chapters and sections.
+[The addition of links to chapters, sections, figures and tables](https://github.com/Konamiman/Z280TechnicalManual/pull/4) and [the addition of appendix E](https://github.com/Konamiman/Z280TechnicalManual/pull/5) have been performed with the help of [Claude Code](https://www.claude.com/product/claude-code).
 
 
 ## Contributing
@@ -72,8 +69,6 @@ Pull requests are welcome for the following:
 
 * Fixing transcript mistakes that I may have missed (or that I introduced myself).
 * Creating better-looking versions of the figures.
-* Adding the missing content (please contact me first so we can coordinate).
-* Adding cross-links between chapters and sections.
 
 
 ## Disclaimer/Copyright
