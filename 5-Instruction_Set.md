@@ -5969,7 +5969,9 @@ Byte FD<sub>H</sub> written to I/O port 321650<sub>H</sub>
 
 The contents of the accumulator are loaded into the selected peripheral. During the I/O transaction, the 8-bit peripheral address from the instruction is placed on the low byte of the address bus, the contents of the accumulator are placed on address lines A<sub>8</sub>-A<sub>15</sub>, and the contents of the I/O Page register are placed on address lines A<sub>16</sub>-A<sub>23</sub>. Then the contents of the accumulator are written into the selected port.
 
-### FlagsNo flags affected
+### Flags
+
+No flags affected
 
 ### Exceptions
 
@@ -6002,7 +6004,7 @@ Byte 42<sub>H</sub> written to I/O port 114255<sub>H</sub>
 **OUTD**<br/>
 **OUTDW**
 
-Operation
+### Operation
 
 (C) ← (HL)<br/>
 B ← B — 1<br/>
@@ -8081,7 +8083,7 @@ None
 | Addressing<br/>Mode | Syntax | Instruction Format
 |-|-|-|
 | R  | TSET R | `11 001 011` `00 110  r `
-| IR | TSET (HL) | `11 011 011` `00 110 110`
+| IR | TSET (HL) | `11 001 011` `00 110 110`
 | SX | TSET (XY + d) | `11 *11 101` `11 001 011` `     d      ` `00 110 110`
 
 #### Field Encoding
@@ -8175,7 +8177,7 @@ _After instruction execution:_
 
 src = R, RX, IM, IR, DA, X, SX, RA, SR, BX
 
-###Operation
+### Operation
 
 A ← A XOR src
 
@@ -8418,7 +8420,7 @@ Extended instruction
 | IR | EPU ← (HL) | `11 101 101` `10 100 110`<br/>`template 1` `template 2` `template 3` `template 4`
 | DA | EPU ← (addr) | `11 101 101` `10 100 111` ` addr(low)  ` ` addr(high) `<br/> `template 1` `template 2` `template 3` `template 4`
 | X  | EPU ← (XX + dd) | `11 101 101` `10 xx  100` `   d(low)   ` `  d(high)   `<br/> `template 1` `template 2` `template 3` `template 4`
-| RA | EPU ← &lt;addr&gt; | `11 101 101` `100 100 100` ` disp(low)  ` ` disp(high) `<br/> `template 1` `template 2` `template 3` `template 4`
+| RA | EPU ← &lt;addr&gt; | `11 101 101` `10 100 100` ` disp(low)  ` ` disp(high) `<br/> `template 1` `template 2` `template 3` `template 4`
 | SR | EPU ← (SP + dd) | `11 101 101` `10 000 100` `   d(low)   ` `  d(high)   `<br/> `template 1` `template 2` `template 3` `template 4`
 | BX | EPU ← (XXA + XXB) | `11 101 101` `10 bx  100`<br/> `template 1` `template 2` `template 3` `template 4`
 
@@ -8485,7 +8487,7 @@ Extended instruction
 | IR | (HL) ← EPU | `11 101 101` `10 101 110`<br/>`template 1` `template 2` `template 3` `template 4`
 | DA | (addr) ← EPU | `11 101 101` `10 101 111` ` addr(low)  ` ` addr(high) `<br/> `template 1` `template 2` `template 3` `template 4`
 | X  | (XX + dd) ← EPU| `11 101 101` `10 xx  101` `   d(low)   ` `  d(high)   `<br/> `template 1` `template 2` `template 3` `template 4`
-| RA | &lt;addr&gt; ← EPU | `11 101 101` `100 100 101` ` disp(low)  ` ` disp(high) `<br/> `template 1` `template 2` `template 3` `template 4`
+| RA | &lt;addr&gt; ← EPU | `11 101 101` `10 100 101` ` disp(low)  ` ` disp(high) `<br/> `template 1` `template 2` `template 3` `template 4`
 | SR | (SP + dd) ← EPU | `11 101 101` `10 000 101` `   d(low)   ` `  d(high)   `<br/> `template 1` `template 2` `template 3` `template 4`
 | BX | (XXA + XXB) ← EPU | `11 101 101` `10 bx  101`<br/> `template 1` `template 2` `template 3` `template 4`
 
