@@ -198,8 +198,6 @@
 
 [NOP - No Operation](#nop---no-operation)
 
-[Operation](#operation)
-
 [OR](#or)
 
 [OTDR - Output, Decrement and Repeat (Byte, Word)](#otdr---output-decrement-and-repeat-byte-word)
@@ -5668,7 +5666,7 @@ _After instruction execution:_
 
 **NOP**
 
-## Operation
+### Operation
 
 None
 
