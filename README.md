@@ -77,6 +77,6 @@ Original book ©1987 by Zilog, Inc. Z280 is a trademark of Zilog, Inc. Z80, Z800
 
 This transcript has been created with the hope that it will be useful for the retrocomputing community. It will be put offline if so is formally requested by the copyright owners.
 
-The PDf files used for the transcription contain the following:
+The PDF files used for the transcription contain the following:
 
 ![Scanned by Dridz(?)](Images/ScannedBy.png)
