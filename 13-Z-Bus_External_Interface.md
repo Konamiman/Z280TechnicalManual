@@ -475,5 +475,5 @@ If the multiprocessor mode is specified in the Bus Timing and Initialization reg
 <a id="figure-13-19-multiprocessor-mode-timing"></a>
 <br/>
 
-![Figure 13-19. Multiprocessor Mode Timing](Images/Figure13.18.png)<br/>
+![Figure 13-19. Multiprocessor Mode Timing](Images/Figure13.19.png)<br/>
 _Figure 13-19. Multiprocessor Mode Timing_
